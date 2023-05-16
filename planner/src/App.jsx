@@ -10,8 +10,9 @@ function App() {
       <Navbar></Navbar>
       <Title></Title>
       <Message></Message>
-      {/* <ListGroup /> */}
-      <Login></Login>
+      <ListGroup />
+      <Login />
+>>>>>>> main
     </div>
   );
 }
