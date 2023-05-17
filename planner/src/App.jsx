@@ -12,7 +12,6 @@ function App() {
       <Message></Message>
       <ListGroup />
       <Login />
->>>>>>> main
     </div>
   );
 }
