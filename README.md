@@ -1,24 +1,16 @@
 # csDuck
+
 Orbital project
 
-## You may need to install cors to run this
+## To install in planner
 
-```
-npm install cors
-```
+npm install vite@latest
+npm install bootstrap@5.2.3
 
-## You also need to set up a mysql server 
-<p>server should follow the convention stated in  "server/index.jsx" shown below here</p>
+## To install in server
 
-```
-const db = mysql.createConnection({
-    user: "root",
-    host: "localhost",
-    // mysql password is removed for this project
-    password: "",
-    database: "users",
-});
-```
+npm install mongodb express cors dotenv
 
-## Run the application 
-<p>1) cd planner; npm run dev<br>2) cd server; node index.jsx;</p>
+## Run the application
+
+<p>1) cd planner; npm run dev<br>2) cd server; node server.mjs;</p>
