@@ -23,7 +23,7 @@
 
 // BELOW IS ADDED FOR MONGODB
 
-import React from "react";
+import React, { useState } from "react";
 
 // We use Route in order to define the different routes of our application
 import { Route, Routes } from "react-router-dom";
@@ -33,10 +33,22 @@ import Navbar from "./components/Navbar";
 import RecordList from "./components/RecordList";
 import Edit from "./components/Edit";
 import Create from "./components/Create";
+import { Login } from "./components/Login";
+import { Register } from "./components/Register";
 
 const App = () => {
+  const [currentForm, setCurrentForm] = useState("login");
+
+  const toggleForm = (formName) => {
+    setCurrentForm(formName);
+  };
   return (
     <div>
+      {currentForm === "login" ? (
+        <Login onFormSwitch={toggleForm} />
+      ) : (
+        <Register onFormSwitch={toggleForm} />
+      )}
       <Navbar />
       <Routes>
         <Route exact path="/" element={<RecordList />} />
