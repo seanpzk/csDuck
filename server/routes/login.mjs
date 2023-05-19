@@ -19,10 +19,10 @@ router.post("/", async(req, res) => {
         .toArray();
     if (result.length == 0) {
         console.log(result);
-        res.send( {text: "Login failed"} ).status(404);
+        res.status(404).send( {text: "Login failed"} );
     } else {
         console.log(result);
-        res.send( {text: "login success" }).status(200);
+        res.status(200).send( {text: "login success" });
     }
 })
 

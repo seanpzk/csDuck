@@ -1,13 +1,11 @@
-import { useState, React } from "react";
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// I think we need to use SSL/TLS to securely send data from client to server
-
-export default function Register() {
+export default function Reset() {
 
     const navigate = useNavigate();
     
-    const [creationForm, setForm] = useState( {
+    const [resetForm, setForm] = useState( {
         username: "",
         password: "",
     } );
@@ -21,20 +19,21 @@ export default function Register() {
 
     async function handleSubmit(event) {
         event.preventDefault();
-        const newUser = creationForm;
+        const updatedUser = resetForm;
 
-        await fetch("http://localhost:5050/register", {
+        const res = await fetch("http://localhost:5050/reset", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(newUser),
+            body: JSON.stringify(updatedUser),
         })
+        .then(response => response.json())
         .catch((error) => {
             window.alert(error);
             return;
         })
-        console.log("user creation request sent");
+        console.log(res);
         setForm({ username: "", password: "" });
         // resets the form once submitted
         event.target.reset();
@@ -45,20 +44,15 @@ export default function Register() {
 
     return (
         <>
-            Register here
-            {/*
-                Create form object
-                1) Contains uesrname, password, other variables required
-                2) editing the boxes will update this form object
-                3) Submitting the form, will pass this form object to the database
-            */}
+
+            <p>Reset your password</p>
 
             <form onSubmit={ handleSubmit }>
-                <label htmlFor = "username">Username: </label>
-                <input type = "text" id = "username" onChange = { (event) => updateForm({ username: event.target.value }) }/>
+                <label htmlFor = "original-username">Original Username: </label>
+                <input type = "text" id = "original-username" onChange = { (event) => updateForm({ username: event.target.value }) }/>
                 <label htmlFor = "password">Password: </label>
                 <input type = "text" id = "password" onChange = { (event) => updateForm({ password: event.target.value }) }/>
-                <button type = "submit">Create user</button>
+                <button type = "submit">Reset password</button>
             </form>
         </>
     )

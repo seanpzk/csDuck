@@ -4,6 +4,7 @@ import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
 import registration from "./routes/register.mjs";
 import login from "./routes/login.mjs";
+import reset from "./routes/reset.mjs";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -17,6 +18,7 @@ app.use("/record", records); /* incoming request to paths starting with /record
                              This records, is the exported router from /routes/record.mjs */
 app.use("/register", registration); // handle incoming request along this path
 app.use("/login", login);
+app.use("/reset", reset);
 
 // start the Express server
 app.listen(PORT, () => {

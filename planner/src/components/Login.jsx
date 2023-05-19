@@ -8,7 +8,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     // stores form info
-    const [loginForm, stForm] = useState({
+    const [loginForm, setForm] = useState({
         username: "", 
         password: "",
     });
@@ -24,7 +24,8 @@ export default function Login() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(form),
-        }).then((response) => response.json())
+        })
+        .then((response) => response.json())
         .catch((error) => {
             window.alert(error);
             return;
@@ -61,6 +62,12 @@ export default function Login() {
                 <NavLink to = "/register">
                     Register for one here!
                 </NavLink>
+                <div>
+                Forgot your password?
+                <NavLink to = "/reset">
+                    reset here!
+                </NavLink>
+                </div>
             </div>
         </>
     );

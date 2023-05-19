@@ -35,6 +35,7 @@ import Create from "./components/Create";
 import Login from "./components/Login";
 import Homepage from "./components/Homepage";
 import Register from "./components/Register";
+import Reset from "./components/Reset";
 import NotFound from "./components/NotFound";
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/create" element={<Create />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reset" element={<Reset />} />
         <Route path ="*" element={<NotFound />} />
       </Routes>
     </div>
