@@ -33,15 +33,17 @@ import Navbar from "./components/Navbar";
 import RecordList from "./components/RecordList";
 import Edit from "./components/Edit";
 import Create from "./components/Create";
-import { Login } from "./components/Login";
-import { Register } from "./components/Register";
+import Login from "./components/Login";
+// import LoginAlt from "./components/Login";
+import Register from "./components/Register";
+// import RegisterAlt from "./components/Register";
 
 const App = () => {
-  const [currentForm, setCurrentForm] = useState("login");
+  // const [currentForm, setCurrentForm] = useState("login");
 
-  const toggleForm = (formName) => {
-    setCurrentForm(formName);
-  };
+  // const toggleForm = (formName) => {
+  //   setCurrentForm(formName);
+  // };
   return (
     <>
       <div>

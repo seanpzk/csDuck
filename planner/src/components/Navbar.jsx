@@ -51,13 +51,13 @@ export default function Navbar() {
             </li> */}
           </ul>
         </div>
-        <form class="container-fluid justify-content-start d-flex flex-row-reverse">
-          <button class="btn btn-sm btn-outline-secondary" type="button">
+        <form className="container-fluid justify-content-start d-flex flex-row-reverse">
+          <button className="btn btn-sm btn-outline-secondary" type="button">
             <NavLink className="nav-link" to="/register">
               Register
             </NavLink>
           </button>
-          <button class="btn btn-outline-success me-2" type="button">
+          <button className="btn btn-outline-success me-2" type="button">
             <NavLink className="nav-link" to="/login">
               Login
             </NavLink>
