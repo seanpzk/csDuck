@@ -17,4 +17,9 @@ npm install mongodb express cors dotenv js-sha512
 
 ## Run the application
 
-<p>1) cd planner; npm run dev<br>2) cd server; node server.mjs;</p>
+```
+cd planner; 
+npm run dev;
+cd server; 
+node server.mjs;
+```
