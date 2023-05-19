@@ -8,7 +8,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     // stores form info
-    const [userInfo, setUser] = useState({
+    const [loginForm, stForm] = useState({
         username: "", 
         password: "",
     });
@@ -17,8 +17,7 @@ export default function Login() {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        const form = userInfo;
-        console.log(form);
+        const form = loginForm;
         const res = await fetch("http://localhost:5050/login", {
             method: "POST",
             headers: {
@@ -32,14 +31,14 @@ export default function Login() {
         })
         console.log(res);
 
-        setUser({ username: "", password: "" });
+        setForm({ username: "", password: "" });
         // resets the form once submitted
         event.target.reset();
         // navigate("/");
     }
 
     const updateForm = (value) => {
-        return setUser((prev) => {
+        return setForm((prev) => {
             return { ...prev, ...value };
         });
     }
