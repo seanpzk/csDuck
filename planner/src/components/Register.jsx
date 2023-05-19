@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export const Register = (props) => {
   const [email, setEmail] = useState("");
@@ -41,13 +42,9 @@ export const Register = (props) => {
           />
           <button type="submit">Log in</button>
         </form>
-        <button
-          className="link-btn"
-          onClick={() => props.onFormSwitch("login")}
-        >
-          {" "}
+        <NavLink style={{ color: "white" }} to="/login">
           Already have an account? Login here.
-        </button>
+        </NavLink>
       </div>
     </>
   );

@@ -10,7 +10,10 @@ import { NavLink } from "react-router-dom";
 export default function Navbar() {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav
+        className="navbar navbar-expand"
+        style={{ backgroundColor: "#d0cfff" }}
+      >
         <NavLink className="navbar-brand" to="/">
           <img
             style={{ width: 25 + "%" }}
@@ -31,13 +34,35 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
+            <li className="nav-item ">
               <NavLink className="nav-link" to="/create">
                 Create Record
               </NavLink>
             </li>
+            {/* <li className="nav-item-login">
+              <NavLink className="nav-link" to="/login">
+                Login
+              </NavLink>
+            </li>
+            <li className="nav-item-register">
+              <NavLink className="nav-link" to="/register">
+                Register
+              </NavLink>
+            </li> */}
           </ul>
         </div>
+        <form class="container-fluid justify-content-start d-flex flex-row-reverse">
+          <button class="btn btn-sm btn-outline-secondary" type="button">
+            <NavLink className="nav-link" to="/register">
+              Register
+            </NavLink>
+          </button>
+          <button class="btn btn-outline-success me-2" type="button">
+            <NavLink className="nav-link" to="/login">
+              Login
+            </NavLink>
+          </button>
+        </form>
       </nav>
     </div>
   );
