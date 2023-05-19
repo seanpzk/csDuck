@@ -30,18 +30,24 @@ import { Route, Routes } from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/Navbar";
-import RecordList from "./components/RecordList";
 import Edit from "./components/Edit";
 import Create from "./components/Create";
+import Login from "./components/Login";
+import Homepage from "./components/Homepage";
+import Register from "./components/Register";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   return (
     <div>
       <Navbar />
       <Routes>
-        <Route exact path="/" element={<RecordList />} />
+        <Route exact path="/" element={<Homepage />} />
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path ="*" element={<NotFound />} />
       </Routes>
     </div>
   );

@@ -1,10 +1,12 @@
 import express from "express";
+// import connected database object
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 // This section will help you get a list of all the records.
+// The base here is /record
 router.get("/", async (req, res) => {
   let collection = await db.collection("records");
   let results = await collection.find({}).toArray();
