@@ -12,7 +12,7 @@ export default function Create() {
   // These methods will update the state properties.
   function updateForm(value) {
     return setForm((prev) => {
-      return { ...prev, ...value };
+      return { ...prev, ...value }; // this will merge the two together
     });
   }
 
@@ -21,14 +21,14 @@ export default function Create() {
     e.preventDefault();
 
     // When a post request is sent to the create url, we'll add a new record to the database.
-    const newPerson = { ...form };
+    const newPerson = { ...form }; // why do we need the ... here?
 
     await fetch("http://localhost:5050/record", {
-      method: "POST",
+      method: "POST", // send data to the server
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // indicates that the request body is in json format
       },
-      body: JSON.stringify(newPerson),
+      body: JSON.stringify(newPerson), // convert based on HTTP request format (Google the formats)
     }).catch((error) => {
       window.alert(error);
       return;
