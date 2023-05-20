@@ -24,5 +24,5 @@ router.post("/", async(req, res) => {
         console.log(result);
         res.status(200).send( {text: "login success" });
     }
-
+})
 export default router;
