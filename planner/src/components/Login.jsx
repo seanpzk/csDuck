@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router";
+import "../styles.css";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 export default function Login() {
@@ -44,31 +45,35 @@ export default function Login() {
         });
     }
 
-    return (
-        <>
-            Enter your login credentials
-            <form onSubmit = { handleSubmit }>
-                <label htmlFor = "username">Username:</label>
-                <input type = "text" id = "username" onChange = { (event) => updateForm({ username: event.target.value }) }/>
-                <label htmlFor = "password">Password:</label>
-                <input type = "text" id = "password" onChange = { (event) => updateForm({ password: event.target.value }) }/>
-                <br></br>
-                <button type = "submit">Login</button>
-            </form>
-
-            <div>
-                No account? 
-                <br/>
-                <NavLink to = "/register">
-                    Register for one here!
-                </NavLink>
-                <div>
-                Forgot your password?
-                <NavLink to = "/reset">
-                    reset here!
-                </NavLink>
-                </div>
-            </div>
-        </>
-    );
+return (
+    <div className="login">
+      <form className="login-style-form" onSubmit={handleSubmit}>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          value={loginForm.username}
+          placeholder="Your username"
+          onChange={(event) => updateForm({ username: event.target.value })}
+        />
+        <label htmlFor="password">Password:</label>
+        <input
+          type="text"
+          name="password"
+          id="password"
+          value={loginForm.password}
+          placeholder="Your password"
+          onChange={(event) => updateForm({ password: event.target.value })}
+        />
+        <button type="submit" className="btn btn-light">
+          Log in
+        </button>
+      </form>
+      <NavLink style={{ color: "white" }} to="/register">
+        Don't have an account? Register here.
+      </NavLink>
+    </div>
+  );
 }
+
