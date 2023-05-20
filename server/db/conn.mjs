@@ -12,8 +12,10 @@ try {
   console.error(e);
 }
 
+
 // Connect to "sample-training" database 
 // gives us the interface to communicate with database
 let db = conn.db("csDuck");
+
 
 export default db;
