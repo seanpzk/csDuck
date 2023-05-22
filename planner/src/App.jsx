@@ -38,7 +38,6 @@ import Register from "./components/Register";
 import Reset from "./components/Reset";
 import NotFound from "./components/NotFound";
 
-
 const App = () => {
   // const [currentForm, setCurrentForm] = useState("login");
 
@@ -55,10 +54,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset" element={<Reset />} />
-        <Route path ="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
-
   );
 };
 

@@ -8,7 +8,6 @@ import { NavLink } from "react-router-dom";
 
 // Here, we display our Navbar
 export default function Navbar() {
-
   return (
     <div>
       <nav
@@ -35,11 +34,7 @@ export default function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
-            <li className="nav-item ">
-              <NavLink className="nav-link" to="/create">
-                Create Record
-              </NavLink>
-            </li>
+            <li className="nav-item "></li>
             {/* <li className="nav-item-login">
               <NavLink className="nav-link" to="/login">
                 Login
@@ -68,4 +63,3 @@ export default function Navbar() {
     </div>
   );
 }
-
