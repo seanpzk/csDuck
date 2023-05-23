@@ -1,3 +1,4 @@
+import TaskList from "./TaskList";
 import RecordList from "./RecordList";
 import { getAuth, } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
@@ -27,15 +28,15 @@ export default function Homepage(props) {
         });
     }
 
-    return (
-        <>
-            <div>Some advertising stuff here</div>
-            <RecordList />
+  return (
+    <>
+      <div>Some advertising stuff here</div>
+      <TaskList />
             {
                 props.auth
                 ? <h1>Display data <button onClick = {displayData}>here</button></h1>
                 : <></>
             }
-        </>
-    )
+    </>
+  );
 }

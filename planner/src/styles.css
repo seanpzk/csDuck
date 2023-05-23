@@ -104,3 +104,14 @@ label {
     margin: 10px;
   }
 
+  .tasklist-container{
+    width: 95%;
+    margin: auto;
+  }
+
+  .table-bordered {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+

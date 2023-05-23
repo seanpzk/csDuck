@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
+import tasks from "./routes/task.mjs"
 import registration from "./routes/register.mjs";
 import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
@@ -23,7 +24,7 @@ app.use("/record", records); /* incoming request to paths starting with /record
 app.use("/register", registration); // handle incoming request along this path
 app.use("/login", login);
 app.use("/reset", reset);
-app.use("/displayData", displayData);
+app.use("/task", tasks);app.use("/displayData", displayData);
 
 
 // start the Express server
