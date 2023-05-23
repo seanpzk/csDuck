@@ -45,14 +45,16 @@ const App = () => {
   // const toggleForm = (formName) => {
   //   setCurrentForm(formName);
   // };
+  const [auth, setAuth] = useState(false);
+
   return (
     <div>
-      <Navbar />
+      <Navbar auth = {auth} setAuth = {setAuth}/>
       <Routes>
-        <Route exact path="/" element={<Homepage />} />
+        <Route exact path="/" element={<Homepage auth = {auth}/>} />
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login auth = {auth} setAuth = {setAuth} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset" element={<Reset />} />
         <Route path ="*" element={<NotFound />} />

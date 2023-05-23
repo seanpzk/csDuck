@@ -1,7 +1,8 @@
 import { useState, React } from "react";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import firebaseAuth from "../firebase.config";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 
@@ -22,8 +23,21 @@ export default function Register() {
         });
     }
 
+    const handleEmailPwCreation = () => createUserWithEmailAndPassword(firebaseAuth, creationForm.username, creationForm.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          console.log("registered with email and password");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+        })
+
     async function handleSubmit(event) {
         event.preventDefault();
+        handleEmailPwCreation();
         const newUser = creationForm;
 
         await fetch("http://localhost:5050/register", {

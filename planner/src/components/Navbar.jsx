@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { NavLink } from "react-router-dom";
 
 // Here, we display our Navbar
-export default function Navbar() {
+export default function Navbar(props) {
 
   return (
     <div>
@@ -58,11 +58,15 @@ export default function Navbar() {
               Register
             </NavLink>
           </button>
-          <button className="btn btn-outline-success me-2" type="button">
+          {
+            props.auth
+            ? <button className="btn btn-outline-success me-2" type = "button" onClick= {() => props.setAuth(false)}>Logout</button>
+            : <button className="btn btn-outline-success me-2" type="button">
             <NavLink className="nav-link" to="/login">
               Login
             </NavLink>
           </button>
+          }
         </form>
       </nav>
     </div>
