@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
+import firebaseAuth from "../firebase.config";
 
 export default function Edit() {
   const [form, setForm] = useState({
     name: "",
-    position: "",
+    deadline: "",
     priority: "",
-    records: [],
   });
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchData() {
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
       const id = params.id.toString();
       const response = await fetch(
-        `http://localhost:5050/record/${params.id.toString()}`
+        `http://localhost:5050/task/${params.id.toString()}`, {
+        method: "GET",
+        header: {
+          "Authorization": "Bearer " + idToken,
+        }
+      }
       );
 
       if (!response.ok) {
@@ -26,7 +32,7 @@ export default function Edit() {
 
       const record = await response.json();
       if (!record) {
-        window.alert(`Record with id ${id} not found`);
+        window.alert(`Task with MongoDb_id ${id} not found`);
         navigate("/");
         return;
       }
@@ -53,13 +59,15 @@ export default function Edit() {
       deadline: form.deadline,
       priority: form.priority,
     };
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/record/${params.id}`, {
+    await fetch(`http://localhost:5050/task/${params.id}`, {
       method: "PATCH",
       body: JSON.stringify(editedPerson),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + idToken
       },
     });
 

@@ -10,12 +10,13 @@ router.post("/", async(req, res) => {
     // obtain login info from client
 
     const user = {
-        username: req.body.username,
+        email: req.body.email,
         password: sha512(req.body.password)
     }
     console.log(user.password);
+    // ensures there is no existing email
     const result = await db.collection("users")
-        .find( { username: user.username, password: user.password } )
+        .find( { email: user.username, password: user.password } )
         .toArray();
     if (result.length == 0) {
         console.log(result);

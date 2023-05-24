@@ -114,4 +114,25 @@ label {
     border-top-left-radius: 15px;
 }
 
+.other-login-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 15rem;
+}
 
+.other-login-container > button {
+  height: 5rem;
+  width: 5rem;
+  padding: 0;
+}
+
+.other-login-container > h2 {
+  font-size: 1.1rem;
+}
+
+.other-login-container > button > img {
+  height: inherit;
+  width: inherit;
+}

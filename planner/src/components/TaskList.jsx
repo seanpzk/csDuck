@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 // import "../styles.css";
 import "bootstrap/dist/css/bootstrap.css";
+import firebaseAuth from "../firebase.config";
+import RedirectLogin from "./helperFunctions/redirectLogin";
 
 const Task = (props) => (
   <tr>
@@ -27,11 +29,21 @@ const Task = (props) => (
 
 export default function TaskList() {
   const [tasks, setTasks] = useState([]);
+  const navigate = useNavigate();
 
   // This method fetches the tasks from the database.
   useEffect(() => {
     async function getTasks() {
-      const response = await fetch(`http://localhost:5050/task/`);
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
+      const UID = firebaseAuth.currentUser.uid;
+      // creates a default GET request -> included UID
+      const response = await fetch(`http://localhost:5050/task?UID=${UID}`, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + idToken,
+          "Content-Type": "application/json"
+        }
+      });
 
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -50,9 +62,14 @@ export default function TaskList() {
 
   // This method will delete a task
   async function deleteTask(id) {
+    // Send whenever we make a request to backend
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
     await fetch(`http://localhost:5050/task/${id}`, {
       method: "DELETE",
-    });
+      headers: {
+        "Authorization": "Bearer " + idToken,
+      }
+    }).then(response => RedirectLogin(response, navigate));
 
     const newTasks = tasks.filter((el) => el._id !== id);
     setTasks(newTasks);

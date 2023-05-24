@@ -7,13 +7,15 @@ const router = express.Router();
 
 // This section will help you get a list of all the records.
 // The base here is /task
+// search based on firebaseUID
 router.get("/", async (req, res) => {
+  const firebaseUID = req.query.UID;
   let collection = await db.collection("task");
-  let results = await collection.find({}).sort({deadline: -1}).toArray();
+  let results = await collection.find({firebaseUID: firebaseUID}).sort({deadline: -1}).toArray();
   res.send(results).status(200);
 });
 
-// This section will help you get a single record by id
+// This section will help you get a single record by MongoDB object_id
 router.get("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let query = {_id: new ObjectId(req.params.id)};
@@ -29,6 +31,7 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     deadline: req.body.deadline,
     priority: req.body.priority,
+    firebaseUID: req.body.firebaseUID
   };
   let collection = await db.collection("task");
   let result = await collection.insertOne(newDocument);

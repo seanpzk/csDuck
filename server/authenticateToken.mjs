@@ -1,5 +1,4 @@
 import admin from "firebase-admin";
-
 import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 
 admin.initializeApp({
@@ -14,11 +13,14 @@ export default async function decodeIDToken(req, res, next) {
         console.log("Next line is the authentication token");
         console.log(idToken);
         try {
-            const decodedToken = await admin.auth().verifyIdToken(idToken);
+            const decodedToken = await admin.auth()?.verifyIdToken(idToken);
             req["currentUser"] = decodedToken;
         } catch (error) {
             console.log(error);
-            window.alert("Unauthorised, please login!");
+            // "return" prevents double response <--> Error here, need to find a better way to send to frontend, then redirect.
+            // return res.redirect(`http://localhost:5173/`);
+            // return here will stop further execution of the middleware stack
+            return res.json( {url: "/login"});
         }
     }
     next();

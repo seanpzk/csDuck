@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router";
-import "../styles.css";
+import "../stylesheets/styles.css";
 import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
@@ -17,7 +17,7 @@ export default function Login(props) {
 
     // stores form info
     const [loginForm, setForm] = useState({
-        username: "", 
+        email: "", 
         password: "",
     });
 
@@ -27,7 +27,7 @@ export default function Login(props) {
         .then(result => {
           const token = GoogleAuthProvider.credentialFromResult(result).accessToken;
           const user = result.user;
-          props.setAuth(true);
+         // props.setAuth(true);
           console.log(token);
           console.log(user);
         }).catch(error => {
@@ -41,7 +41,7 @@ export default function Login(props) {
         .then(result => {
           const token = FacebookAuthProvider.credentialFromResult(result).accessToken;
           // const user = result.user;
-          props.setAuth(true);
+          // props.setAuth(true);
           console.log(token);
           console.log(user);
         }).catch(error => {
@@ -53,7 +53,7 @@ export default function Login(props) {
     };
 
     // Handles login using email and password
-    const handleEmailPwLogin = () => signInWithEmailAndPassword(firebaseAuth, loginForm.username, loginForm.password)
+    const handleEmailPwLogin = () => signInWithEmailAndPassword(firebaseAuth, loginForm.email, loginForm.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
@@ -81,7 +81,7 @@ export default function Login(props) {
         })
         .then((response) => {
           if (response.ok) {
-            props.setAuth(true);
+            // props.setAuth(true);
             return response.json();
           } else {
             throw new Error("An error occured during login, Please try again!");
@@ -89,10 +89,10 @@ export default function Login(props) {
         })
         .catch((error) => {
             window.alert(error);
-            props.setAuth(false);
+            // props.setAuth(false);
             return;
         })
-        setForm({ username: "", password: "" });
+        setForm({ email: "", password: "" });
         // resets the form once submitted
         event.target.reset();
         // navigate("/");
@@ -107,17 +107,17 @@ export default function Login(props) {
 return (
     <div className="login">
       {
-        !props.auth 
+        !props.auth
         ? <>
           <form className="login-style-form" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="email">Email:</label>
             <input
               type="text"
-              name="username"
-              id="username"
-              value={loginForm.username}
-              placeholder="Your username"
-              onChange={(event) => updateForm({ username: event.target.value })}
+              name="email"
+              id="email"
+              value={loginForm.email}
+              placeholder="Your email"
+              onChange={(event) => updateForm({ email: event.target.value })}
             />
             <label htmlFor="password">Password:</label>
             <input
@@ -131,10 +131,17 @@ return (
             <button type="submit" className="btn btn-light">Log in</button>
             <br/>
           </form>
-          <button onClick = {loginWithGoogle}><img src = {googleLogo} /></button>
-          <button onClick = {loginWithFacebook}><img src = {facebookLogo} /></button>
+          <div className = "other-login-container">
+            <h2>Log in using other alternatives!</h2>
+            <button onClick = {loginWithGoogle}><img src = {googleLogo} /></button>
+            <button onClick = {loginWithFacebook}><img src = {facebookLogo} /></button>
+          </div>
           <NavLink style={{ color: "white" }} to="/register">
             Don't have an account? Register here.
+          </NavLink>
+
+          <NavLink style={{ color: "red" }} to="/reset">
+            Forgot your password? Reset your password here
           </NavLink>
         </>
        : <h1>You are logged in</h1>

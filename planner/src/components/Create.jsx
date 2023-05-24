@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import firebaseAuth from "../firebase.config";
 
 export default function Create() {
   const [task, setTask] = useState({
     name: "",
     deadline: "",
     priority: "",
+    firebaseUID: ""
   });
   const navigate = useNavigate();
 
-  // These methods will update the state properties.g
+  // These methods will update the state properties.
   function updateTask(value) {
     return setTask((prev) => {
       return { ...prev, ...value }; // this will merge the two together
     });
   }
+
+  // Adds the current user's UID to the form
+  useEffect(() => {
+    const UID = firebaseAuth.currentUser.uid;
+    updateTask({ firebaseUID: UID });
+  }, []);
 
   // This function will handle the submission.
   async function onSubmit(e) {
@@ -34,7 +42,7 @@ export default function Create() {
       return;
     });
 
-    setTask({ name: "", deadline: "", priority: "" });
+    setTask({ name: "", deadline: "", priority: "", firebaseUID: "" });
     navigate("/");
   }
 

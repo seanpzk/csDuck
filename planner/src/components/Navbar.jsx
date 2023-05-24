@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // We import bootstrap to make our application look better.
 import "bootstrap/dist/css/bootstrap.css";
@@ -6,8 +6,17 @@ import "bootstrap/dist/css/bootstrap.css";
 // We import NavLink to utilize the react router.
 import { NavLink } from "react-router-dom";
 
+import firebaseAuth from "../firebase.config";
+
 // Here, we display our Navbar
 export default function Navbar(props) {
+  
+  useEffect(() => firebaseAuth.onAuthStateChanged(
+    () => props.setAuth(firebaseAuth.currentUser != null)));
+
+  async function handleLogout() {
+    await firebaseAuth.signOut();
+  }
 
   return (
     <div>
@@ -36,32 +45,18 @@ export default function Navbar(props) {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item "></li>
-            {/* <li className="nav-item-login">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-            </li>
-            <li className="nav-item-register">
-              <NavLink className="nav-link" to="/register">
-                Register
-              </NavLink>
-            </li> */}
           </ul>
         </div>
         <form className="container-fluid justify-content-start d-flex flex-row-reverse">
-          <button className="btn btn-sm btn-outline-secondary" type="button">
-            <NavLink className="nav-link" to="/register">
+            <NavLink className="btn btn-sm btn-outline-secondary" to="/register">
               Register
             </NavLink>
-          </button>
           {
-            props.auth
-            ? <button className="btn btn-outline-success me-2" type = "button" onClick= {() => props.setAuth(false)}>Logout</button>
-            : <button className="btn btn-outline-success me-2" type="button">
-            <NavLink className="nav-link" to="/login">
-              Login
-            </NavLink>
-          </button>
+            !props.auth
+              ? <NavLink className="btn btn-outline-success me-2" to="/login">
+                    Login
+                </NavLink>
+              : <button className="btn btn-outline-success me-2" type = "button" onClick= {handleLogout}>Logout</button>
           }
         </form>
       </nav>
