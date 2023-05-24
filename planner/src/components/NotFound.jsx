@@ -1,9 +1,10 @@
 import { useEffect } from "react"
-import { Navigate, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function NotFound() {
 
-    useEffect(() =>console.log("returning to homepage"));
+    useEffect(() =>console.log("returning to homepage"), []);
+    window.alert("Page not found! Redirecting to homepage");
     return (
         <Navigate to = "/" />
     )

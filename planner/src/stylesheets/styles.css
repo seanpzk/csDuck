@@ -1,0 +1,138 @@
+.header{
+  text-align: center;
+}
+.title{
+  text-align: center;
+}
+.login, .register {
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 100vh;
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    background-image: linear-gradient(79deg, #664bef,#3ea2ff,#32ef8b);
+  } 
+label {
+  text-align: left;
+  padding: 0.25rem 0;
+}
+  input {
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border:none;
+    border-radius: 10px;
+  }
+
+  button {
+    border: none;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+.link-btn {
+  background: none;
+  color: red;
+  text-decoration: underline;
+}
+
+  .login-style-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .register-style-form{
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="name"],
+  input[type="password"] {
+    height: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  
+  input[type="submit"] {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #01d28e;
+    border: 1px solid #01d28e;
+    color: #fff;
+    padding: 10px 20px;
+  }
+  
+  input[type="submit"]:hover {
+    background: #6cf0c2;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .login-form {
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .list-container {
+    display: flex;
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+  
+  .title {
+    font-size: 25px;
+    margin-bottom: 20px;
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px;
+  }
+
+  .tasklist-container{
+    width: 95%;
+    margin: auto;
+  }
+
+  .table-bordered {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.other-login-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 15rem;
+}
+
+.other-login-container > button {
+  height: 5rem;
+  width: 5rem;
+  padding: 0;
+}
+
+.other-login-container > h2 {
+  font-size: 1.1rem;
+}
+
+.other-login-container > button > img {
+  height: inherit;
+  width: inherit;
+}

@@ -1,7 +1,9 @@
 import { useState, React } from "react";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import firebaseAuth from "../firebase.config";
+import { Route, Routes } from "react-router-dom";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 
@@ -11,7 +13,7 @@ export default function Register() {
     const navigate = useNavigate();
     
     const [creationForm, setForm] = useState( {
-        username: "",
+        email: "",
         password: "",
     } );
 
@@ -22,8 +24,21 @@ export default function Register() {
         });
     }
 
+    const handleEmailPwCreation = () => createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          console.log("registered with email and password");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+        })
+
     async function handleSubmit(event) {
         event.preventDefault();
+        handleEmailPwCreation();
         const newUser = creationForm;
 
         await fetch("http://localhost:5050/register", {
@@ -38,25 +53,24 @@ export default function Register() {
             return;
         })
         console.log("user creation request sent");
-        setForm({ username: "", password: "" });
+        setForm({ email: "", password: "" });
         // resets the form once submitted
         event.target.reset();
         // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
-        // For some reason, redirect doesn't work here
         navigate("/");
     }
   return (
     <>
       <div className="register">
         <form className="register-style-form" onSubmit={handleSubmit}>
-          <label htmlFor="username">Username: </label>
+          <label htmlFor="email">Email: </label>
           <input
             type="text"
             name="password"
-            id="username"
-            value={creationForm.username}
-            placeholder="Your username"
-            onChange={(event) => updateForm({ username: event.target.value })}
+            id="email"
+            value={creationForm.email}
+            placeholder="Your email"
+            onChange={(event) => updateForm({ email: event.target.value })}
           />
           <label htmlFor="password">Password: </label>
           <input
