@@ -37,6 +37,7 @@ import Homepage from "./components/Homepage";
 import Register from "./components/Register";
 import Reset from "./components/Reset";
 import NotFound from "./components/NotFound";
+import TaskList from "./components/TaskList";
 
 const App = () => {
   // const [currentForm, setCurrentForm] = useState("login");
@@ -47,16 +48,20 @@ const App = () => {
   const [auth, setAuth] = useState(false);
 
   return (
-    <div>
-      <Navbar auth = {auth} setAuth = {setAuth}/>
+    <div className="app">
+      <Navbar auth={auth} setAuth={setAuth} />
       <Routes>
-        <Route exact path="/" element={<Homepage auth = {auth}/>} />
+        <Route exact path="/" element={<Homepage auth={auth} />} />
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
-        <Route path="/login" element={<Login auth = {auth} setAuth = {setAuth} />} />
+        <Route
+          path="/login"
+          element={<Login auth={auth} setAuth={setAuth} />}
+        />
         <Route path="/register" element={<Register />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/mytasks" element={<TaskList />} />
       </Routes>
     </div>
   );

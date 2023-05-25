@@ -10,9 +10,11 @@ import firebaseAuth from "../firebase.config";
 
 // Here, we display our Navbar
 export default function Navbar(props) {
-  
-  useEffect(() => firebaseAuth.onAuthStateChanged(
-    () => props.setAuth(firebaseAuth.currentUser != null)));
+  useEffect(() =>
+    firebaseAuth.onAuthStateChanged(() =>
+      props.setAuth(firebaseAuth.currentUser != null)
+    )
+  );
 
   async function handleLogout() {
     await firebaseAuth.signOut();
@@ -47,17 +49,34 @@ export default function Navbar(props) {
             <li className="nav-item "></li>
           </ul>
         </div>
+
         <form className="container-fluid justify-content-start d-flex flex-row-reverse">
-            <NavLink className="btn btn-sm btn-outline-secondary" to="/register">
+          {!props.auth && (
+            <NavLink
+              className="btn btn-sm btn-outline-secondary"
+              to="/register"
+            >
               Register
             </NavLink>
-          {
-            !props.auth
-              ? <NavLink className="btn btn-outline-success me-2" to="/login">
-                    Login
-                </NavLink>
-              : <button className="btn btn-outline-success me-2" type = "button" onClick= {handleLogout}>Logout</button>
-          }
+          )}
+          {!props.auth ? (
+            <NavLink className="btn btn-outline-success me-2" to="/login">
+              Login
+            </NavLink>
+          ) : (
+            <>
+              <button
+                className="btn btn-outline-success me-2"
+                type="button"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+              <NavLink className="btn btn-outline-success me-2" to="/mytasks">
+                My Tasks
+              </NavLink>
+            </>
+          )}
         </form>
       </nav>
     </div>

@@ -136,3 +136,12 @@ label {
   height: inherit;
   width: inherit;
 }
+
+.ads {
+  display: flex;
+  justify-content: center;
+  background-image: url("../assets/cuteduck3.png");
+  color: white;
+  background-size: fill;
+  height: 100vh;
+}

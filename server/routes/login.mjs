@@ -16,7 +16,7 @@ router.post("/", async(req, res) => {
     console.log(user.password);
     // ensures there is no existing email
     const result = await db.collection("users")
-        .find( { email: user.username, password: user.password } )
+        .find( { email: user.email, password: user.password } )
         .toArray();
     if (result.length == 0) {
         console.log(result);

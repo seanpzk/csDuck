@@ -1,7 +1,6 @@
 import TaskList from "./TaskList";
-
+import Ads from "./Ads";
 export default function Homepage(props) {
-
   /* For testing purpose only--
     async function displayData() {
         console.log("Clicked");
@@ -29,12 +28,9 @@ export default function Homepage(props) {
 
   return (
     <>
-      <div>Some advertising stuff here</div>
-      {
-        props.auth
-        ? <TaskList />
-        : <></>
-      }
+      <Ads></Ads>
+
+      {/* {props.auth ? <TaskList /> : <></>} */}
     </>
   );
 }
