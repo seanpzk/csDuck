@@ -11,7 +11,50 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const firebaseUID = req.query.UID;
   let collection = await db.collection("task");
-  let results = await collection.find({firebaseUID: firebaseUID}).sort({deadline: -1}).toArray();
+  // let results = await collection.find({firebaseUID: firebaseUID}).sort({deadline: -1}).toArray();
+  let results = await collection.aggregate([
+    {$match: {firebaseUID: firebaseUID}},
+    {$addFields: {
+     sortPriority: {
+      $switch: {
+       branches: [
+        {
+         'case': {
+          $eq: [
+           '$priority',
+           'High'
+          ]
+         },
+         then: 3
+        },
+        {
+         'case': {
+          $eq: [
+           '$priority',
+           'Medium'
+          ]
+         },
+         then: 2
+        },
+        {
+         'case': {
+          $eq: [
+           '$priority',
+           'Low'
+          ]
+         },
+         then: 1
+        }
+       ],
+       'default': 0
+      }
+     }
+    }
+   }, {
+    $sort: {
+     sortPriority: 1
+    }
+   }]).toArray();
   res.send(results).status(200);
 });
 

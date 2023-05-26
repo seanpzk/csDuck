@@ -2,34 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 // import "../styles.css";
 import "bootstrap/dist/css/bootstrap.css";
-import firebaseAuth from "../firebase.config";
-import RedirectLogin from "./helperFunctions/redirectLogin";
+import firebaseAuth from "../../firebase.config";
+import RedirectLogin from "../helperFunctions/redirectLogin";
 
 const Task = (props) => (
-  // <tr>
-  //   <td>{props.task.name}</td>
-  //   <td>{props.task.deadline}</td>
-  //   <td>{props.task.priority}</td>
-  //   <td>
-  //     <Link className="btn btn-link" to={`/edit/${props.task._id}`}>
-  //       Edit
-  //     </Link>{" "}
-  //     |
-  //     <button
-  //       className="btn btn-link"
-  //       onClick={() => {
-  //         props.deleteTask(props.task._id);
-  //       }}
-  //     >
-  //       Delete
-  //     </button>
-  //   </td>
-  // </tr>
-  <div>
-    <ul id="List">
-      <li style={{ width: "95%" }}>{props.task.name}</li>
-    </ul>
-  </div>
+  <tr>
+    <td>{props.task.name}</td>
+    <td>{props.task.deadline}</td>
+    <td>{props.task.priority}</td>
+    <td>
+      <Link className="btn btn-link" to={`/edit/${props.task._id}`}>
+        Edit
+      </Link>{" "}
+      |
+      <button
+        className="btn btn-link"
+        onClick={() => {
+          props.deleteTask(props.task._id);
+        }}
+      >
+        Delete
+      </button>
+    </td>
+  </tr>
 );
 
 export default function TaskList() {
@@ -96,10 +91,10 @@ export default function TaskList() {
   // This following section will display the table with the tasks of individuals.
   return (
     <>
-      <div className="list taskListPage ">
+      <div>
         <h3 style={{ textAlign: "center", margin: 15 }}>📚Task List</h3>{" "}
-        <div>
-          {/* <table className="table table-bordered table-striped align-middle">
+        <div className="tasklist-container">
+          <table className="table table-bordered table-striped align-middle">
             <thead>
               <tr>
                 <th>Name</th>
@@ -109,23 +104,19 @@ export default function TaskList() {
               </tr>
             </thead>
             <tbody className="table-group-divider">{taskList()}</tbody>
-          </table> */}
-          <div className="lines"></div>
-          {taskList()}
+          </table>
           <NavLink
             className="nav-link btn"
             style={{
               color: "white",
               backgroundColor: "green",
               padding: "0.5%",
-              fontSize: "80%",
-              width: "10%",
-              marginLeft: 75,
-              marginTop: 10,
+              fontSize: "100%",
+              width: "8%",
             }}
             to="/create"
           >
-            ✏️ Add new task
+            + Add new task
           </NavLink>
         </div>
       </div>

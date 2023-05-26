@@ -1,4 +1,3 @@
-import TaskList from "./TaskList2";
 import Ads from "./Ads";
 export default function Homepage(props) {
   /* For testing purpose only--

@@ -151,6 +151,7 @@ label {
   /* width: auto; */
   margin: 0 auto;
   padding: 0;
+  
 }
 
 .list {
@@ -161,17 +162,25 @@ label {
   /* width: 100vh; */
   height: 100vh;
   font-family: courier, monospace;
-  font-weight: bold;
+  font-weight:bold ;
   border: 1px solid #dedede;
+  
 }
 
 .list li {
   list-style: none;
   border-bottom: 2px dotted #ccc;
-  text-indent: 25px;
+  /* text-indent: 25px; */
+  text-indent: 2rem;
+  font-size: 1rem;
   height: auto;
   padding: 10px;
   text-transform: capitalize;
+  column-count: 4;
+  column-gap: normal;
+  position: relative;
+  right: 1.5rem;
+  overflow-wrap: break-word;
 }
 /* .list li:hover {
   background-color: #f0f0f0;
@@ -186,5 +195,7 @@ label {
   width: 8px;
   float: left;
   height: 100vh;
-  margin-left: 40px;
+  /* margin-left: 40px; */
+  margin-left: 3rem;
+  
 }
