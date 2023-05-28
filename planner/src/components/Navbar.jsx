@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // We import bootstrap to make our application look better.
 import "bootstrap/dist/css/bootstrap.css";
@@ -11,6 +12,7 @@ import iconDuck from "../assets/iconicDuck.png";
 
 // Here, we display our Navbar
 export default function Navbar(props) {
+  const navigate = useNavigate();
   useEffect(() =>
     firebaseAuth.onAuthStateChanged(() =>
       props.setAuth(firebaseAuth.currentUser != null)
@@ -19,6 +21,7 @@ export default function Navbar(props) {
 
   async function handleLogout() {
     await firebaseAuth.signOut();
+    navigate("/login");
   }
 
   return (
