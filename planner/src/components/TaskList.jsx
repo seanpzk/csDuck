@@ -32,13 +32,13 @@ const Task = (props) => (
       {props.task.deadline}
       <colgroup />
       {props.task.priority}
-      <colgroup />{" "}
-      <button className="btn btn-link" style={{ paddingLeft: 0 }}>
+      <colgroup />
+      <button className="btn btn-link resizing" style={{ paddingLeft: 0 }}>
         <Link to={`/edit/${props.task._id}`}>Edit</Link>
       </button>
       |
       <button
-        className="btn btn-link"
+        className="btn btn-link resizing"
         onClick={() => {
           props.deleteTask(props.task._id);
         }}
@@ -131,7 +131,6 @@ export default function TaskList() {
           <div className="lines"></div>
           {
             <ul id="List">
-              {" "}
               <li
                 style={{
                   borderBottom: " double darkgrey",
@@ -155,7 +154,7 @@ export default function TaskList() {
               padding: "0.5%",
               fontSize: "80%",
               fontWeight: "normal",
-              width: "10%",
+              width: "18%",
               marginLeft: 75,
               marginTop: 10,
             }}

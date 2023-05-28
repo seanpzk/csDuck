@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { NavLink } from "react-router-dom";
 
 import firebaseAuth from "../firebase.config";
+import iconDuck from "../assets/iconicDuck.png";
 
 // Here, we display our Navbar
 export default function Navbar(props) {
@@ -20,17 +21,25 @@ export default function Navbar(props) {
     await firebaseAuth.signOut();
   }
 
-
   return (
     <div>
       <nav
-        className="navbar navbar-expand"
-        style={{ backgroundColor: "#d0cfff" }}
+        className="navbar navbar-expand "
+        style={{
+          backgroundColor: "#ffffff",
+          boxShadow: "0px 5px 10px lightgrey",
+        }}
       >
-        <NavLink className="navbar-brand" to="/">
+        <NavLink className="navbar navbar-brand" to="/">
           <img
-            style={{ width: 25 + "%" }}
-            src="https://d3cy9zhslanhfa.cloudfront.net/media/3800C044-6298-4575-A05D5C6B7623EE37/4B45D0EC-3482-4759-82DA37D8EA07D229/webimage-8A27671A-8A53-45DC-89D7BF8537F15A0D.png"
+            style={{
+              height: "5rem",
+              borderRadius: "10px",
+              marginLeft: "30%",
+              boxShadow: "0px 5px 10px lightgrey",
+            }}
+            // src="https://d3cy9zhslanhfa.cloudfront.net/media/3800C044-6298-4575-A05D5C6B7623EE37/4B45D0EC-3482-4759-82DA37D8EA07D229/webimage-8A27671A-8A53-45DC-89D7BF8537F15A0D.png"
+            src={iconDuck}
           ></img>
         </NavLink>
         <button

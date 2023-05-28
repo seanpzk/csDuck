@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
     }
    }, {
     $sort: {
-     sortPriority: 1
+     sortPriority: -1
     }
    }]).toArray();
   res.send(results).status(200);
