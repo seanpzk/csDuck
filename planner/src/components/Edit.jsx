@@ -16,12 +16,13 @@ export default function Edit() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const id = params.id.toString();
       const response = await fetch(
-        `http://localhost:5050/task/${params.id.toString()}`, {
-        method: "GET",
-        header: {
-          "Authorization": "Bearer " + idToken,
+        `http://localhost:5050/task/${params.id.toString()}`,
+        {
+          method: "GET",
+          header: {
+            Authorization: "Bearer " + idToken,
+          },
         }
-      }
       );
 
       if (!response.ok) {
@@ -67,11 +68,11 @@ export default function Edit() {
       body: JSON.stringify(editedPerson),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + idToken
+        Authorization: "Bearer " + idToken,
       },
     });
 
-    navigate("/");
+    navigate("/mytasks");
   }
 
   // This following section will display the form that takes input from the user to update the data.
