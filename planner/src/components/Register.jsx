@@ -8,6 +8,7 @@ import firebaseAuth from "../firebase.config";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [newUserCreated, updateUser] = useState(null);
 
   const [creationForm, setForm] = useState({
     email: "",
