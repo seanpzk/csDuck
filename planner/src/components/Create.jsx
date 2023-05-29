@@ -8,7 +8,7 @@ export default function Create() {
     name: "",
     deadline: "",
     priority: "",
-    firebaseUID: ""
+    firebaseUID: "",
   });
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ export default function Create() {
     });
 
     setTask({ name: "", deadline: "", priority: "", firebaseUID: "" });
-    navigate("/");
+    navigate("/mytasks");
   }
 
   // This following section will display the form that takes the input from the user.

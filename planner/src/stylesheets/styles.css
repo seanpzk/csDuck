@@ -137,6 +137,8 @@ label {
   width: inherit;
 }
 
+/*
+firebase code
 .verificationTag {
   height: 5rem;
   background-color: #c06572;
@@ -147,4 +149,88 @@ label {
 
 .verificationTag:hover {
   border-width: 0.6rem;
+}
+*/
+.ads {
+  display: flex;
+  justify-content: center;
+  background-image: url("../assets/cuteduck3.png");
+  color: white;
+  background-size: fill;
+  height: 100vh;
+}
+
+.taskListPage {
+  background-color: #f5f5f5;
+  width: auto;
+  margin: 0 auto;
+  padding: 2;
+  height: 100vh;
+  /* box-shadow: 0px 10px 15px lightblue, inset 0px 10px 5px lightblue; */
+  
+}
+
+.list {
+  color: #555;
+  font-size: 22px;
+  padding: 0 !important;
+  /* width: 500px; */
+  /* width: 100vh; */
+  height: 100vh;
+  font-family: courier, monospace;
+  font-weight:bold ;
+  border: 1px solid #dedede;
+  
+  
+}
+
+.list li {
+  list-style: none;
+  border-bottom: 2px dotted #ccc;
+  
+  /* text-indent: 25px; */
+  text-indent: 2rem;
+  /* font-size: 1rem; */
+  height: auto;
+  padding: 10px;
+  text-transform: capitalize;
+  column-count: 4;
+  column-gap:normal;
+  position: relative;
+  right: 1.5rem;
+  /* overflow-wrap:break-word; */
+  word-break: break-all;
+  font-size: 1vw; 
+  font-size: calc(3px + 0.7vw); 
+}
+/* .list li:hover {
+  background-color: #f0f0f0;
+  -webkit-transition: all 0.2s;
+  -moz-transition:    all 0.2s;
+  -ms-transition:     all 0.2s;
+  -o-transition:      all 0.2s;
+} */
+.lines {
+  border-left: 1px solid #ffaa9f;
+  border-right: 1px solid #ffaa9f;
+  width: 8px;
+  float: left;
+  height: 90vh;
+  /* margin-left: 40px; */
+  margin-left: 3rem;
+  
+}
+
+.previewPicture {
+  position: relative;
+  left: 40%;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+filter: 
+}
+
+.resizing {
+  font-size: calc(3px + 0.7vw); 
 }

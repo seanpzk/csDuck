@@ -7,22 +7,36 @@ import firebaseAuth from "../firebase.config";
 // I think we need to use SSL/TLS to securely send data from client to server
 
 export default function Register() {
+  const navigate = useNavigate();
 
+  const [creationForm, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
-    const navigate = useNavigate();
-    const [newUserCreated, updateUser] = useState(null);
+  // value passed here is an object
+  const updateForm = (value) => {
+    return setForm((prev) => {
+      return { ...prev, ...value };
+    });
+  };
 
-    const [creationForm, setForm] = useState( {
-        email: "",
-        password: "",
-    } );
-
-    // value passed here is an object
-    const updateForm = (value) => {
-        return setForm((prev) => {
-            return { ...prev, ...value };
-        });
-    }
+  const handleEmailPwCreation = () =>
+    createUserWithEmailAndPassword(
+      firebaseAuth,
+      creationForm.email,
+      creationForm.password
+    )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        console.log("registered with email and password");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
 
     async function handleEmailPwCreation() {
       await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
@@ -90,6 +104,30 @@ export default function Register() {
         event.target.reset();
         // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
     }
+  /*
+  async function handleSubmit(event) {
+    event.preventDefault();
+    handleEmailPwCreation();
+    const newUser = creationForm;
+
+    await fetch("http://localhost:5050/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+    console.log("user creation request sent");
+    setForm({ email: "", password: "" });
+    // resets the form once submitted
+    event.target.reset();
+    // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
+    navigate("/login");
+  }
+  */
   return (
     <>
     <div>Please verify email before proceeding</div>
@@ -123,5 +161,4 @@ export default function Register() {
       </div>
     </>
   );
-
 }
