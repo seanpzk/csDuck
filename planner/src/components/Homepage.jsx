@@ -13,7 +13,7 @@ export default function Homepage(props) {
           <button className="verificationTag" onClick = {event => sendEmailVerification(user).catch(error => console.log(error))}>Click here to verify your email</button>
         )
       }
-      return <h1>User email verified</h1>;
+      return <></>;
     }
 
   return (
