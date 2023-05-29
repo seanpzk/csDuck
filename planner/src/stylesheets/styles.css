@@ -137,6 +137,20 @@ label {
   width: inherit;
 }
 
+/*
+firebase code
+.verificationTag {
+  height: 5rem;
+  background-color: #c06572;
+  border-radius: 1rem;
+  border: 0.3rem black dotted;
+  transition: border-width 0.5s linear;
+}
+
+.verificationTag:hover {
+  border-width: 0.6rem;
+}
+*/
 .ads {
   display: flex;
   justify-content: center;

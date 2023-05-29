@@ -9,8 +9,8 @@ router.post("/", async(req, res) => {
 
     // create mongo document to store form data, sha512 to store data
     const newUser = {
-        email: req.body.email,
-        password: sha512(req.body.password)
+        username: req.body.username,
+        phoneNumber: req.body.phoneNumber
     }
 
     const result = await db.collection("users")

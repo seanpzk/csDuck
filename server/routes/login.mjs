@@ -13,16 +13,13 @@ router.post("/", async(req, res) => {
         email: req.body.email,
         password: sha512(req.body.password)
     }
-    console.log(user.password);
     // ensures there is no existing email
     const result = await db.collection("users")
         .find( { email: user.email, password: user.password } )
         .toArray();
     if (result.length == 0) {
-        console.log(result);
-        res.status(404).send( {text: "Login failed"} );
+        res.status(401).send( {text: "Login failed"} );
     } else {
-        console.log(result);
         res.status(200).send( {text: "login success" });
     }
 })
