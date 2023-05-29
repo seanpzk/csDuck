@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
+import { backendURL } from "./helperFunctions/serverUrl";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -31,7 +32,7 @@ export default function Create() {
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task }; // why do we need the ... here?
 
-    await fetch("http://localhost:5050/task", {
+    await fetch(`${backendURL}/task`, {
       method: "POST", // send data to the server
       headers: {
         "Content-Type": "application/json", // indicates that the request body is in json format

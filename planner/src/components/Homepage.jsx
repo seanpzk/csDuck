@@ -1,39 +1,30 @@
 import TaskList from "./TaskList";
+import firebaseAuth from "../firebase.config";
+import { sendEmailVerification } from "firebase/auth";
+import { NavLink } from "react-router-dom";
 
 export default function Homepage(props) {
 
-  /* For testing purpose only--
-    async function displayData() {
-        console.log("Clicked");
-        const idToken = await firebaseAuth.currentUser?.getIdToken();
-        await fetch("http://localhost:5050/displayData", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + idToken,
-            },
-            body: JSON.stringify({message: "Hello there"}),
-        }).then((response) => {
-            if (response.ok) {
-                const rep = response.json().then(msg => console.log(msg.message));
-                return rep;
-            } else {
-              throw new Error("An error occured during login, Please try again!");
-            }
-          }).catch((error) => {
-            window.alert(error);
-            return;
-        });
+    function displayEmailValid() {
+      const user = firebaseAuth.currentUser;
+      if (user && !user.emailVerified) {
+        return (
+          <button className="verificationTag" onClick = {event => sendEmailVerification(user).catch(error => console.log(error))}>Click here to verify your email</button>
+        )
+      }
+      return <h1>user</h1>;
     }
-    */
 
   return (
     <>
       <div>Some advertising stuff here</div>
       {
         props.auth
-        ? <TaskList />
-        : <></>
+          ? <TaskList />
+          : <></>
+      }
+      {
+        displayEmailValid()
       }
     </>
   );

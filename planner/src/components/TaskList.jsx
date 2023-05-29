@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
 import RedirectLogin from "./helperFunctions/redirectLogin";
+import { backendURL } from "./helperFunctions/serverUrl";
 
 const Task = (props) => (
   <tr>
@@ -35,9 +36,10 @@ export default function TaskList() {
   useEffect(() => {
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
+      console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      const response = await fetch(`http://localhost:5050/task?UID=${UID}`, {
+      const response = await fetch(`${backendURL}/task?UID=${UID}`, {
         method: "GET",
         headers: {
           "Authorization": "Bearer " + idToken,
@@ -64,7 +66,7 @@ export default function TaskList() {
   async function deleteTask(id) {
     // Send whenever we make a request to backend
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-    await fetch(`http://localhost:5050/task/${id}`, {
+    await fetch(`${backendURL}/task/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": "Bearer " + idToken,

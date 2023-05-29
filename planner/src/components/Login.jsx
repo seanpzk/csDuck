@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router";
 import "../stylesheets/styles.css";
-import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithRedirect, signInWithEmailAndPassword } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
+import { backendURL } from "./helperFunctions/serverUrl";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 export default function Login(props) {
@@ -37,7 +38,7 @@ export default function Login(props) {
 
     // Handles login using Facebook <--> Not usable for now!!
     const loginWithFacebook = async () => {
-      const response = await signInWithPopup(firebaseAuth, facebookProvider)
+      const response = await signInWithRedirect(firebaseAuth, facebookProvider)
         .then(result => {
           const token = FacebookAuthProvider.credentialFromResult(result).accessToken;
           // const user = result.user;
@@ -72,7 +73,7 @@ export default function Login(props) {
 
         handleEmailPwLogin();
         const form = loginForm;
-        const res = await fetch("http://localhost:5050/login", {
+        const res = await fetch(`${backendURL}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -26,7 +26,7 @@
 import React, { useState } from "react";
 
 // We use Route in order to define the different routes of our application
-import { Link, Outlet, Route, Routes } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/Navbar";
@@ -37,6 +37,8 @@ import Homepage from "./components/Homepage";
 import Register from "./components/Register";
 import Reset from "./components/Reset";
 import NotFound from "./components/NotFound";
+import firebaseAuth from "./firebase.config";
+import RegInfo from "./components/RegInfo";
 
 const App = () => {
   // const [currentForm, setCurrentForm] = useState("login");
@@ -44,8 +46,16 @@ const App = () => {
   // const toggleForm = (formName) => {
   //   setCurrentForm(formName);
   // };
-  const [auth, setAuth] = useState(false);
+  firebaseAuth.onAuthStateChanged(user => {
+    if (user) {
+      console.log("User is logged in");
+    } else {
+      console.log("User is logged out");
+    }
+  });
 
+  const [auth, setAuth] = useState(false);
+  
   return (
     <div>
       <Navbar auth = {auth} setAuth = {setAuth}/>
@@ -54,7 +64,8 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/login" element={<Login auth = {auth} setAuth = {setAuth} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register/*" element={<Register />} />
+        <Route path="/reginfo" element={<RegInfo />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
