@@ -21,6 +21,7 @@ export default function Register() {
     });
   };
 
+  /*
   const handleEmailPwCreation = () =>
     createUserWithEmailAndPassword(
       firebaseAuth,
@@ -37,6 +38,7 @@ export default function Register() {
         const errorMessage = error.message;
         console.log(errorMessage);
       });
+*/
 
     async function handleEmailPwCreation() {
       await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
