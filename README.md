@@ -9,7 +9,6 @@ Orbital project
 ```
 npm install vite@latest
 npm install bootstrap@5.2.3
-<!-- npm install firebase -->
 ```
 <!--
 ## To install in server
