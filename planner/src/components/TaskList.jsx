@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 // import "../styles.css";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
-import RedirectLogin from "./helperFunctions/redirectLogin";
+import RedirectLogin from "./helperFunctions/RedirectLogin";
 
 const Task = (props) => (
   // <tr>
