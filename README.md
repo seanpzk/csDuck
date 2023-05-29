@@ -2,6 +2,8 @@
 
 Orbital project
 
+## Before you run the programs, ensure you have nodejs and npm installed
+
 ## To install in planner
 
 ```
