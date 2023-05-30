@@ -140,7 +140,7 @@ export default function Register() {
   */
   return (
     <>
-      <div>Please verify email before proceeding</div>
+      {/* <div>Please verify email before proceeding</div> */}
       <div className="register">
         <form
           className="register-style-form"

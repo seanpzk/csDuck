@@ -74,6 +74,7 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     deadline: req.body.deadline,
     priority: req.body.priority,
+    description: req.body.description,
     firebaseUID: req.body.firebaseUID
   };
   let collection = await db.collection("task");
@@ -88,7 +89,8 @@ router.patch("/:id", async (req, res) => {
     $set: {
       name: req.body.name,
       deadline: req.body.deadline,
-      priority: req.body.priority
+      priority: req.body.priority,
+      description: req.body.description
     }
   };
 

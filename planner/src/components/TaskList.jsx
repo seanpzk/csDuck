@@ -1,34 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-// import "../styles.css";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
+import ShowTaskInfo from "./ShowTaskInfo";
 
 const Task = (props) => (
-  // <tr>
-  //   <td>{props.task.name}</td>
-  //   <td>{props.task.deadline}</td>
-  //   <td>{props.task.priority}</td>
-  //   <td>
-  //     <Link className="btn btn-link" to={`/edit/${props.task._id}`}>
-  //       Edit
-  //     </Link>{" "}
-  //     |
-  //     <button
-  //       className="btn btn-link"
-  //       onClick={() => {
-  //         props.deleteTask(props.task._id);
-  //       }}
-  //     >
-  //       Delete
-  //     </button>
-  //   </td>
-  // </tr>
   <div>
     <li>
-      {props.task.name}
+      {/* {props.task.name} */}
+      <ShowTaskInfo task={props.task}></ShowTaskInfo>
       <colgroup />
       {props.task.deadline}
       <colgroup />
@@ -115,6 +97,8 @@ export default function TaskList() {
   // This following section will display the table with the tasks of individuals.
   return (
     <>
+      {/* {console.log(tasks)} */}
+
       <div className="list taskListPage ">
         <h3 style={{ textAlign: "center", margin: 15 }}>📚Task List</h3>{" "}
         <div>

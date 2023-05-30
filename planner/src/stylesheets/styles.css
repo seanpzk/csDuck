@@ -212,7 +212,7 @@ firebase code
   right: 1.5rem;
   /* overflow-wrap:break-word; */
   word-break: break-all;
-  font-size: 1vw; 
+  /* font-size: 1vw;  */
   font-size: calc(3px + 0.7vw); 
 }
 /* .list li:hover {
@@ -233,7 +233,7 @@ firebase code
   
 }
 
-.previewPicture {
+/* .previewPicture {
   position: relative;
   left: 40%;
   border-radius: 10px;
@@ -241,7 +241,7 @@ firebase code
   border-radius: 4px;
   padding: 5px;
 filter: 
-}
+} */
 
 .resizing {
   font-size: calc(3px + 0.7vw); 

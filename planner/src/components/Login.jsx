@@ -190,6 +190,7 @@ export default function Login(props) {
                   border: "0.5px solid",
                   // filter: "drop-shadow(0px 10px 10px lightgrey)",
                   borderRadius: "10px",
+                  marginTop: "10px",
                 }}
               >
                 Log in
@@ -230,7 +231,7 @@ export default function Login(props) {
       ) : (
         <>
           <h1>You are logged in</h1>
-          <NavLink style={{ color: "white" }} to="/">
+          <NavLink style={{ color: "black" }} to="/">
             Go to task list
           </NavLink>
         </>
