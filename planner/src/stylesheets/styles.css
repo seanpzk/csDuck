@@ -5,7 +5,7 @@
   text-align: center;
 }
 .login, .register {
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,7 +13,7 @@
     gap: 20px;
     min-height: 100vh;
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-    background-image: linear-gradient(79deg, #664bef,#3ea2ff,#32ef8b);
+    background-color: white ;
   } 
 label {
   text-align: left;
@@ -32,6 +32,15 @@ label {
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
+  }
+
+  hr {
+    border: 1;
+    clear:both;
+    display:block;
+    width: 100%;               
+    background-color:grey;
+    height: 1px;
   }
 
 .link-btn {
@@ -123,18 +132,21 @@ label {
 }
 
 .other-login-container > button {
-  height: 5rem;
   width: 5rem;
+  height: 3.5rem;
+  width: 3.5rem;
   padding: 0;
 }
 
 .other-login-container > h2 {
   font-size: 1.1rem;
+  margin: 20px;
 }
 
 .other-login-container > button > img {
   height: inherit;
   width: inherit;
+  background-color: white;
 }
 
 /*

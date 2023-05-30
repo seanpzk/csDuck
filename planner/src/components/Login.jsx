@@ -86,25 +86,25 @@ export default function Login(props) {
     handleEmailPwLogin();
     const form = loginForm;
     const res = await fetch(`${backendURL}/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
     })
-    .then((response) => {
-      if (response.ok) {
-        // props.setAuth(true);
-        return response.json();
-      } else {
-        throw new Error("An error occured during login, Please try again!");
-      }
-    })
-    .catch((error) => {
+      .then((response) => {
+        if (response.ok) {
+          // props.setAuth(true);
+          return response.json();
+        } else {
+          throw new Error("An error occured during login, Please try again!");
+        }
+      })
+      .catch((error) => {
         window.alert(error);
         // props.setAuth(false);
         return;
-    })
+      });
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
@@ -150,46 +150,82 @@ export default function Login(props) {
     <div className="login">
       {!props.auth ? (
         <>
-          <form className="login-style-form" onSubmit={handleSubmit}>
-            <label htmlFor="email">Email:</label>
-            <input
-              type="text"
-              name="email"
-              id="email"
-              value={loginForm.email}
-              placeholder="Your email"
-              onChange={(event) => updateForm({ email: event.target.value })}
-            />
-            <label htmlFor="password">Password:</label>
-            <input
-              type="text"
-              name="password"
-              id="password"
-              value={loginForm.password}
-              placeholder="Your password"
-              onChange={(event) => updateForm({ password: event.target.value })}
-            />
-            <button type="submit" className="btn btn-light">
-              Log in
-            </button>
-            <br />
-          </form>
-          <div className="other-login-container">
-            <h2>Log in using other alternatives!</h2>
-            <button onClick={loginWithGoogle}>
-              <img src={googleLogo} />
-            </button>
-            <button onClick={loginWithFacebook}>
-              <img src={facebookLogo} />
-            </button>
-          </div>
-          <NavLink style={{ color: "white" }} to="/register">
-            Don't have an account? Register here.
-          </NavLink>
+          <div
+            className="other-login-container"
+            style={{
+              width: "30rem",
+              border: "1px solid grey",
+              // paddingLeft: "10vh",
+              paddingBlock: "3%",
+              borderRadius: "10px",
+              boxShadow: "0 0 10px lightgrey",
+            }}
+          >
+            <form className="login-style-form" onSubmit={handleSubmit}>
+              <label htmlFor="email">Email:</label>
+              <input
+                type="text"
+                name="email"
+                id="email"
+                value={loginForm.email}
+                placeholder="Your email"
+                onChange={(event) => updateForm({ email: event.target.value })}
+              />
+              <label htmlFor="password">Password:</label>
+              <input
+                type="text"
+                name="password"
+                id="password"
+                value={loginForm.password}
+                placeholder="Your password"
+                onChange={(event) =>
+                  updateForm({ password: event.target.value })
+                }
+              />
 
-          <NavLink style={{ color: "red" }} to="/reset">
-            Forgot your password? Reset your password here
-          </NavLink>
+              <button
+                type="submit"
+                className="btn btn-light"
+                style={{
+                  border: "0.5px solid",
+                  // filter: "drop-shadow(0px 10px 10px lightgrey)",
+                  borderRadius: "10px",
+                }}
+              >
+                Log in
+              </button>
+              <br />
+            </form>
+            <div
+              className="other-login-container"
+              style={{
+                width: "20rem",
+                margin: 0,
+                // border: "1px solid grey",
+                padding: 0,
+                borderRadius: "10px",
+              }}
+            >
+              <hr />
+
+              <h2>Log in using other alternatives</h2>
+              <button onClick={loginWithGoogle}>
+                <img src={googleLogo} />
+              </button>
+              <button onClick={loginWithFacebook}>
+                <img src={facebookLogo} />
+              </button>
+              <hr />
+            </div>
+
+            <NavLink style={{ color: "blue", margin: 5 }} to="/register">
+              Don't have an account? Register here.
+            </NavLink>
+
+            <NavLink style={{ color: "red", margin: 5 }} to="/reset">
+              Forgot your password? Reset here
+            </NavLink>
+          </div>
         </>
       ) : (
         <>
