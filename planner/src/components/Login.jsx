@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router";
 import "../stylesheets/styles.css";
 import {
   GoogleAuthProvider,
@@ -14,7 +13,6 @@ import facebookLogo from "../assets/facebook.png";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 export default function Login(props) {
-  const navigate = useNavigate();
 
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
@@ -35,7 +33,6 @@ export default function Login(props) {
         // props.setAuth(true);
         console.log(token);
         console.log(user);
-        // send registration incomplete info to mongoDB
       })
       .catch((error) => {
         console.log(error);
@@ -52,7 +49,6 @@ export default function Login(props) {
         // props.setAuth(true);
         console.log(token);
         console.log(user);
-        // send registration incomplete info to mongoDB
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -111,42 +107,7 @@ export default function Login(props) {
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
-    // navigate("/");
   }
-  /*
-    handleEmailPwLogin();
-    const form = loginForm;
-    const res = await fetch("http://localhost:5050/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // props.setAuth(true);
-          return response.json();
-        } else {
-          throw new Error("An error occured during login, Please try again!");
-        }
-      })
-      .catch((error) => {
-        window.alert(error);
-        // props.setAuth(false);
-        return;
-      });
-    setForm({ email: "", password: "" });
-    // resets the form once submitted
-    event.target.reset();
-  }
-
-  const updateForm = (value) => {
-    return setForm((prev) => {
-      return { ...prev, ...value };
-    });
-  };
-  */
 
   return (
     <div className="login">
