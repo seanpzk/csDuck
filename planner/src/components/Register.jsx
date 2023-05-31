@@ -1,7 +1,10 @@
 import { useState, React, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 
@@ -34,11 +37,11 @@ export default function Register() {
         });
     }
 
-    async function verifyEmail() {
-      await sendEmailVerification(newUserCreated)
-        .then(console.log("Email verification sent"))
-        .catch(error => console.log(error));
-    }
+  async function verifyEmail() {
+    await sendEmailVerification(newUserCreated)
+      .then(console.log("Email verification sent"))
+      .catch((error) => console.log(error));
+  }
 
     // Runs when a new user is registered
     useEffect(() => {
@@ -76,7 +79,20 @@ export default function Register() {
   return (
     <>
       <div className="register">
-        <form className="register-style-form" onSubmit={handleSubmit}>
+        <form
+          className="register-style-form"
+          onSubmit={handleSubmit}
+          style={{
+            width: "20rem",
+            border: "1px solid grey",
+            // paddingLeft: "10vh",
+            paddingBlock: "3%",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 0 10px lightgrey",
+          }}
+        >
           <label htmlFor="email">Email: </label>
           <input
             type="text"
@@ -95,7 +111,16 @@ export default function Register() {
             placeholder="Your password"
             onChange={(event) => updateForm({ password: event.target.value })}
           />
-          <button type="submit" className="btn btn-light">
+          <button
+            type="submit"
+            className="btn btn-light"
+            style={{
+              marginTop: "10px",
+              border: "0.5px solid",
+              // filter: "drop-shadow(0px 10px 10px lightgrey)",
+              borderRadius: "10px",
+            }}
+          >
             Create user
           </button>
         </form>
