@@ -57,6 +57,12 @@ export default function Login(props) {
         console.log(errorMessage);
       });
   };
+  
+  const updateForm = (value) => {
+    return setForm((prev) => {
+      return { ...prev, ...value };
+    });
+  };
 
   // Handles login using email and password
   const handleEmailPwLogin = () =>

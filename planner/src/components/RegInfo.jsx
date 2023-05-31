@@ -4,9 +4,11 @@ import "../stylesheets/RegInfo-stylesheet.css";
 import { backendURL } from "./helperFunctions/serverUrl";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function RegInfo() {
     
+    const navigate = useNavigate();
     const [form, setForm] = useState(
         {
             firebaseUID: "",
@@ -44,6 +46,7 @@ export default function RegInfo() {
         // resets the form once submitted
         event.target.reset();
         // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
+        navigate("/mytasks");
     }
 
     // For alert banner
