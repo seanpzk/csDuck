@@ -246,3 +246,33 @@ filter:
 .resizing {
   font-size: calc(3px + 0.7vw); 
 }
+
+
+.setting-header{
+  padding-top: 5vh;
+  padding-bottom: 2vh;
+  /* align-items: center; */
+
+}
+
+.setting-header-subgroups{
+  font-size: 3vh;
+  /* position:relative; */
+  display: flex;
+  align-items:end; /* vertical centering if flex-direction: row */
+
+
+  
+}
+
+.setting-body {
+  background-color: rgb(192, 187, 248);
+  width: 100%;
+  height: 100vh;
+  font-size:2vh ;
+  font-weight: bold;
+}
+
+.setting-body-row {
+  padding: 5px;
+}

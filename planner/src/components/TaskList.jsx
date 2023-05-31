@@ -83,6 +83,7 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList() {
+    console.log(tasks);
     return tasks.map((task) => {
       return (
         <Task
