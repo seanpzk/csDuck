@@ -23,4 +23,16 @@ router.post("/", async(req, res) => {
         res.status(200).send( {text: "login success" });
     }
 })
+
+router.get("/", async(req, res) => {
+    const uid = req.query.UID;
+    let collection = await db.collection("users");
+    let result = await collection.findOne({firebaseUID: uid});
+    if (result && result.registration) {
+        return res.send({message: "registered"});
+    } else {
+        return res.send({message: "not registered"});
+    }
+});
+
 export default router;

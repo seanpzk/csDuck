@@ -1,22 +1,16 @@
-.mukti-step-form {
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    height: 100vh;
-    background: rgba(194, 233, 251, 1);
-    background: radial-gradient(
-      circle,
-      rgba(161, 196, 253, 1) 10%,
-      rgba(194, 233, 251, 1) 100%
-    );
-  
+.multi-step-form {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 100vh;
 }
 
 .data-step {
-    width: 400px;
+  position: absolute;
+    width: 50vw;
     background-color: white;
     border: 1px solid #333;
     border-radius: 0.5rem;
@@ -26,6 +20,7 @@
     display: flex;
     flex-direction: column;
     animation: slideIn 1s ease-in-out forwards;
+    align-items: center;
 }
 
 .step-title {
@@ -35,19 +30,23 @@
     text-align: center;
 }
 
-button {
+.data-step button {
     background-color: #4caf50;
     border: none;
     color: white;
-    padding: 0.8rem;
+    padding: 0rem;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    align-self: stretch;
+    margin-top: 3rem;
+    height: 5vh;
   }
 
   .disappear {
-    opacity: 0;
+    animation: fadeOut 250ms ease-in-out forwards;
+    display: hidden;
   }
 
   @keyframes slideIn {
@@ -74,4 +73,37 @@ button {
         opacity: 0;
         transform: scale(0);
       }
+  }
+
+  .reg-nav {
+    margin-top: 3rem;
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .reg-nav button {
+    width: 50%;
+    margin:1px;
+  }
+
+  .error-alert {
+    height: auto;
+    padding: 1vh;
+    font-family: sans-serif;
+    font-weight: 400;
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
+    text-align: center;
+  }
+
+  .alert-close {
+    float: right;
+    background-color: transparent;
+  }
+
+  .hide {
+    display: none;
   }

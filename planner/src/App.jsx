@@ -1,32 +1,7 @@
-// import Message from "./Message";
-// import ListGroup from "./components/unused/ListGroup";
-// import Login from "./components/Login";
-// import Title from "./components/Title";
-// import NavbarOld from "./components/NavbarOld";
-
-// function App() {
-//   return (
-//     <div>
-//       {/* <NavbarOld></NavbarOld> */}
-//       <Navbar></Navbar>
-//       <Title></Title>
-//       <Message></Message>
-//       <ListGroup />
-//       <Login />
-//     </div>
-//   );
-// }
-
-//export default App;
-
-// ========================================================================
-
-// BELOW IS ADDED FOR MONGODB
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // We use Route in order to define the different routes of our application
-import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/Navbar";
@@ -40,16 +15,53 @@ import NotFound from "./components/NotFound";
 import firebaseAuth from "./firebase.config";
 import RegInfo from "./components/RegInfo";
 import TaskList from "./components/TaskList";
+import VerifyEmail from "./components/VerifyEmail";
+import { backendURL } from "./components/helperFunctions/serverUrl";
 
 const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  firebaseAuth.onAuthStateChanged(user => {
-    if (user) {
-      console.log("User is logged in");
-    } else {
-      console.log("User is logged out");
+  async function checkRegistered(User) {
+    const UID = User.uid;
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`${backendURL}/login?UID=${UID}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + idToken,
+        "Content-Type": "application/json",
+      },
+    }).catch(error => console.log(error));
+    const resObj = await response.json();
+    if (resObj.message === "not registered") {
+      return false;
     }
-  });
+    return true;
+  }
+
+  async function checkVerified() {
+    setUser(firebaseAuth.currentUser);
+    // not the best way... This looks for any path with /reginfo
+    if (user && !location.pathname.includes("/reginfo")) {
+      user.reload();
+      if (user.emailVerified) {
+        const registered = await checkRegistered(user);
+        if (!registered) {
+          console.log("Email verified and not registered");
+          navigate("/reginfo");
+        }
+      } else {
+        navigate("/verifyEmail");
+      }
+    }
+  }
+
+  // Forces user to input their registration details if they have yet to do so
+  useEffect(() => {
+    const interval = setInterval(checkVerified, 1000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const [auth, setAuth] = useState(false);
   
@@ -66,6 +78,7 @@ const App = () => {
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/mytasks" element={<TaskList />} />
+        <Route path="/verifyEmail" element={<VerifyEmail />} />
       </Routes>
     </div>
   );

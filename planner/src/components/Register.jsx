@@ -3,8 +3,7 @@ import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
-
-// I think we need to use SSL/TLS to securely send data from client to server
+import { backendURL } from "./helperFunctions/serverUrl";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -22,25 +21,6 @@ export default function Register() {
     });
   };
 
-  /*
-  const handleEmailPwCreation = () =>
-    createUserWithEmailAndPassword(
-      firebaseAuth,
-      creationForm.email,
-      creationForm.password
-    )
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        console.log("registered with email and password");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      });
-*/
-
     async function handleEmailPwCreation() {
       await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
         .then(async (userCredential) => {
@@ -49,7 +29,6 @@ export default function Register() {
           console.log("registered with email and password");
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorMessage);
         });
@@ -61,79 +40,41 @@ export default function Register() {
         .catch(error => console.log(error));
     }
 
-    function checkVerified() {
-      if (newUserCreated) {
-        newUserCreated.reload();
-        if (newUserCreated.emailVerified) {
-          console.log("Email verified");
-          navigate("/reginfo");
-        }
-      }
-    }
-
     // Runs when a new user is registered
     useEffect(() => {
       if (newUserCreated) {
         verifyEmail();
-      } else {
-        console.log("Please verify your email");
-      }
-    }, [newUserCreated]);
-
-    // Checks if a user has verified email
-    useEffect(() => {
-      const interval = setInterval(checkVerified, 1000);
-      return () => clearInterval(interval);
+      } 
     }, [newUserCreated]);
 
     async function handleSubmit(event) {
         event.preventDefault();
-        handleEmailPwCreation();
+        await handleEmailPwCreation();
         const newUser = creationForm;
+        const idToken = await firebaseAuth.currentUser?.getIdToken();
 
-        // await fetch("http://localhost:5050/register", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(newUser),
-        // })
-        // .catch((error) => {
-        //     window.alert(error);
-        //     return;
-        // })
-        setForm({ email: "", password: "" });
+        await fetch(`${backendURL}/register`, {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + idToken,  
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firebaseUID: firebaseAuth.currentUser.uid, 
+              email: creationForm.email
+            }),
+        })
+        .catch((error) => {
+            window.alert(error);
+            return;
+        })
         // resets the form once submitted
+        setForm({ email: "", password: "" });
         event.target.reset();
-        // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
     }
-  /*
-  async function handleSubmit(event) {
-    event.preventDefault();
-    handleEmailPwCreation();
-    const newUser = creationForm;
 
-    await fetch("http://localhost:5050/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    }).catch((error) => {
-      window.alert(error);
-      return;
-    });
-    console.log("user creation request sent");
-    setForm({ email: "", password: "" });
-    // resets the form once submitted
-    event.target.reset();
-    // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
-    navigate("/login");
-  }
-  */
   return (
     <>
-    <div>Please verify email before proceeding</div>
       <div className="register">
         <form className="register-style-form" onSubmit={handleSubmit}>
           <label htmlFor="email">Email: </label>
