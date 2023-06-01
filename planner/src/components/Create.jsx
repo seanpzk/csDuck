@@ -8,6 +8,7 @@ export default function Create() {
     name: "",
     deadline: "",
     priority: "",
+    description: "",
     firebaseUID: "",
   });
   const navigate = useNavigate();
@@ -43,7 +44,13 @@ export default function Create() {
       return;
     });
 
-    setTask({ name: "", deadline: "", priority: "", firebaseUID: "" });
+    setTask({
+      name: "",
+      deadline: "",
+      priority: "",
+      description: "",
+      firebaseUID: "",
+    });
     navigate("/mytasks");
   }
 
@@ -70,6 +77,16 @@ export default function Create() {
             id="deadline"
             value={task.deadline}
             onChange={(e) => updateTask({ deadline: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="Description"> Task description</label>
+          <input
+            type="text"
+            className="form-control"
+            id="description"
+            value={task.description}
+            onChange={(e) => updateTask({ description: e.target.value })}
           />
         </div>
         <label htmlFor="Priority">Priority</label>

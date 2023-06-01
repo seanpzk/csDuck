@@ -7,6 +7,7 @@ export default function Edit() {
     name: "",
     deadline: "",
     priority: "",
+    description: "",
   });
   const params = useParams();
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ export default function Edit() {
       name: form.name,
       deadline: form.deadline,
       priority: form.priority,
+      description: form.description,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
 
@@ -98,6 +100,16 @@ export default function Edit() {
             id="deadline"
             value={form.deadline}
             onChange={(e) => updateForm({ deadline: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Task description: </label>
+          <input
+            type="text"
+            className="form-control"
+            id="description"
+            value={form.description}
+            onChange={(e) => updateForm({ description: e.target.value })}
           />
         </div>
         <div className="form-group">

@@ -5,7 +5,7 @@ import Ads from "./Ads";
 import TaskListSS from "../assets/tasklistss.png";
 
 export default function Homepage(props) {
-
+  
   return (
     <>
       {/* <Ads></Ads> */}
@@ -36,7 +36,6 @@ export default function Homepage(props) {
           {/* </div> */}
         </div>
       </div>
-      {/* {props.auth ? <TaskList /> : <></>} */}
     </>
   );
 }
