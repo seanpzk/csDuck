@@ -1,16 +1,17 @@
 import express from "express";
 import db from "../db/conn.mjs";
-import sha512 from "js-sha512";
 
 const router = express.Router();
 
 // handles the Register post request made to this /register
 router.post("/", async(req, res) => {
 
-    // create mongo document to store form data, sha512 to store data
+    // Insert new user into mongoDB
+    const uid = req.body.UID;
     const newUser = {
-        username: req.body.username,
-        phoneNumber: req.body.phoneNumber
+        firebaseUID: req.body.firebaseUID,
+        email: req.body?.email,
+        registration: false
     }
 
     const result = await db.collection("users")
@@ -21,7 +22,18 @@ router.post("/", async(req, res) => {
         .catch(error => {
             res.status(500).json(error);
         })
+});
 
+router.patch("/", async(req, res) => {
+    const uid = req.body.firebaseUID;
+    console.log("new" + uid);
+    const result = await db.collection("users")
+        .updateOne({firebaseUID: uid},
+            {$set: { username: req.body.username, 
+                phoneNumber: req.body.phoneNumber,
+                registration: true }})
+                .then(doc => res.status(200).send({message: "success"}))
+                .catch(error => res.status(400).send({message: "fail"}));
 });
 
 export default router;
