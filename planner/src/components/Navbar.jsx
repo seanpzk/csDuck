@@ -88,6 +88,9 @@ export default function Navbar(props) {
               <NavLink className="btn btn-outline-success me-2" to="/mytasks">
                 My Tasks
               </NavLink>
+              <NavLink className="btn btn-outline-success me-2" to="/settings">
+                Settings
+              </NavLink>
             </>
           )}
         </form>
