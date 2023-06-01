@@ -6,10 +6,12 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  sendEmailVerification
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
+import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 export default function Login(props) {
@@ -23,10 +25,11 @@ export default function Login(props) {
     password: "",
   });
 
-  // Handles login using Google
+  // Handles login using Google. Automatically verifies email
   async function loginWithGoogle() {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
-      .then((result) => {
+      .then(async (result) => {
+        await CreateUserMongo();
         const token =
           GoogleAuthProvider.credentialFromResult(result).accessToken;
         const user = result.user;
@@ -39,16 +42,18 @@ export default function Login(props) {
       });
   };
 
-  // Handles login using Facebook <--> Not usable for now!!
+  // Handles login using Facebook. Does not automatically verify email
   async function loginWithFacebook() {
     const response = await signInWithPopup(firebaseAuth, facebookProvider)
-      .then((result) => {
+      .then(async (result) => {
+        await CreateUserMongo();
+        await sendEmailVerification(result.user)
+          .then(console.log("Email verification sent"))
+          .catch((error) => console.log(error));
         const token =
           FacebookAuthProvider.credentialFromResult(result).accessToken;
         // const user = result.user;
         // props.setAuth(true);
-        console.log(token);
-        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -57,7 +62,7 @@ export default function Login(props) {
         console.log(errorMessage);
       });
   };
-  
+
   const updateForm = (value) => {
     return setForm((prev) => {
       return { ...prev, ...value };

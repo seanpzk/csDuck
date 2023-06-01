@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
+import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -54,23 +55,7 @@ export default function Register() {
         event.preventDefault();
         await handleEmailPwCreation();
         const newUser = creationForm;
-        const idToken = await firebaseAuth.currentUser?.getIdToken();
-
-        await fetch(`${backendURL}/register`, {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + idToken,  
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              firebaseUID: firebaseAuth.currentUser.uid, 
-              email: creationForm.email
-            }),
-        })
-        .catch((error) => {
-            window.alert(error);
-            return;
-        })
+        await CreateUserMongo();
         // resets the form once submitted
         setForm({ email: "", password: "" });
         event.target.reset();
