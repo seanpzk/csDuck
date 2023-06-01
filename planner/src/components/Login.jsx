@@ -10,6 +10,7 @@ import {
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
+import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
 // I think we need to use SSL/TLS to securely send data from client to server
 export default function Login(props) {
@@ -26,7 +27,8 @@ export default function Login(props) {
   // Handles login using Google
   async function loginWithGoogle() {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
-      .then((result) => {
+      .then(async (result) => {
+        await CreateUserMongo();
         const token =
           GoogleAuthProvider.credentialFromResult(result).accessToken;
         const user = result.user;
@@ -42,7 +44,8 @@ export default function Login(props) {
   // Handles login using Facebook <--> Not usable for now!!
   async function loginWithFacebook() {
     const response = await signInWithPopup(firebaseAuth, facebookProvider)
-      .then((result) => {
+      .then(async (result) => {
+        await CreateUserMongo();
         const token =
           FacebookAuthProvider.credentialFromResult(result).accessToken;
         // const user = result.user;
@@ -57,7 +60,7 @@ export default function Login(props) {
         console.log(errorMessage);
       });
   };
-  
+
   const updateForm = (value) => {
     return setForm((prev) => {
       return { ...prev, ...value };
