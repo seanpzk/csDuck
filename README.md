@@ -9,6 +9,7 @@ Orbital project
 ```
 npm install vite@latest
 npm install react-bootstrap bootstrap@5.2.3
+npm install react-phone-input-2
 ```
 
 <!--
