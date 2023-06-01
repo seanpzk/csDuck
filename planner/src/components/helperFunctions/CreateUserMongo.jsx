@@ -5,7 +5,6 @@ export default async function CreateUserMongo() {
 
   const user = firebaseAuth?.currentUser;
   const idToken = await user.getIdToken();
-  console.log("JWT TOKEN: " + idToken);
   
   await fetch(`${backendURL}/register`, {
       method: "POST",

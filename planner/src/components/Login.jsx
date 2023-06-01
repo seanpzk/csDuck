@@ -6,6 +6,7 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  sendEmailVerification
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
@@ -24,7 +25,7 @@ export default function Login(props) {
     password: "",
   });
 
-  // Handles login using Google
+  // Handles login using Google. Automatically verifies email
   async function loginWithGoogle() {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
       .then(async (result) => {
@@ -41,17 +42,18 @@ export default function Login(props) {
       });
   };
 
-  // Handles login using Facebook <--> Not usable for now!!
+  // Handles login using Facebook. Does not automatically verify email
   async function loginWithFacebook() {
     const response = await signInWithPopup(firebaseAuth, facebookProvider)
       .then(async (result) => {
         await CreateUserMongo();
+        await sendEmailVerification(result.user)
+          .then(console.log("Email verification sent"))
+          .catch((error) => console.log(error));
         const token =
           FacebookAuthProvider.credentialFromResult(result).accessToken;
         // const user = result.user;
         // props.setAuth(true);
-        console.log(token);
-        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
