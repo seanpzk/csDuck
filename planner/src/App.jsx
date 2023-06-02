@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 // We use Route in order to define the different routes of our application
-import { Link, Outlet, Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/Navbar";
@@ -16,8 +23,8 @@ import firebaseAuth from "./firebase.config";
 import RegInfo from "./components/RegInfo";
 import TaskList from "./components/TaskList";
 
-import Setting from "./components/Setting";
-
+import SettingProfile from "./components/SettingProfile";
+import SettingSecurity from "./components/SettingSecurity";
 
 import VerifyEmail from "./components/VerifyEmail";
 import { backendURL } from "./components/helperFunctions/serverUrl";
@@ -36,7 +43,7 @@ const App = () => {
         Authorization: "Bearer " + idToken,
         "Content-Type": "application/json",
       },
-    }).catch(error => console.log(error));
+    }).catch((error) => console.log(error));
     const resObj = await response.json();
     if (resObj.message === "not registered") {
       return false;
@@ -58,7 +65,6 @@ const App = () => {
       } else {
         navigate("/verifyEmail");
       }
-
     }
   }
 
@@ -86,9 +92,9 @@ const App = () => {
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/mytasks" element={<TaskList />} />
-        <Route path="/settings" element={<Setting />} />
+        <Route path="/settings/profile" element={<SettingProfile />} />
+        <Route path="/settings/security" element={<SettingSecurity />}></Route>
         <Route path="/verifyEmail" element={<VerifyEmail />} />
-
       </Routes>
     </div>
   );
