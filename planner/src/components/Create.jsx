@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
+import DoBefore from "./DoBefore";
+import { verifyDAG } from "./helperFunctions/Toposort.jsx";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -10,7 +12,14 @@ export default function Create() {
     priority: "",
     description: "",
     firebaseUID: "",
+    doBefore: []
   });
+  // ============== ADDED CODE HERE =============
+  // array of objects
+  //  const [doBefore, setDoBefore] = useState(null);
+
+  // ============== ADDED CODE ENDS HERE =============
+
   const navigate = useNavigate();
 
   // These methods will update the state properties.
@@ -29,20 +38,26 @@ export default function Create() {
   // This function will handle the submission.
   async function onSubmit(e) {
     e.preventDefault();
-
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task }; // why do we need the ... here?
-
-    await fetch(`${backendURL}/task`, {
-      method: "POST", // send data to the server
-      headers: {
-        "Content-Type": "application/json", // indicates that the request body is in json format
-      },
-      body: JSON.stringify(newTask), // convert based on HTTP request format (Google the formats)
-    }).catch((error) => {
-      window.alert(error);
-      return;
-    });
+    console.log("new task");
+    console.log(newTask);
+    // ============= <ADDED CODE HERE =============
+    if (await verifyDAG(newTask)) {
+      console.log("DAG Present");
+      await fetch(`${backendURL}/task`, {
+        method: "POST", // send data to the server
+        headers: {
+          "Content-Type": "application/json", // indicates that the request body is in json format
+        },
+        body: JSON.stringify(newTask), // convert based on HTTP request format (Google the formats)
+      }).catch((error) => {
+        window.alert(error);
+        return;
+      });
+    } else {
+      console.log("NO DAG present");
+    }
 
     setTask({
       name: "",
@@ -50,6 +65,7 @@ export default function Create() {
       priority: "",
       description: "",
       firebaseUID: "",
+      doBefore: []
     });
     navigate("/mytasks");
   }
@@ -134,6 +150,9 @@ export default function Create() {
             </label>
           </div>
         </div>
+        {/* ======= Edit DONE HERE ==========*/}
+        <DoBefore task = {task} updateTask = {updateTask} />
+        {/* ==========EDIT ENDS HERE ===============*/}
         <div className="form-group">
           <input type="submit" value="Add task" className="btn btn-primary" />
         </div>

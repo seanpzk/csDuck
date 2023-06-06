@@ -6,6 +6,8 @@ import registration from "./routes/register.mjs";
 import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
 import decodeIDToken from "./authenticateToken.mjs";
+import toposort from "./routes/toposort.mjs";
+import dropdown from "./routes/dropdown.mjs";
 
 
 const PORT = process.env.PORT || 5050;
@@ -20,6 +22,8 @@ app.use("/register", registration); // handle incoming request along this path
 app.use("/login", login);
 app.use("/reset", reset);
 app.use("/task", tasks);
+app.use("/toposort", toposort);
+app.use("/dropdown", dropdown);
 
 
 // start the Express server

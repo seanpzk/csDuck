@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
+import DoBefore from "./DoBefore";
+import { verifyDAG } from "./helperFunctions/Toposort.jsx";
 
 export default function Edit() {
   const [form, setForm] = useState({
@@ -8,6 +10,7 @@ export default function Edit() {
     deadline: "",
     priority: "",
     description: "",
+    doBefore: []
   });
   const params = useParams();
   const navigate = useNavigate();
@@ -57,22 +60,28 @@ export default function Edit() {
   async function onSubmit(e) {
     e.preventDefault();
     const editedPerson = {
+      _id: params.id,
       name: form.name,
       deadline: form.deadline,
       priority: form.priority,
       description: form.description,
+      doBefore: form.doBefore,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-
-    // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/task/${params.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(editedPerson),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + idToken,
-      },
-    });
+    if (await verifyDAG(editedPerson)) {
+      console.log("DAG PRESENT");
+      // This will send a post request to update the data in the database.
+      await fetch(`http://localhost:5050/task/${params.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(editedPerson),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + idToken,
+        },
+      });
+    } else {
+      console.log("CYCLE FOUND");
+    }
 
     navigate("/mytasks");
   }
@@ -157,6 +166,9 @@ export default function Edit() {
           </div>
         </div>
         <br />
+        {/* ======= Edit DONE HERE ==========*/}
+        <DoBefore task = {form} updateTask = {updateForm} />
+        {/* ==========EDIT ENDS HERE ===============*/}
 
         <div className="form-group">
           <input

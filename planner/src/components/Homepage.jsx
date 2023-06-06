@@ -3,6 +3,7 @@ import { sendEmailVerification } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import Ads from "./Ads";
 import TaskListSS from "../assets/tasklistss.png";
+import Toposort from "./helperFunctions/Toposort.jsx";
 
 export default function Homepage(props) {
   
@@ -36,6 +37,7 @@ export default function Homepage(props) {
           {/* </div> */}
         </div>
       </div>
+      <Toposort />
     </>
   );
 }
