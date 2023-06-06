@@ -98,6 +98,7 @@ router.patch("/:id", async (req, res) => {
   let result = await collection.updateOne(query, updates);
 
   res.send(result).status(200);
+  // console.log(result);
 });
 
 // This section will help you delete a record

@@ -5,6 +5,7 @@ import tasks from "./routes/task.mjs"
 import registration from "./routes/register.mjs";
 import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
+import setting from "./routes/setting.mjs"
 import decodeIDToken from "./authenticateToken.mjs";
 
 
@@ -20,6 +21,7 @@ app.use("/register", registration); // handle incoming request along this path
 app.use("/login", login);
 app.use("/reset", reset);
 app.use("/task", tasks);
+app.use("/setting", setting);
 
 
 // start the Express server

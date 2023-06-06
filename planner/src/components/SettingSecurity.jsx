@@ -102,8 +102,6 @@ export default function SettingSecurity() {
   );
 
   function userInfoList() {
-    console.log(info);
-
     return <UserInfo userInfo={info} />;
   }
 

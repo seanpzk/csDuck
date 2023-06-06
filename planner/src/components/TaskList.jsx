@@ -40,7 +40,7 @@ export default function TaskList() {
   useEffect(() => {
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-      console.log(firebaseAuth.currentUser);
+      // console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
       const response = await fetch(`${backendURL}/task?UID=${UID}`, {
@@ -83,7 +83,6 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList() {
-    console.log(tasks);
     return tasks.map((task) => {
       return (
         <Task
