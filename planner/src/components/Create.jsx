@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import DoBefore from "./DoBefore";
-import { verifyDAG } from "./helperFunctions/Toposort.jsx";
+import verifyDAG from "./helperFunctions/Toposort.jsx";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -40,8 +40,6 @@ export default function Create() {
     e.preventDefault();
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task }; // why do we need the ... here?
-    console.log("new task");
-    console.log(newTask);
     // ============= <ADDED CODE HERE =============
     if (await verifyDAG(newTask)) {
       console.log("DAG Present");

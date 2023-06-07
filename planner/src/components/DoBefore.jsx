@@ -45,7 +45,6 @@ export default function DoBefore(props) {
                 isMulti
                 options={children} 
                 onChange={e => {
-                    console.log("E");
                     props.updateTask({doBefore: e.map(pair => pair.value)})
                 }} />
             </div>

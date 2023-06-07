@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import DoBefore from "./DoBefore";
-import { verifyDAG } from "./helperFunctions/Toposort.jsx";
+import verifyDAG from "./helperFunctions/Toposort.jsx";
 
 export default function Edit() {
   const [form, setForm] = useState({

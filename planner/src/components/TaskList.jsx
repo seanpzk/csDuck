@@ -5,6 +5,7 @@ import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
+import { Toposort } from "./helperFunctions/Toposort.jsx"
 
 const Task = (props) => (
   <div>
@@ -35,12 +36,12 @@ const Task = (props) => (
 export default function TaskList() {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
+  const [topoTask, setTopo] = useState([]);
 
   // This method fetches the tasks from the database.
   useEffect(() => {
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-      console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
       const response = await fetch(`${backendURL}/task?UID=${UID}`, {
@@ -83,7 +84,6 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList() {
-    console.log(tasks);
     return tasks.map((task) => {
       return (
         <Task
@@ -93,6 +93,12 @@ export default function TaskList() {
         />
       );
     });
+  }
+
+  async function displayTopo(e) {
+    const topoList = await Toposort();
+    setTopo(topoList);
+    console.log(topoTask);
   }
 
   // This following section will display the table with the tasks of individuals.
@@ -150,6 +156,7 @@ export default function TaskList() {
             ✏️ Add new task
           </NavLink>
         </div>
+        <button type = "button" onClick={displayTopo}>Auto sort</button>
       </div>
     </>
   );
