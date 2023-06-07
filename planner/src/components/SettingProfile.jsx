@@ -7,14 +7,18 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-export default function Setting() {
+export default function SettingProfile() {
   const [info, setInfo] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const getUserInfo = () => {
       const auth = getAuth();
       const user = auth.currentUser;
-      setInfo({ email: user.email, name: "temp placeholder" });
+      setInfo({
+        email: user.email,
+        name: "temp placeholder",
+        phoneNumber: "9123 4567",
+      });
     };
     getUserInfo();
     return;
@@ -23,16 +27,26 @@ export default function Setting() {
   const UserInfo = (props) => (
     <>
       <div className="setting-header">
-        <Container>
-          <Row>
-            <Col style={{ fontSize: "5vh", fontWeight: "bold" }}>
-              ⚙️ Settings
-            </Col>
-            <Col className="setting-header-subgroups">Profile</Col>
-            <Col className="setting-header-subgroups">Security</Col>
-            <Col className="setting-header-subgroups">Appearance</Col>
-          </Row>
-        </Container>
+        <Row>
+          <Col style={{ fontSize: "5vh", fontWeight: "bold" }}>⚙️ Settings</Col>
+          <Col className="setting-header-subgroups">
+            <Link
+              className="setting-header-text"
+              style={{ backgroundColor: "lightgrey", color: "black" }}
+              to="/settings/profile"
+            >
+              Profile
+            </Link>
+          </Col>
+          <Col className="setting-header-subgroups">
+            <Link className="setting-header-text " to="/settings/security">
+              Security
+            </Link>
+          </Col>
+          <Col className="setting-header-subgroups">
+            <div className="setting-header-text">Appearance</div>
+          </Col>
+        </Row>
       </div>
       <div className="setting-body">
         <Container>
