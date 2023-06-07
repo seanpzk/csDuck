@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
 
 router.patch("/", async(req, res) => {
     console.log(req.body.username)
-
     const firebaseUID = req.body.uid;  
     // const query = {$and: [{firebaseUID:firebaseUID}, {registration: true}]};
     const query = {firebaseUID:firebaseUID};
@@ -21,6 +20,7 @@ router.patch("/", async(req, res) => {
         $set: {
             username: req.body.username,
             email: req.body.email,
+            bio: req.body.bio,
         }
     };
     let collection = await db.collection("users");
