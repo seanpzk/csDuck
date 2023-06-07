@@ -8,13 +8,15 @@ import ShowTaskInfo from "./ShowTaskInfo";
 
 const Task = (props) => (
   <div>
-    <li>
+    <li draggable="true">
       {/* {props.task.name} */}
       <ShowTaskInfo task={props.task}></ShowTaskInfo>
       <colgroup />
-      {props.task.deadline}
+      {/* {props.task.deadline}&nbsp; */}
+      {props.task.deadline || "nil"}
       <colgroup />
-      {props.task.priority}
+      {/* {props.task.priority}&nbsp; */}
+      {props.task.deadline || "nil"}
       <colgroup />
       <button className="btn btn-link resizing" style={{ paddingLeft: 0 }}>
         <Link to={`/edit/${props.task._id}`}>Edit</Link>
