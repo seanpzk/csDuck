@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
+import "../stylesheets/styles.css";
 
 const Task = (props) => (
   <div>
-    <li draggable="true">
+    <li
+      className="list-items"
+      draggable
+      onDragStart={(e) => (props.dragItem.current = props.index)}
+      onDragEnter={(e) => (props.dragOverItem.current = props.index)}
+      onDragEnd={props.handleSort}
+      onDragOver={(e) => e.preventDefault()}
+    >
       {/* {props.task.name} */}
       <ShowTaskInfo task={props.task}></ShowTaskInfo>
       <colgroup />
@@ -16,14 +24,18 @@ const Task = (props) => (
       {props.task.deadline || "nil"}
       <colgroup />
       {/* {props.task.priority}&nbsp; */}
-      {props.task.deadline || "nil"}
+      {props.task.priority || "nil"}
       <colgroup />
-      <button className="btn btn-link resizing" style={{ paddingLeft: 0 }}>
+      <button
+        className="btn btn-link"
+        style={{ paddingLeft: 0, fontSize: "calc(3px + 0.7vw)" }}
+      >
         <Link to={`/edit/${props.task._id}`}>Edit</Link>
       </button>
       |
       <button
-        className="btn btn-link resizing"
+        className="btn btn-link "
+        style={{ fontSize: "calc(3px + 0.7vw)" }}
         onClick={() => {
           props.deleteTask(props.task._id);
         }}
@@ -85,16 +97,43 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList() {
-    return tasks.map((task) => {
+    return tasks.map((task, index) => {
       return (
         <Task
           task={task}
           deleteTask={() => deleteTask(task._id)}
           key={task._id}
+          index={index}
+          dragItem={dragItem}
+          dragOverItem={dragOverItem}
+          handleSort={handleSort}
         />
       );
     });
   }
+
+  // Reference for dragItem and dragOverItem
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
+
+  //handle drag sorting
+  const handleSort = () => {
+    // duplicate items
+    let _tasks = [...tasks];
+
+    //remove and save the dragged item content
+    const draggedItemContent = _tasks.splice(dragItem.current, 1)[0];
+
+    //switch the position
+    _tasks.splice(dragOverItem.current, 0, draggedItemContent);
+
+    //reset the position ref
+    dragItem.current = null;
+    dragOverItem.current = null;
+
+    //update the actual array
+    setTasks(_tasks);
+  };
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -147,6 +186,7 @@ export default function TaskList() {
               marginTop: 10,
             }}
             to="/create"
+            draggable="false"
           >
             ✏️ Add new task
           </NavLink>
