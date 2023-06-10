@@ -48,6 +48,15 @@ const Task = (props) => (
 
 export default function TaskList() {
   const [tasks, setTasks] = useState([]);
+  const [taskInfo, setTaskInfo] = useState({
+    name: "",
+    deadline: "",
+    priority: "",
+    description: "",
+    customPriority: "",
+    useCustomPriority: "",
+  });
+
   const navigate = useNavigate();
 
   // This method fetches the tasks from the database.
@@ -135,6 +144,76 @@ export default function TaskList() {
     setTasks(_tasks);
   };
 
+  async function getTaskData(task) {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`http://localhost:5050/task/${task._id}`, {
+      method: "GET",
+      header: {
+        Authorization: "Bearer " + idToken,
+      },
+    });
+
+    if (!response.ok) {
+      const message = `An error has occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const record = await response.json();
+    if (!record) {
+      window.alert(`Task with MongoDb_id ${id} not found`);
+      navigate("/");
+      return;
+    }
+    console.log(record);
+    setTaskInfo(record);
+  }
+
+  //Save the modified task order after performing dnd
+  function saveTaskOrder(e) {
+    e.preventDefault();
+    return tasks.map((task, index) => {
+      getTaskData(task);
+      updateTaskInfo({ customPriority: index, useCustomPriority: true });
+      console.log("taskInfo is now:");
+      console.log(taskInfo);
+      submitTaskInfo(e, task);
+    });
+  }
+
+  // These methods will update the state properties.
+  function updateTaskInfo(value) {
+    console.log("updating");
+    return setTaskInfo((prev) => {
+      return { ...prev, ...value };
+    });
+  }
+
+  async function submitTaskInfo(e, task) {
+    e.preventDefault();
+    const editedTask = {
+      name: taskInfo.name,
+      deadline: taskInfo.deadline,
+      priority: taskInfo.priority,
+      description: taskInfo.description,
+      customPriority: taskInfo.customPriority,
+      useCustomPriority: taskInfo.useCustomPriority,
+    };
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/task/${task._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(editedTask),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+
+    navigate("/mytasks");
+  }
+
   // This following section will display the table with the tasks of individuals.
   return (
     <>
@@ -190,6 +269,13 @@ export default function TaskList() {
           >
             ✏️ Add new task
           </NavLink>
+          <button
+            className="btn btn-primary "
+            style={{ fontSize: "80%" }}
+            onClick={saveTaskOrder}
+          >
+            Save current task order
+          </button>
         </div>
       </div>
     </>

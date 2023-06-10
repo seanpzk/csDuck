@@ -62,8 +62,9 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let query = {_id: new ObjectId(req.params.id)};
+  console.log(query);
   let result = await collection.findOne(query);
-
+console.log(result)
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
@@ -90,7 +91,9 @@ router.patch("/:id", async (req, res) => {
       name: req.body.name,
       deadline: req.body.deadline,
       priority: req.body.priority,
-      description: req.body.description
+      description: req.body.description,
+      customPriority: req.body.customPriority,
+      useCustomPriority: req.body.useCustomPriority
     }
   };
 
