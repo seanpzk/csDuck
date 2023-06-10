@@ -6,6 +6,7 @@ import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
+import { useNonInitialEffect } from "./useNonInitialEffect";
 
 const Task = (props) => (
   <div>
@@ -144,7 +145,7 @@ export default function TaskList() {
     setTasks(_tasks);
   };
 
-  async function getTaskData(task) {
+  async function getTaskData(task, index) {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     const response = await fetch(`http://localhost:5050/task/${task._id}`, {
       method: "GET",
@@ -165,44 +166,44 @@ export default function TaskList() {
       navigate("/");
       return;
     }
+    console.log("STEP 1: SHOWING RECORD");
     console.log(record);
-    setTaskInfo(record);
+    setTaskInfo({ ...record, customPriority: index, useCustomPriority: true });
   }
+
+  useNonInitialEffect(() => {
+    console.log("taskInfo has been updated to :");
+    console.log(taskInfo);
+    console.log("STEP 2: SUBMIT TASK INFO TO SERVER");
+    submitTaskInfo(taskInfo);
+  }, [taskInfo]);
+
+  // useNonInitialEffect(() => {}, [taskInfo]);
 
   //Save the modified task order after performing dnd
-  function saveTaskOrder(e) {
-    e.preventDefault();
-    return tasks.map((task, index) => {
-      getTaskData(task);
-      updateTaskInfo({ customPriority: index, useCustomPriority: true });
-      console.log("taskInfo is now:");
-      console.log(taskInfo);
-      submitTaskInfo(e, task);
-    });
+  async function saveTaskOrder() {
+    let index = 0;
+    for await (const t of tasks) {
+      await getTaskData(t, index);
+      index++;
+    }
   }
 
-  // These methods will update the state properties.
-  function updateTaskInfo(value) {
-    console.log("updating");
-    return setTaskInfo((prev) => {
-      return { ...prev, ...value };
-    });
-  }
-
-  async function submitTaskInfo(e, task) {
-    e.preventDefault();
+  async function submitTaskInfo(taskInfo) {
+    console.log("Starting to submit");
+    let _taskInfo = structuredClone(taskInfo);
     const editedTask = {
-      name: taskInfo.name,
-      deadline: taskInfo.deadline,
-      priority: taskInfo.priority,
-      description: taskInfo.description,
-      customPriority: taskInfo.customPriority,
-      useCustomPriority: taskInfo.useCustomPriority,
+      name: _taskInfo.name,
+      deadline: _taskInfo.deadline,
+      priority: _taskInfo.priority,
+      description: _taskInfo.description,
+      customPriority: _taskInfo.customPriority,
+      useCustomPriority: _taskInfo.useCustomPriority,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/task/${task._id}`, {
+    await fetch(`http://localhost:5050/task/${_taskInfo._id}`, {
       method: "PATCH",
       body: JSON.stringify(editedTask),
       headers: {
@@ -212,6 +213,7 @@ export default function TaskList() {
     });
 
     navigate("/mytasks");
+    console.log("Finish submit");
   }
 
   // This following section will display the table with the tasks of individuals.
