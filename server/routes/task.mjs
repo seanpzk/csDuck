@@ -15,20 +15,11 @@ router.get("/", async (req, res) => {
   const useCustomPriority = req.query.UCP;
 
   let results = null;
-  console.log("useCustomPriority is now: ")
-  console.log(useCustomPriority)
 
-if (useCustomPriority) {
-  console.log(typeof(useCustomPriority))
-} else {
-  console.log("its false")
-}
 
   if (useCustomPriority === "true") {
-    console.log("custom version");
     results = await collection.find({firebaseUID: firebaseUID}).sort({customPriority: 1}).toArray();
   } else {
-    console.log("default version")
     results = await collection.aggregate([
     {$match: {firebaseUID: firebaseUID}},
     {$addFields: {
@@ -73,7 +64,6 @@ if (useCustomPriority) {
     }
    }]).toArray();}
 
-   console.log("sending results");
   res.send(results).status(200);
 });
 

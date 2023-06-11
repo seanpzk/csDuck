@@ -62,10 +62,8 @@ export default function TaskList() {
 
   // This method tells whether customPrio is enabled or disabled.
   useEffect(() => {
-    console.log("ran useeffect");
     async function getCustomPrio() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-      // console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
       const response = await fetch(`${backendURL}/tasklist?UID=${UID}`, {
@@ -95,11 +93,8 @@ export default function TaskList() {
   useNonInitialEffect(() => {
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-      // console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      console.log("am sending GET request, custom prio is now: ");
-      console.log(customPrio);
       const response = await fetch(
         `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
         {
@@ -237,15 +232,10 @@ export default function TaskList() {
       navigate("/");
       return;
     }
-    console.log("STEP 1: SHOWING RECORD");
-    console.log(record);
     setTaskInfo({ ...record, customPriority: index });
   }
 
   useNonInitialEffect(() => {
-    console.log("taskInfo has been updated to :");
-    console.log(taskInfo);
-    console.log("STEP 2: SUBMIT TASK INFO TO SERVER");
     submitTaskInfo(taskInfo);
   }, [taskInfo]);
 
@@ -259,7 +249,6 @@ export default function TaskList() {
       index++;
     }
     await customPriorityTrue();
-    console.log("customPriorityTrue ran");
   }
 
   async function useDefaultSort() {
@@ -268,7 +257,6 @@ export default function TaskList() {
   }
 
   async function submitTaskInfo(taskInfo) {
-    console.log("Starting to submit");
     let _taskInfo = structuredClone(taskInfo);
     const editedTask = {
       name: _taskInfo.name,
@@ -290,7 +278,6 @@ export default function TaskList() {
     });
 
     navigate("/mytasks");
-    console.log("Finish submit");
   }
 
   // This following section will display the table with the tasks of individuals.
