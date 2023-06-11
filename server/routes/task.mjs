@@ -12,7 +12,24 @@ router.get("/", async (req, res) => {
   const firebaseUID = req.query.UID;
   let collection = await db.collection("task");
   // let results = await collection.find({firebaseUID: firebaseUID}).sort({deadline: -1}).toArray();
-  let results = await collection.aggregate([
+  const useCustomPriority = req.query.UCP;
+
+  let results = null;
+  console.log("useCustomPriority is now: ")
+  console.log(useCustomPriority)
+
+if (useCustomPriority) {
+  console.log(typeof(useCustomPriority))
+} else {
+  console.log("its false")
+}
+
+  if (useCustomPriority === "true") {
+    console.log("custom version");
+    results = await collection.find({firebaseUID: firebaseUID}).sort({customPriority: 1}).toArray();
+  } else {
+    console.log("default version")
+    results = await collection.aggregate([
     {$match: {firebaseUID: firebaseUID}},
     {$addFields: {
      sortPriority: {
@@ -54,7 +71,9 @@ router.get("/", async (req, res) => {
     $sort: {
      sortPriority: -1
     }
-   }]).toArray();
+   }]).toArray();}
+
+   console.log("sending results");
   res.send(results).status(200);
 });
 
@@ -62,9 +81,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let query = {_id: new ObjectId(req.params.id)};
-  console.log(query);
   let result = await collection.findOne(query);
-console.log(result)
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
@@ -93,7 +110,6 @@ router.patch("/:id", async (req, res) => {
       priority: req.body.priority,
       description: req.body.description,
       customPriority: req.body.customPriority,
-      useCustomPriority: req.body.useCustomPriority
     }
   };
 
@@ -101,7 +117,6 @@ router.patch("/:id", async (req, res) => {
   let result = await collection.updateOne(query, updates);
 
   res.send(result).status(200);
-  // console.log(result);
 });
 
 // This section will help you delete a record

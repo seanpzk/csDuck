@@ -48,6 +48,7 @@ const Task = (props) => (
 );
 
 export default function TaskList() {
+  const [customPrio, setCustomPrio] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskInfo, setTaskInfo] = useState({
     name: "",
@@ -55,25 +56,60 @@ export default function TaskList() {
     priority: "",
     description: "",
     customPriority: "",
-    useCustomPriority: "",
   });
 
   const navigate = useNavigate();
 
-  // This method fetches the tasks from the database.
+  // This method tells whether customPrio is enabled or disabled.
   useEffect(() => {
-    async function getTasks() {
+    console.log("ran useeffect");
+    async function getCustomPrio() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       // console.log(firebaseAuth.currentUser);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      const response = await fetch(`${backendURL}/task?UID=${UID}`, {
+      const response = await fetch(`${backendURL}/tasklist?UID=${UID}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + idToken,
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const result = await response.json();
+      setCustomPrio(result[0].useCustomPriority);
+    }
+
+    getCustomPrio();
+
+    return;
+  }, [tasks.length]);
+
+  // This method fetches the tasks from the database.
+  useNonInitialEffect(() => {
+    async function getTasks() {
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
+      // console.log(firebaseAuth.currentUser);
+      const UID = firebaseAuth.currentUser.uid;
+      // creates a default GET request -> included UID
+      console.log("am sending GET request, custom prio is now: ");
+      console.log(customPrio);
+      const response = await fetch(
+        `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + idToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -88,8 +124,43 @@ export default function TaskList() {
     getTasks();
 
     return;
-  }, [tasks.length]);
+  }, [customPrio]);
 
+  async function customPriorityFalse() {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const ucp = {
+      useCustomPriority: false,
+      UID: firebaseAuth.currentUser.uid,
+    };
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/tasklist`, {
+      method: "PATCH",
+      body: JSON.stringify(ucp),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+  }
+
+  async function customPriorityTrue() {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const ucp = {
+      useCustomPriority: true,
+      UID: firebaseAuth.currentUser.uid,
+    };
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/tasklist`, {
+      method: "PATCH",
+      body: JSON.stringify(ucp),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+  }
   // This method will delete a task
   async function deleteTask(id) {
     // Send whenever we make a request to backend
@@ -168,7 +239,7 @@ export default function TaskList() {
     }
     console.log("STEP 1: SHOWING RECORD");
     console.log(record);
-    setTaskInfo({ ...record, customPriority: index, useCustomPriority: true });
+    setTaskInfo({ ...record, customPriority: index });
   }
 
   useNonInitialEffect(() => {
@@ -187,6 +258,13 @@ export default function TaskList() {
       await getTaskData(t, index);
       index++;
     }
+    await customPriorityTrue();
+    console.log("customPriorityTrue ran");
+  }
+
+  async function useDefaultSort() {
+    await customPriorityFalse();
+    setCustomPrio(false);
   }
 
   async function submitTaskInfo(taskInfo) {
@@ -198,7 +276,6 @@ export default function TaskList() {
       priority: _taskInfo.priority,
       description: _taskInfo.description,
       customPriority: _taskInfo.customPriority,
-      useCustomPriority: _taskInfo.useCustomPriority,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
 
@@ -271,12 +348,21 @@ export default function TaskList() {
           >
             ✏️ Add new task
           </NavLink>
+
           <button
             className="btn btn-primary "
             style={{ fontSize: "80%" }}
             onClick={saveTaskOrder}
           >
             Save current task order
+          </button>
+
+          <button
+            className="btn btn-primary "
+            style={{ fontSize: "80%" }}
+            onClick={useDefaultSort}
+          >
+            Reset to default sort order
           </button>
         </div>
       </div>

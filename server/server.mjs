@@ -7,6 +7,7 @@ import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
 import setting from "./routes/setting.mjs"
 import decodeIDToken from "./authenticateToken.mjs";
+import tasklist from "./routes/tasklist.mjs"
 
 
 const PORT = process.env.PORT || 5050;
@@ -22,6 +23,7 @@ app.use("/login", login);
 app.use("/reset", reset);
 app.use("/task", tasks);
 app.use("/setting", setting);
+app.use("/tasklist", tasklist);
 
 
 // start the Express server
