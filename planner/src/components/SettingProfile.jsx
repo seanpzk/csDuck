@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
-import { getAuth } from "firebase/auth";
+import { useParams } from "react-router-dom";
+import { backendURL } from "./helperFunctions/serverUrl";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,21 +11,68 @@ import Col from "react-bootstrap/Col";
 export default function SettingProfile() {
   const [info, setInfo] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
-    const getUserInfo = () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      setInfo({
-        email: user.email,
-        name: "temp placeholder",
-        phoneNumber: "9123 4567",
+    async function getInfo() {
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
+      const UID = firebaseAuth.currentUser.uid;
+      // creates a default GET request -> included UID
+      const response = await fetch(`${backendURL}/setting`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + idToken,
+          "Content-Type": "application/json",
+        },
       });
-    };
-    getUserInfo();
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const info = await response.json();
+      setInfo(info[0]);
+      console.log("just finished setting info");
+      console.log(info);
+    }
+    getInfo();
+
     return;
   }, []);
 
-  const UserInfo = (props) => (
+  function updateInfo(value) {
+    return setInfo((prev) => {
+      return { ...prev, ...value };
+    });
+  }
+
+  // This will update user data.
+  async function onSubmit(e) {
+    e.preventDefault();
+    const editedInfo = {
+      email: info.email,
+      username: info.username,
+      uid: info.firebaseUID,
+      bio: info.bio,
+    };
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+
+    // This will send a post request to update the data in the database.
+
+    await fetch(`${backendURL}/setting`, {
+      method: "PATCH",
+      body: JSON.stringify(editedInfo),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+
+    navigate("/settings/profile");
+  }
+
+  return (
     <>
       <div className="setting-header">
         <Row>
@@ -50,81 +98,84 @@ export default function SettingProfile() {
       </div>
       <div className="setting-body">
         <Container>
-          <Row className="setting-body-row">
-            <Col xs lg="2">
-              Username:
-            </Col>
-            <Col xs lg="3">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                // value={loginForm.email}
-                placeholder={props.userInfo.name}
-              />
-            </Col>
-            <Col
-              xs
-              lg="2"
-              className="btn btn-outline"
-              style={{
-                backgroundColor: "lightgreen",
-              }}
-            >
-              Update
-            </Col>
-          </Row>
-          <Row className="setting-body-row flex-nowrap">
-            <Col xs lg="2">
-              Email:
-            </Col>
-            <Col xs lg="3">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                // value={loginForm.email}
-                placeholder={props.userInfo.email}
-              />
-            </Col>
-            <Col
-              xs
-              lg="2"
-              className="btn btn-outline"
-              style={{ backgroundColor: "pink" }}
-            >
-              Verify email
-            </Col>
-          </Row>
+          <form onSubmit={onSubmit}>
+            <Row className="setting-body-row">
+              <Col xs lg="2">
+                <label htmlFor="username"> Username:</label>
+              </Col>
 
-          <Row className="setting-body-row">
-            <Col lg="2">Bio:</Col>
-            <Col>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                // value={loginForm.email}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "start",
-                  height: "250%",
-                }}
-                placeholder="Your bio here"
-              />
-            </Col>
-          </Row>
+              <Col xs lg="3">
+                <input
+                  type="text"
+                  id="username"
+                  value={info.username}
+                  placeholder="Your username here"
+                  onChange={(e) => updateInfo({ username: e.target.value })}
+                />
+              </Col>
+              <Col xs lg="2">
+                <input
+                  type="submit"
+                  style={{ width: "100%", color: "black", border: "none" }}
+                  value="Update"
+                ></input>
+              </Col>
+            </Row>
+            <Row className="setting-body-row flex-nowrap">
+              <Col xs lg="2">
+                Email:
+              </Col>
+              <Col xs lg="3">
+                <input
+                  disabled
+                  type="text"
+                  name="email"
+                  id="email"
+                  placeholder={info.email}
+                />
+              </Col>
+              <Col xs lg="2">
+                <input
+                  type="submit"
+                  style={{
+                    width: "100%",
+                    color: "black",
+                    backgroundColor: "pink",
+                    border: "none",
+                  }}
+                  value="Verify email"
+                ></input>
+              </Col>
+            </Row>
+
+            <Row className="setting-body-row">
+              <Col lg="2">Bio:</Col>
+              <Col>
+                <input
+                  type="text"
+                  id="bio"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "start",
+                    height: "150%",
+                  }}
+                  placeholder="Your bio here"
+                  value={info.bio}
+                  onChange={(e) => updateInfo({ bio: e.target.value })}
+                />
+                <Col className="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <input
+                    type="submit"
+                    style={{ width: "10%", color: "black", border: "none" }}
+                    value="Save"
+                  ></input>
+                </Col>
+              </Col>
+            </Row>
+          </form>
         </Container>
       </div>
     </>
   );
-
-  function userInfoList() {
-    console.log(info);
-
-    return <UserInfo userInfo={info} />;
-  }
-
-  return userInfoList();
 }

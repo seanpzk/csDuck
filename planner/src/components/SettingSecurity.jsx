@@ -6,9 +6,11 @@ import { getAuth } from "firebase/auth";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { backendURL } from "./helperFunctions/serverUrl";
 
 export default function SettingSecurity() {
   const [info, setInfo] = useState([]);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
     const getUserInfo = () => {
@@ -23,6 +25,30 @@ export default function SettingSecurity() {
     getUserInfo();
     return;
   }, []);
+
+  async function checkRegistered(User) {
+    const UID = User.uid;
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`${backendURL}/login?UID=${UID}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + idToken,
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => console.log(error));
+    const resObj = await response.json();
+    if (resObj.message === "not registered") {
+      return false;
+    }
+    return true;
+  }
+
+  async function checkVerified() {
+    setUser(firebaseAuth.currentUser);
+    const registered = await checkRegistered(user);
+    console.log(registered);
+    return registered;
+  }
 
   const UserInfo = (props) => (
     <>
@@ -56,9 +82,11 @@ export default function SettingSecurity() {
             </Col>
             <Col xs lg="3">
               <input
+                disabled
                 type="text"
                 name="email"
                 id="email"
+                style={{ backgroundColor: "white" }}
                 // value={loginForm.email}
                 placeholder={props.userInfo.email}
               />
@@ -67,11 +95,13 @@ export default function SettingSecurity() {
               xs
               lg="2"
               className="btn btn-outline"
-              style={{
-                backgroundColor: "lightgreen",
-              }}
+              style={
+                checkVerified()
+                  ? { backgroundColor: "lightgreen" }
+                  : { backgroundColor: "lightpink" }
+              }
             >
-              Send verification email
+              {checkVerified() ? "Email Verified" : "Send verification email"}
             </Col>
           </Row>
           <Row className="setting-body-row flex-nowrap">
@@ -102,8 +132,6 @@ export default function SettingSecurity() {
   );
 
   function userInfoList() {
-    console.log(info);
-
     return <UserInfo userInfo={info} />;
   }
 

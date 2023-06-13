@@ -5,9 +5,11 @@ import tasks from "./routes/task.mjs"
 import registration from "./routes/register.mjs";
 import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
+import setting from "./routes/setting.mjs"
 import decodeIDToken from "./authenticateToken.mjs";
 import toposort from "./routes/toposort.mjs";
 import dropdown from "./routes/dropdown.mjs";
+import tasklist from "./routes/tasklist.mjs"
 
 
 const PORT = process.env.PORT || 5050;
@@ -24,6 +26,8 @@ app.use("/reset", reset);
 app.use("/task", tasks);
 app.use("/toposort", toposort);
 app.use("/dropdown", dropdown);
+app.use("/setting", setting);
+app.use("/tasklist", tasklist);
 
 
 // start the Express server

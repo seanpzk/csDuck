@@ -40,6 +40,7 @@ export default function Create() {
     e.preventDefault();
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task }; // why do we need the ... here?
+    console.log(newTask);
     // ============= <ADDED CODE HERE =============
     if (await verifyDAG(newTask)) {
       console.log("DAG Present");
@@ -148,9 +149,7 @@ export default function Create() {
             </label>
           </div>
         </div>
-        {/* ======= Edit DONE HERE ==========*/}
-        <DoBefore task = {task} updateTask = {updateTask} />
-        {/* ==========EDIT ENDS HERE ===============*/}
+        <DoBefore updateTask = {updateTask} />
         <div className="form-group">
           <input type="submit" value="Add task" className="btn btn-primary" />
         </div>

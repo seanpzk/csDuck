@@ -2,25 +2,57 @@ import { Heap } from 'heap-js';
 import { backendURL } from './serverUrl';
 import firebaseAuth from "../../firebase.config";
 
+/** 
+ * Acts as a Node in a Graph.
+ *  Graph used to carry out Topological sorting 
+ * */
 class node {
-    // doBefores it an array of incoming edges
+    
+    /**
+     * The node Constructor.
+     * Only required params specified here.
+     * 
+     * @param {Object} task - The task object from MongoDB.
+     * @param {Object[]} task.doBefore - Array of tasks to be done before current.
+     */
     constructor(task) {
+        /** Task that is the value of the current node */
         this.task = task;
-        // incoming edges
         this.doBefore = task.doBefore;
+        /** Models the outgoing edges from current node */
         this.outgoingNode = [];
+        /** in-deg of current node */
         this.in_deg = -1;
     }
 
+    /**  
+     * Check if node's in-deg equals 0.
+     * 
+     * @method checkZero
+     * @returns {boolean} - if current node's in-deg == 0.
+    */
     checkZero() {
         return this.in_deg == 0;
     }
 
+    /**
+     * Push outgoing Node into current Node's outgoingNode array.
+     * 
+     * @param {Object} nextNode - Task (Node) to be done AFTER current task is completed
+     * @return {void}
+     */
     setOutgoingNode(nextNode) {
         this.outgoingNode.push(nextNode);
     }
 
-    // hashmap map task: node
+    /**
+     * Updates in-deg of current node based on doBefore array length. 
+     * Update the modeling of outgoing edges of this node.
+     * 
+     * @method updateOutgoingNodes
+     * @param {Map} hashmap - Maps task : node
+     * @return {void}
+     */
     updateOutgoingNodes(hashmap) {
         if (this.task.doBefore) {
             this.in_deg = this.doBefore.length;
@@ -37,9 +69,14 @@ class node {
     
 }
 
-// Check if after addition of newTask, remains DAG
-export default async function verifyDAG(newTask) {
-
+/**
+ * Extracts existing tasks previosly added by user from MongoDB.
+ * 
+ * @function extractExistingTasks
+ * @async
+ * @returns {Object[]} - array of tasks from MongoDB
+ */
+async function extractExistingTasks() {
     const user = firebaseAuth?.currentUser;
     const idToken = await user.getIdToken();
 
@@ -52,9 +89,28 @@ export default async function verifyDAG(newTask) {
     });
     // all tasks of the user from Mongo
     const tasks = await response.json();
+    return tasks;
+}
 
-    // a and b are of type node declared above
-    // Sorts by in-deg, breakeven by deadline
+/**
+ * Checks if AFTER addition of newTask, graph remains a DAG.
+ * Fetches data from database to obtain past tasks records
+ * 
+ * @function verifyDAG
+ * @async
+ * @param {Object} newTask - new Task to be added
+ * @returns {boolean} - if DAG is present. return: number of visited nodes != number of nodes
+ */
+export default async function verifyDAG(newTask) {
+
+    /**
+     * Custom Comparator used for ordering in min in-deg Heap.
+     * Sorts by in-deg, breakevens by deadline.
+     * 
+     * @param {Node} a
+     * @param {Node} b 
+     * @returns {int} - {-1 : top of Heap, 1 : bottom of Heap}
+     */
     function customInDegComparator(a, b) {
         if (a.in_deg < b.in_deg) {
             return -1;
@@ -71,7 +127,8 @@ export default async function verifyDAG(newTask) {
         }
     }
 
-    // stores the nodes of the graph (NewTask + Existing tasks)
+    const tasks = await extractExistingTasks();
+    
     if (tasks.length <= 1) {
         return true;
     }
@@ -127,21 +184,18 @@ export default async function verifyDAG(newTask) {
     return visited === minArr.length;
 }
 
+/**
+ * Topologically Sorts a DAG 
+ * 
+ * @function Toposort
+ * @async
+ * @return {Object[]} - array of sorted tasks
+ */
 export async function Toposort() {
         // stores the topological sorted items
         const result = [];
-        const user = firebaseAuth?.currentUser;
-        const idToken = await user.getIdToken();
-    
-        const response = await fetch(`${backendURL}/toposort?UID=${user.uid}`, {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + idToken,  
-                "Content-Type": "application/json",
-            }
-        });
         // all tasks of the user from Mongo
-        const tasks = await response.json();
+        const tasks = await extractExistingTasks();
     
         // a and b are of type node declared above
         // Sorts by in-deg, breakeven by deadline

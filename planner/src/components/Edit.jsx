@@ -41,7 +41,6 @@ export default function Edit() {
         navigate("/");
         return;
       }
-
       setForm(record);
     }
 

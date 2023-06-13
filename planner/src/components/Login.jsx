@@ -92,29 +92,6 @@ export default function Login(props) {
   async function handleSubmit(event) {
     event.preventDefault();
     handleEmailPwLogin();
-    const form = loginForm;
-    /*
-    const res = await fetch(`${backendURL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // props.setAuth(true);
-          return response.json();
-        } else {
-          throw new Error("An error occured during login, Please try again!");
-        }
-      })
-      .catch((error) => {
-        window.alert(error);
-        // props.setAuth(false);
-        return;
-      });
-      */
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();

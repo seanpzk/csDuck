@@ -1,28 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
+import "../stylesheets/styles.css";
+import { useNonInitialEffect } from "./useNonInitialEffect";
 import { Toposort } from "./helperFunctions/Toposort.jsx"
 
 const Task = (props) => (
   <div>
-    <li>
+    <li
+      className="list-items"
+      draggable
+      onDragStart={(e) => (props.dragItem.current = props.index)}
+      onDragEnter={(e) => (props.dragOverItem.current = props.index)}
+      onDragEnd={props.handleSort}
+      onDragOver={(e) => e.preventDefault()}
+    >
       {/* {props.task.name} */}
       <ShowTaskInfo task={props.task}></ShowTaskInfo>
       <colgroup />
-      {props.task.deadline}
+      {/* {props.task.deadline}&nbsp; */}
+      {props.task.deadline || "nil"}
       <colgroup />
-      {props.task.priority}
+      {/* {props.task.priority}&nbsp; */}
+      {props.task.priority || "nil"}
       <colgroup />
-      <button className="btn btn-link resizing" style={{ paddingLeft: 0 }}>
+      <button
+        className="btn btn-link"
+        style={{ paddingLeft: 0, fontSize: "calc(3px + 0.7vw)" }}
+      >
         <Link to={`/edit/${props.task._id}`}>Edit</Link>
       </button>
       |
       <button
-        className="btn btn-link resizing"
+        className="btn btn-link "
+        style={{ fontSize: "calc(3px + 0.7vw)" }}
         onClick={() => {
           props.deleteTask(props.task._id);
         }}
@@ -34,23 +49,64 @@ const Task = (props) => (
 );
 
 export default function TaskList() {
+  const [customPrio, setCustomPrio] = useState();
   const [tasks, setTasks] = useState([]);
+  const [taskInfo, setTaskInfo] = useState({
+    name: "",
+    deadline: "",
+    priority: "",
+    description: "",
+    customPriority: "",
+  });
+
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
 
-  // This method fetches the tasks from the database.
+  // This method tells whether customPrio is enabled or disabled.
   useEffect(() => {
-    async function getTasks() {
+    async function getCustomPrio() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      const response = await fetch(`${backendURL}/task?UID=${UID}`, {
+      const response = await fetch(`${backendURL}/tasklist?UID=${UID}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + idToken,
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+
+      const result = await response.json();
+      setCustomPrio(result[0].useCustomPriority);
+    }
+
+    getCustomPrio();
+
+    return;
+  }, [tasks.length]);
+
+  // This method fetches the tasks from the database.
+  useNonInitialEffect(() => {
+    async function getTasks() {
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
+      const UID = firebaseAuth.currentUser.uid;
+      // creates a default GET request -> included UID
+      const response = await fetch(
+        `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + idToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
@@ -65,8 +121,43 @@ export default function TaskList() {
     getTasks();
 
     return;
-  }, [tasks.length]);
+  }, [customPrio]);
 
+  async function customPriorityFalse() {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const ucp = {
+      useCustomPriority: false,
+      UID: firebaseAuth.currentUser.uid,
+    };
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/tasklist`, {
+      method: "PATCH",
+      body: JSON.stringify(ucp),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+  }
+
+  async function customPriorityTrue() {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const ucp = {
+      useCustomPriority: true,
+      UID: firebaseAuth.currentUser.uid,
+    };
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/tasklist`, {
+      method: "PATCH",
+      body: JSON.stringify(ucp),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+  }
   // This method will delete a task
   async function deleteTask(id) {
     // Send whenever we make a request to backend
@@ -84,22 +175,119 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList() {
-    return tasks.map((task) => {
+    return tasks.map((task, index) => {
       return (
         <Task
           task={task}
           deleteTask={() => deleteTask(task._id)}
           key={task._id}
+          index={index}
+          dragItem={dragItem}
+          dragOverItem={dragOverItem}
+          handleSort={handleSort}
         />
       );
     });
   }
 
+  // Reference for dragItem and dragOverItem
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
+
+  //handle drag sorting
+  const handleSort = () => {
+    // duplicate items
+    let _tasks = [...tasks];
+
+    //remove and save the dragged item content
+    const draggedItemContent = _tasks.splice(dragItem.current, 1)[0];
+
+    //switch the position
+    _tasks.splice(dragOverItem.current, 0, draggedItemContent);
+
+    //reset the position ref
+    dragItem.current = null;
+    dragOverItem.current = null;
+
+    //update the actual array
+    setTasks(_tasks);
+  };
+
+  async function getTaskData(task, index) {
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`http://localhost:5050/task/${task._id}`, {
+      method: "GET",
+      header: {
+        Authorization: "Bearer " + idToken,
+      },
+    });
+
+    if (!response.ok) {
+      const message = `An error has occurred: ${response.statusText}`;
+      window.alert(message);
+      return;
+    }
+
+    const record = await response.json();
+    if (!record) {
+      window.alert(`Task with MongoDb_id ${id} not found`);
+      navigate("/");
+      return;
+    }
+    setTaskInfo({ ...record, customPriority: index });
+  }
+
+  useNonInitialEffect(() => {
+    submitTaskInfo(taskInfo);
+  }, [taskInfo]);
+
+  // useNonInitialEffect(() => {}, [taskInfo]);
+
+  //Save the modified task order after performing dnd
+  async function saveTaskOrder() {
+    let index = 0;
+    for await (const t of tasks) {
+      await getTaskData(t, index);
+      index++;
+    }
+    await customPriorityTrue();
+  }
+
+  async function useDefaultSort() {
+    await customPriorityFalse();
+    setCustomPrio(false);
+  }
+
+  async function submitTaskInfo(taskInfo) {
+    let _taskInfo = structuredClone(taskInfo);
+    const editedTask = {
+      name: _taskInfo.name,
+      deadline: _taskInfo.deadline,
+      priority: _taskInfo.priority,
+      description: _taskInfo.description,
+      customPriority: _taskInfo.customPriority,
+    };
+    const idToken = await firebaseAuth.currentUser?.getIdToken();
+
+    // This will send a post request to update the data in the database.
+    await fetch(`http://localhost:5050/task/${_taskInfo._id}`, {
+      method: "PATCH",
+      body: JSON.stringify(editedTask),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + idToken,
+      },
+    });
+
+    navigate("/mytasks");
+  }
+
   async function displayTopo(e) {
     const topoList = await Toposort();
     setTopo(topoList);
-    console.log(topoTask);
   }
+
+  useNonInitialEffect(() => console.log(topoTask), [topoTask]);
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -152,9 +340,26 @@ export default function TaskList() {
               marginTop: 10,
             }}
             to="/create"
+            draggable="false"
           >
             ✏️ Add new task
           </NavLink>
+
+          <button
+            className="btn btn-primary "
+            style={{ fontSize: "80%" }}
+            onClick={saveTaskOrder}
+          >
+            Save current task order
+          </button>
+
+          <button
+            className="btn btn-primary "
+            style={{ fontSize: "80%" }}
+            onClick={useDefaultSort}
+          >
+            Reset to default sort order
+          </button>
         </div>
         <button type = "button" onClick={displayTopo}>Auto sort</button>
       </div>

@@ -1,16 +1,13 @@
 import { useState, React, useEffect } from "react";
-import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
-import { backendURL } from "./helperFunctions/serverUrl";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
 export default function Register() {
-  const navigate = useNavigate();
   const [newUserCreated, updateUser] = useState(null);
 
   const [creationForm, setForm] = useState({
@@ -25,18 +22,18 @@ export default function Register() {
     });
   };
 
-    async function handleEmailPwCreation() {
-      await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
-        .then(async (userCredential) => {
-          const user = userCredential.user;
-          updateUser(user);
-          console.log("registered with email and password");
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          console.log(errorMessage);
-        });
-    }
+  async function handleEmailPwCreation() {
+    await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        updateUser(user);
+        console.log("registered with email and password");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  }
 
   async function verifyEmail() {
     await sendEmailVerification(newUserCreated)
