@@ -199,7 +199,6 @@ firebase code
 .list li {
   list-style: none;
   border-bottom: 2px dotted #ccc;
-  
   /* text-indent: 25px; */
   text-indent: 2rem;
   /* font-size: 1rem; */
@@ -214,6 +213,11 @@ firebase code
   word-break: break-all;
   /* font-size: 1vw;  */
   font-size: calc(3px + 0.7vw); 
+}
+
+.list-items {
+    /* for dragging effects */
+    cursor:move;
 }
 /* .list li:hover {
   background-color: #f0f0f0;

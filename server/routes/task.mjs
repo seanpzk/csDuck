@@ -12,7 +12,15 @@ router.get("/", async (req, res) => {
   const firebaseUID = req.query.UID;
   let collection = await db.collection("task");
   // let results = await collection.find({firebaseUID: firebaseUID}).sort({deadline: -1}).toArray();
-  let results = await collection.aggregate([
+  const useCustomPriority = req.query.UCP;
+
+  let results = null;
+
+
+  if (useCustomPriority === "true") {
+    results = await collection.find({firebaseUID: firebaseUID}).sort({customPriority: 1}).toArray();
+  } else {
+    results = await collection.aggregate([
     {$match: {firebaseUID: firebaseUID}},
     {$addFields: {
      sortPriority: {
@@ -54,7 +62,8 @@ router.get("/", async (req, res) => {
     $sort: {
      sortPriority: -1
     }
-   }]).toArray();
+   }]).toArray();}
+
   res.send(results).status(200);
 });
 
@@ -63,7 +72,6 @@ router.get("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let query = {_id: new ObjectId(req.params.id)};
   let result = await collection.findOne(query);
-
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
@@ -90,7 +98,8 @@ router.patch("/:id", async (req, res) => {
       name: req.body.name,
       deadline: req.body.deadline,
       priority: req.body.priority,
-      description: req.body.description
+      description: req.body.description,
+      customPriority: req.body.customPriority,
     }
   };
 
