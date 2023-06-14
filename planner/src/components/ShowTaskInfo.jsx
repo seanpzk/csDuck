@@ -4,7 +4,6 @@ import Modal from "react-bootstrap/Modal";
 
 function ShowTaskInfo(props) {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 

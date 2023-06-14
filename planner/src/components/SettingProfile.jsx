@@ -12,6 +12,9 @@ export default function SettingProfile() {
   const [info, setInfo] = useState([]);
   const navigate = useNavigate();
 
+  /**
+   * Get user's information and store in state info.
+   */
   useEffect(() => {
     async function getInfo() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -41,13 +44,17 @@ export default function SettingProfile() {
     return;
   }, []);
 
+  /**
+   * Updates the state info
+   * @param {*} value - Information to be updated in state info.
+   */
   function updateInfo(value) {
     return setInfo((prev) => {
       return { ...prev, ...value };
     });
   }
 
-  // This will update user data.
+  // This will update user data in database.
   async function onSubmit(e) {
     e.preventDefault();
     const editedInfo = {

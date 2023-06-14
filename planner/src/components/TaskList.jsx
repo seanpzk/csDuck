@@ -8,6 +8,11 @@ import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
 
+/**
+ * Display the information of task in a row.
+ * @param {*} props
+ * @returns Name, deadline, priority of task displayed, has "Edit" and "Delete" function.
+ */
 const Task = (props) => (
   <div>
     <li
@@ -60,7 +65,7 @@ export default function TaskList() {
 
   const navigate = useNavigate();
 
-  // This method tells whether customPrio is enabled or disabled.
+  // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
     async function getCustomPrio() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -121,6 +126,9 @@ export default function TaskList() {
     return;
   }, [customPrio]);
 
+  /**
+   * Update the database that current user's tasklist is NOT sorted by custom priority.
+   */
   async function customPriorityFalse() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     const ucp = {
@@ -139,6 +147,9 @@ export default function TaskList() {
     });
   }
 
+  /**
+   * Update the database that current user's tasklist is sorted by custom priority.
+   */
   async function customPriorityTrue() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     const ucp = {
@@ -156,6 +167,7 @@ export default function TaskList() {
       },
     });
   }
+
   // This method will delete a task
   async function deleteTask(id) {
     // Send whenever we make a request to backend
@@ -251,11 +263,18 @@ export default function TaskList() {
     await customPriorityTrue();
   }
 
+  /**
+   * Functionality to set the task list to be sorted using default way.
+   */
   async function useDefaultSort() {
     await customPriorityFalse();
     setCustomPrio(false);
   }
 
+  /**
+   * Updates information of task to database.
+   * @param {*} taskInfo - Contains information of a task object.
+   */
   async function submitTaskInfo(taskInfo) {
     let _taskInfo = structuredClone(taskInfo);
     const editedTask = {
@@ -299,7 +318,7 @@ export default function TaskList() {
             </thead>
             <tbody className="table-group-divider">{taskList()}</tbody>
           </table> */}
-
+          oh
           <div className="lines"></div>
           {
             <ul id="List">
@@ -317,7 +336,6 @@ export default function TaskList() {
               {taskList()}
             </ul>
           }
-
           <NavLink
             className="nav-link btn"
             style={{
@@ -335,7 +353,6 @@ export default function TaskList() {
           >
             ✏️ Add new task
           </NavLink>
-
           <button
             className="btn btn-primary "
             style={{ fontSize: "80%" }}
@@ -343,7 +360,6 @@ export default function TaskList() {
           >
             Save current task order
           </button>
-
           <button
             className="btn btn-primary "
             style={{ fontSize: "80%" }}
