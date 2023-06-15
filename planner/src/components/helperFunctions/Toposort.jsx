@@ -25,6 +25,14 @@ class node {
         this.in_deg = -1;
     }
 
+    /**
+     * Getter to obtain task
+     * @return {Object} - task within the node
+     */
+    getTask() {
+        return this.task;
+    }
+
     /**  
      * Check if node's in-deg equals 0.
      * 
@@ -76,7 +84,7 @@ class node {
  * @async
  * @returns {Object[]} - array of tasks from MongoDB
  */
-async function extractExistingTasks() {
+export async function extractExistingTasks() {
     const user = firebaseAuth?.currentUser;
     const idToken = await user.getIdToken();
 
@@ -93,43 +101,42 @@ async function extractExistingTasks() {
 }
 
 /**
+ * Custom Comparator used for ordering in min in-deg Heap.
+ * Sorts by in-deg, breakevens by deadline.
+ * 
+ * @param {Node} a
+ * @param {Node} b 
+ * @returns {int} - {-1 : top of Heap, 1 : bottom of Heap}
+ */
+function customInDegComparator(a, b) {
+    if (a.in_deg < b.in_deg) {
+        return -1;
+    } else if (a.in_deg > b.in_deg) {
+        return 1;
+    } else {
+        if (a.task.deadline < b.task.deadline) {
+            return -1;
+        } else if (a.task.deadline > b.task.deadline){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+/**
  * Checks if AFTER addition of newTask, graph remains a DAG.
  * Fetches data from database to obtain past tasks records
  * 
  * @function verifyDAG
  * @async
  * @param {Object} newTask - new Task to be added
+ * @param {Objectp[]} existingTasks - array of existing tasks from MongoDB
  * @returns {boolean} - if DAG is present. return: number of visited nodes != number of nodes
  */
-export default async function verifyDAG(newTask) {
+export default async function verifyDAG(newTask, existingTasks) {
 
-    /**
-     * Custom Comparator used for ordering in min in-deg Heap.
-     * Sorts by in-deg, breakevens by deadline.
-     * 
-     * @param {Node} a
-     * @param {Node} b 
-     * @returns {int} - {-1 : top of Heap, 1 : bottom of Heap}
-     */
-    function customInDegComparator(a, b) {
-        if (a.in_deg < b.in_deg) {
-            return -1;
-        } else if (a.in_deg > b.in_deg) {
-            return 1;
-        } else {
-            if (a.task.deadline < b.task.deadline) {
-                return -1;
-            } else if (a.task.deadline > b.task.deadline){
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    const tasks = await extractExistingTasks();
-    
-    if (tasks.length <= 1) {
+    if (existingTasks.length <= 1) {
         return true;
     }
     // Iterates through all the previous tasks, create nodes and place in hashmap
@@ -137,7 +144,7 @@ export default async function verifyDAG(newTask) {
     const taskToNode = new Map();
     // only edit request need to push newNode into nodes
     let edit = false;
-    tasks.forEach(task => {
+    existingTasks.forEach(task => {
         let prevNode = null;
         if (task._id === newTask._id) {
             // Use newTask instead of mongoTask (Edit function)
@@ -189,41 +196,21 @@ export default async function verifyDAG(newTask) {
  * 
  * @function Toposort
  * @async
+ * @param {Object[]} existingTasks - array of existing tasks from MongoDB
  * @return {Object[]} - array of sorted tasks
  */
-export async function Toposort() {
+export async function Toposort(existingTasks) {
         // stores the topological sorted items
-        const result = [];
-        // all tasks of the user from Mongo
-        const tasks = await extractExistingTasks();
-    
-        // a and b are of type node declared above
-        // Sorts by in-deg, breakeven by deadline
-        function customInDegComparator(a, b) {
-            if (a.in_deg < b.in_deg) {
-                return -1;
-            } else if (a.in_deg > b.in_deg) {
-                return 1;
-            } else {
-                if (a.task.deadline < b.task.deadline) {
-                    return -1;
-                } else if (a.task.deadline > b.task.deadline){
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-    
+        let result = [];
         // stores the nodes of the graph (NewTask + Existing tasks)
-        if (tasks.length <= 1) {
-            return true;
+        if (existingTasks.length <= 1) {
+            return existingTasks;
         }
         // Iterates through all the previous tasks, create nodes and place in hashmap
         // hashmap-> task_id : node
         const taskToNode = new Map();
         // only edit request need to push newNode into nodes
-        tasks.forEach(task => {
+        existingTasks.forEach(task => {
             const prevNode = new node(task);
             taskToNode.set(task._id, prevNode);
         });
@@ -248,5 +235,7 @@ export async function Toposort() {
                     inDegMinHeap.add(node);
                 })
         }
+        result = result.map(node => node.getTask())
+        console.log(result);
         return result;
 }

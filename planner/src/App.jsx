@@ -29,11 +29,21 @@ import SettingSecurity from "./components/SettingSecurity";
 import VerifyEmail from "./components/VerifyEmail";
 import { backendURL } from "./components/helperFunctions/serverUrl";
 
+/**
+ * Direct child of the Root of the application.
+ * renderes all routes
+ */
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+  /**
+   * Checks if the user has registered their details
+   * 
+   * @param {Object} User - fireabse User object
+   * @return {boolean} - If registered
+   */
   async function checkRegistered(User) {
     const UID = User.uid;
     const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -51,6 +61,11 @@ const App = () => {
     return true;
   }
 
+  /**
+   * Redirects user to /verifyEmail if have yet to register details.
+   * 
+   * @return {void}
+   */
   async function checkVerified() {
     setUser(firebaseAuth.currentUser);
     // not the best way... This looks for any path with /reginfo
@@ -69,6 +84,10 @@ const App = () => {
   }
 
   // Forces user to input their registration details if they have yet to do so
+  /**
+   * Constantly checks if the user has verified their email.
+   * Forces users to have a valid email address.
+   */
   useEffect(() => {
     const interval = setInterval(checkVerified, 1000);
     return () => clearInterval(interval);

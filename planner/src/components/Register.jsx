@@ -7,21 +7,39 @@ import {
 import firebaseAuth from "../firebase.config";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
+/**
+ * Component that handles the registration of a new user via email and password.
+ * 
+ * @returns {React.ReactElement} - The registration form page
+ */
 export default function Register() {
-  const [newUserCreated, updateUser] = useState(null);
 
+  const [newUserCreated, updateUser] = useState(null);
+  /** New user creation form to be submitted to backend */
   const [creationForm, setForm] = useState({
     email: "",
     password: "",
   });
 
-  // value passed here is an object
+  /**
+   * Creates a function that Updates the creationForm for the key:value pair specified in param.
+   * 
+   * @param {Object} value - { key : value } of creationForm
+   * @returns {Function} that handles the updating of creationForm
+   */
   const updateForm = (value) => {
     return setForm((prev) => {
       return { ...prev, ...value };
     });
   };
 
+  /**
+   * Handles the email and password creation.
+   * 
+   * @function handleEmailPwCreation
+   * @async
+   * @return {void}
+   */
   async function handleEmailPwCreation() {
     await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
       .then(async (userCredential) => {
@@ -35,6 +53,13 @@ export default function Register() {
       });
   }
 
+  /**
+   * Sends email verification emails to newly created users.
+   * 
+   * @function verifyEmail
+   * @async
+   * @return {void}
+   */
   async function verifyEmail() {
     await sendEmailVerification(newUserCreated)
       .then(console.log("Email verification sent"))
@@ -48,15 +73,22 @@ export default function Register() {
       } 
     }, [newUserCreated]);
 
-    async function handleSubmit(event) {
-        event.preventDefault();
-        await handleEmailPwCreation();
-        const newUser = creationForm;
-        await CreateUserMongo();
-        // resets the form once submitted
-        setForm({ email: "", password: "" });
-        event.target.reset();
-    }
+  /**
+   * Runs onSubmission of creationForm.
+   * Creates user in firebase and MongoDB.
+   * 
+   * @param {Event} event 
+   * @return {void}
+   */
+  async function handleSubmit(event) {
+      event.preventDefault();
+      await handleEmailPwCreation();
+      const newUser = creationForm;
+      await CreateUserMongo();
+      // resets the form once submitted
+      setForm({ email: "", password: "" });
+      event.target.reset();
+  }
 
   return (
     <>

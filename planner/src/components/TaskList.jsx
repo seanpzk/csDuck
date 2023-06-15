@@ -7,7 +7,7 @@ import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
-import { Toposort } from "./helperFunctions/Toposort.jsx"
+import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx"
 
 const Task = (props) => (
   <div>
@@ -283,7 +283,7 @@ export default function TaskList() {
   }
 
   async function displayTopo(e) {
-    const topoList = await Toposort();
+    const topoList = await Toposort(await extractExistingTasks());
     setTopo(topoList);
   }
 

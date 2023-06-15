@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import DoBefore from "./DoBefore";
-import verifyDAG from "./helperFunctions/Toposort.jsx";
+import verifyDAG, { extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -14,11 +14,6 @@ export default function Create() {
     firebaseUID: "",
     doBefore: []
   });
-  // ============== ADDED CODE HERE =============
-  // array of objects
-  //  const [doBefore, setDoBefore] = useState(null);
-
-  // ============== ADDED CODE ENDS HERE =============
 
   const navigate = useNavigate();
 
@@ -42,7 +37,7 @@ export default function Create() {
     const newTask = { ...task }; // why do we need the ... here?
     console.log(newTask);
     // ============= <ADDED CODE HERE =============
-    if (await verifyDAG(newTask)) {
+    if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
       await fetch(`${backendURL}/task`, {
         method: "POST", // send data to the server

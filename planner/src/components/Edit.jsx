@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import DoBefore from "./DoBefore";
-import verifyDAG from "./helperFunctions/Toposort.jsx";
+import verifyDAG, { extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 
 export default function Edit() {
   const [form, setForm] = useState({
@@ -67,7 +67,7 @@ export default function Edit() {
       doBefore: form.doBefore,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-    if (await verifyDAG(editedPerson)) {
+    if (await verifyDAG(editedPerson, await extractExistingTasks())) {
       console.log("DAG PRESENT");
       // This will send a post request to update the data in the database.
       await fetch(`http://localhost:5050/task/${params.id}`, {

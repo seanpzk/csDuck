@@ -1,6 +1,10 @@
 import firebaseAuth from "../../firebase.config";
 import { backendURL } from "./serverUrl";
 
+/**
+ * Creates a POST request to create user in MongoDB
+ * @return {void}
+ */
 export default async function CreateUserMongo() {
 
   const user = firebaseAuth?.currentUser;
