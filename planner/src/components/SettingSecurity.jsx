@@ -11,7 +11,10 @@ import { backendURL } from "./helperFunctions/serverUrl";
 export default function SettingSecurity() {
   const [info, setInfo] = useState([]);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+
+  /**
+   * This will display the necessary user info on the different
+   */
   useEffect(() => {
     const getUserInfo = () => {
       const auth = getAuth();
@@ -26,6 +29,11 @@ export default function SettingSecurity() {
     return;
   }, []);
 
+  /**
+   * Check if a user is registered
+   * @param {*} User - User object obtained from firebase
+   * @returns Boolean that states if user is registered
+   */
   async function checkRegistered(User) {
     const UID = User.uid;
     const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -43,13 +51,17 @@ export default function SettingSecurity() {
     return true;
   }
 
+  /**
+   * Check if current user is verified
+   * @returns Boolean that checks if current user is verified
+   */
   async function checkVerified() {
     setUser(firebaseAuth.currentUser);
     const registered = await checkRegistered(user);
-    console.log(registered);
     return registered;
   }
 
+  // The UI to display the information of user with functionalities.
   const UserInfo = (props) => (
     <>
       <div className="setting-header">
