@@ -61,8 +61,11 @@ export default function TaskList() {
     deadline: "",
     priority: "",
     description: "",
+    doBefore: [],
     customPriority: "",
   });
+
+  useEffect(() => console.log(customPrio), [ customPrio]);
 
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
@@ -98,6 +101,7 @@ export default function TaskList() {
 
   // This method fetches the tasks from the database.
   useNonInitialEffect(() => {
+    console.log("Change");
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
@@ -168,6 +172,7 @@ export default function TaskList() {
         Authorization: "Bearer " + idToken,
       },
     });
+    setCustomPrio(() => true);
   }
 
   // This method will delete a task
@@ -186,7 +191,9 @@ export default function TaskList() {
   }
 
   // This method will map out the tasks on the table
-  function taskList() {
+  function taskList(tasks) {
+    console.log("Tasklist change");
+    console.log(tasks);
     return tasks.map((task, index) => {
       return (
         <Task
@@ -201,6 +208,10 @@ export default function TaskList() {
       );
     });
   }
+
+  const [htmlTaskList, setHtmlTaskList] = useState(null);
+
+  useEffect(() => setHtmlTaskList(taskList(tasks)), [tasks]);
 
   // Reference for dragItem and dragOverItem
   const dragItem = useRef(null);
@@ -256,7 +267,7 @@ export default function TaskList() {
   // useNonInitialEffect(() => {}, [taskInfo]);
 
   //Save the modified task order after performing dnd
-  async function saveTaskOrder() {
+  async function saveTaskOrder(tasks) {
     let index = 0;
     for await (const t of tasks) {
       await getTaskData(t, index);
@@ -284,6 +295,7 @@ export default function TaskList() {
       deadline: _taskInfo.deadline,
       priority: _taskInfo.priority,
       description: _taskInfo.description,
+      doBefore: _taskInfo.doBefore,
       customPriority: _taskInfo.customPriority,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -302,11 +314,18 @@ export default function TaskList() {
   }
 
   async function displayTopo(e) {
-    const topoList = await Toposort(await extractExistingTasks());
-    setTopo(topoList);
+    // This calls a the hook that fetches tasks from mongo -> Do this before settingTask here
+    // Must be done in order to reset default
+    await setCustomPrio(true);
+    let topoList = await Toposort(await extractExistingTasks());
+    setTasks(topoList);
   }
 
-  useNonInitialEffect(() => console.log(topoTask), [topoTask]);
+  // useNonInitialEffect(() => {
+  //   saveTaskOrder(topoTask);
+  //   console.log("Saved");
+  //   console.log(topoTask);
+  // }, [topoTask]);
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -342,7 +361,7 @@ export default function TaskList() {
                 Priority <colgroup />
                 Action
               </li>
-              {taskList()}
+              {taskList(tasks)}
             </ul>
           }
           <NavLink
@@ -365,7 +384,7 @@ export default function TaskList() {
           <button
             className="btn btn-primary "
             style={{ fontSize: "80%" }}
-            onClick={saveTaskOrder}
+            onClick={( e => saveTaskOrder(tasks))}
           >
             Save current task order
           </button>

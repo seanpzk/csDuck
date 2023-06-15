@@ -97,6 +97,7 @@ export async function extractExistingTasks() {
     });
     // all tasks of the user from Mongo
     const tasks = await response.json();
+    console.log(tasks);
     return tasks;
 }
 
@@ -200,6 +201,8 @@ export default async function verifyDAG(newTask, existingTasks) {
  * @return {Object[]} - array of sorted tasks
  */
 export async function Toposort(existingTasks) {
+        console.log('existing tasks')    
+        console.log(existingTasks);
         // stores the topological sorted items
         let result = [];
         // stores the nodes of the graph (NewTask + Existing tasks)
