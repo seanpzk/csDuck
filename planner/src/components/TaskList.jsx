@@ -7,7 +7,11 @@ import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
+<<<<<<< HEAD
 import iconDuck from "../assets/iconicDuck.png";
+=======
+import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx"
+>>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
 
 /**
  * Display the information of task in a row.
@@ -61,10 +65,14 @@ export default function TaskList() {
     deadline: "",
     priority: "",
     description: "",
+    doBefore: [],
     customPriority: "",
   });
 
+  useEffect(() => console.log(customPrio), [ customPrio]);
+
   const navigate = useNavigate();
+  const [topoTask, setTopo] = useState([]);
 
   // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
@@ -88,11 +96,16 @@ export default function TaskList() {
       }
 
       const result = await response.json();
+<<<<<<< HEAD
       if (result[0] == undefined) {
         setCustomPrio("false");
       } else {
         setCustomPrio(result[0].useCustomPriority);
       }
+=======
+      console.log(result);
+      setCustomPrio(result[0].useCustomPriority);
+>>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
     }
 
     getCustomPrio();
@@ -106,6 +119,7 @@ export default function TaskList() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
+      console.log(customPrio);
       const response = await fetch(
         `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
         {
@@ -190,7 +204,9 @@ export default function TaskList() {
   }
 
   // This method will map out the tasks on the table
-  function taskList() {
+  function taskList(tasks) {
+    console.log("Tasklist change");
+    console.log(tasks);
     return tasks.map((task, index) => {
       return (
         <Task
@@ -260,7 +276,7 @@ export default function TaskList() {
   // useNonInitialEffect(() => {}, [taskInfo]);
 
   //Save the modified task order after performing dnd
-  async function saveTaskOrder() {
+  async function saveTaskOrder(tasks) {
     let index = 0;
     for await (const t of tasks) {
       await getTaskData(t, index);
@@ -275,7 +291,13 @@ export default function TaskList() {
    */
   async function useDefaultSort() {
     await customPriorityFalse();
-    setCustomPrio(false);
+    if (customPrio == null) {
+      setCustomPrio(false);
+    } else if (customPrio == false) {
+      setCustomPrio(null);
+    } else {
+      setCustomPrio(false);  
+    }
   }
 
   /**
@@ -289,6 +311,7 @@ export default function TaskList() {
       deadline: _taskInfo.deadline,
       priority: _taskInfo.priority,
       description: _taskInfo.description,
+      doBefore: _taskInfo.doBefore,
       customPriority: _taskInfo.customPriority,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -305,6 +328,17 @@ export default function TaskList() {
 
     navigate("/mytasks");
   }
+
+  async function useToposort(e) {
+    let topoList = await Toposort(await extractExistingTasks());
+    setTasks(topoList);
+  }
+
+  // useNonInitialEffect(() => {
+  //   saveTaskOrder(topoTask);
+  //   console.log("Saved");
+  //   console.log(topoTask);
+  // }, [topoTask]);
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -340,7 +374,7 @@ export default function TaskList() {
                 Priority <colgroup />
                 Action
               </li>
-              {taskList()}
+              {taskList(tasks)}
             </ul>
           }
           <NavLink
@@ -362,6 +396,7 @@ export default function TaskList() {
 
           <button
             className="btn btn-primary "
+<<<<<<< HEAD
             style={{
               color: "black",
               backgroundColor: "lightblue",
@@ -375,6 +410,10 @@ export default function TaskList() {
               margin: 18,
             }}
             onClick={saveTaskOrder}
+=======
+            style={{ fontSize: "80%" }}
+            onClick={( e => saveTaskOrder(tasks))}
+>>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
           >
             Save current task order
           </button>
@@ -397,6 +436,7 @@ export default function TaskList() {
             Reset to default sort order
           </button>
         </div>
+        <button type = "button" onClick={useToposort}>Auto sort</button>
       </div>
     </>
   );

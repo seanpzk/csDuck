@@ -13,7 +13,18 @@ import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
-// I think we need to use SSL/TLS to securely send data from client to server
+/**
+ * Componenet that enables Login using three methods.
+ * 1) Gooogle Login
+ * 2) Facebook Login
+ * 3) Email and password Login
+ * 
+ * @param {Object} props 
+ * @param {boolean} props.auth - Tracks if user is authenticated
+ * @param {function} props.setAuth - set State of auth
+ * @returns {React.ReactElement} - The login form/page
+ * @description need to use SSL/TLS to securely send data from client to server
+ */
 export default function Login(props) {
 
   const googleProvider = new GoogleAuthProvider();
@@ -25,7 +36,13 @@ export default function Login(props) {
     password: "",
   });
 
-  // Handles login using Google. Automatically verifies email
+  /**
+   * Handles login using Google.
+   * Automatically create, login and verifies email.
+   * Creates user in MongoDB
+   * 
+   * @return {void}
+   */
   async function loginWithGoogle() {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
       .then(async (result) => {
@@ -42,7 +59,14 @@ export default function Login(props) {
       });
   };
 
-  // Handles login using Facebook. Does not automatically verify email
+  /**
+   * Handles login using Facebook.
+   * Automatically create, login.
+   * Sends email verification to user!
+   * Creates user in MongoDB
+   * 
+   * @return {void}
+   */
   async function loginWithFacebook() {
     const response = await signInWithPopup(firebaseAuth, facebookProvider)
       .then(async (result) => {
@@ -52,8 +76,6 @@ export default function Login(props) {
           .catch((error) => console.log(error));
         const token =
           FacebookAuthProvider.credentialFromResult(result).accessToken;
-        // const user = result.user;
-        // props.setAuth(true);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -69,7 +91,9 @@ export default function Login(props) {
     });
   };
 
-  // Handles login using email and password
+  /**
+   * Handles login using email and password.
+   */
   const handleEmailPwLogin = () =>
     signInWithEmailAndPassword(
       firebaseAuth,
@@ -88,33 +112,14 @@ export default function Login(props) {
         console.log(errorMessage);
       });
 
-  // sends login request to the server
+  /**
+   * Submits form to backend. Resets when done.
+   * 
+   * @param {Event} event
+   */
   async function handleSubmit(event) {
     event.preventDefault();
     handleEmailPwLogin();
-    const form = loginForm;
-    /*
-    const res = await fetch(`${backendURL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // props.setAuth(true);
-          return response.json();
-        } else {
-          throw new Error("An error occured during login, Please try again!");
-        }
-      })
-      .catch((error) => {
-        window.alert(error);
-        // props.setAuth(false);
-        return;
-      });
-      */
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
@@ -171,6 +176,8 @@ export default function Login(props) {
               </button>
               <br />
             </form>
+            <hr />
+            <h2>Log in using other alternatives</h2>
             <div
               className="other-login-container"
               style={{
@@ -181,9 +188,6 @@ export default function Login(props) {
                 borderRadius: "10px",
               }}
             >
-              <hr />
-
-              <h2>Log in using other alternatives</h2>
               <button onClick={loginWithGoogle}>
                 <img src={googleLogo} />
               </button>

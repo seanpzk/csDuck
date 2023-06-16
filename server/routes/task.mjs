@@ -78,12 +78,15 @@ router.get("/:id", async (req, res) => {
 
 // This section will help you create a new record.
 router.post("/", async (req, res) => {
+  console.log("BEFORE");
+  console.log(req.body.doBefore);
   let newDocument = {
     name: req.body.name,
     deadline: req.body.deadline,
     priority: req.body.priority,
     description: req.body.description,
-    firebaseUID: req.body.firebaseUID
+    firebaseUID: req.body.firebaseUID,
+    doBefore: req.body.doBefore
   };
   let collection = await db.collection("task");
   let result = await collection.insertOne(newDocument);
@@ -99,6 +102,7 @@ router.patch("/:id", async (req, res) => {
       deadline: req.body.deadline,
       priority: req.body.priority,
       description: req.body.description,
+      doBefore: req.body.doBefore,
       customPriority: req.body.customPriority,
     }
   };
