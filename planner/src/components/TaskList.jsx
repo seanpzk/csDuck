@@ -7,11 +7,7 @@ import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
-<<<<<<< HEAD
-import iconDuck from "../assets/iconicDuck.png";
-=======
-import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx"
->>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
+import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 
 /**
  * Display the information of task in a row.
@@ -69,7 +65,7 @@ export default function TaskList() {
     customPriority: "",
   });
 
-  useEffect(() => console.log(customPrio), [ customPrio]);
+  useEffect(() => console.log(customPrio), [customPrio]);
 
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
@@ -96,16 +92,11 @@ export default function TaskList() {
       }
 
       const result = await response.json();
-<<<<<<< HEAD
       if (result[0] == undefined) {
         setCustomPrio("false");
       } else {
         setCustomPrio(result[0].useCustomPriority);
       }
-=======
-      console.log(result);
-      setCustomPrio(result[0].useCustomPriority);
->>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
     }
 
     getCustomPrio();
@@ -296,7 +287,7 @@ export default function TaskList() {
     } else if (customPrio == false) {
       setCustomPrio(null);
     } else {
-      setCustomPrio(false);  
+      setCustomPrio(false);
     }
   }
 
@@ -396,7 +387,6 @@ export default function TaskList() {
 
           <button
             className="btn btn-primary "
-<<<<<<< HEAD
             style={{
               color: "black",
               backgroundColor: "lightblue",
@@ -410,10 +400,6 @@ export default function TaskList() {
               margin: 18,
             }}
             onClick={saveTaskOrder}
-=======
-            style={{ fontSize: "80%" }}
-            onClick={( e => saveTaskOrder(tasks))}
->>>>>>> 60414efeb9e083622addb0ff30400375a15ca669
           >
             Save current task order
           </button>
@@ -436,7 +422,9 @@ export default function TaskList() {
             Reset to default sort order
           </button>
         </div>
-        <button type = "button" onClick={useToposort}>Auto sort</button>
+        <button type="button" onClick={useToposort}>
+          Auto sort
+        </button>
       </div>
     </>
   );
