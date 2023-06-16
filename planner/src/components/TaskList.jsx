@@ -172,7 +172,6 @@ export default function TaskList() {
         Authorization: "Bearer " + idToken,
       },
     });
-    setCustomPrio(() => true);
   }
 
   // This method will delete a task
@@ -208,10 +207,6 @@ export default function TaskList() {
       );
     });
   }
-
-  const [htmlTaskList, setHtmlTaskList] = useState(null);
-
-  useEffect(() => setHtmlTaskList(taskList(tasks)), [tasks]);
 
   // Reference for dragItem and dragOverItem
   const dragItem = useRef(null);
@@ -273,6 +268,7 @@ export default function TaskList() {
       await getTaskData(t, index);
       index++;
     }
+    setCustomPrio(true);
     await customPriorityTrue();
   }
 
@@ -281,7 +277,13 @@ export default function TaskList() {
    */
   async function useDefaultSort() {
     await customPriorityFalse();
-    setCustomPrio(false);
+    if (customPrio == null) {
+      setCustomPrio(false);
+    } else if (customPrio == false) {
+      setCustomPrio(null);
+    } else {
+      setCustomPrio(false);  
+    }
   }
 
   /**
@@ -313,10 +315,7 @@ export default function TaskList() {
     navigate("/mytasks");
   }
 
-  async function displayTopo(e) {
-    // This calls a the hook that fetches tasks from mongo -> Do this before settingTask here
-    // Must be done in order to reset default
-    await setCustomPrio(true);
+  async function useToposort(e) {
     let topoList = await Toposort(await extractExistingTasks());
     setTasks(topoList);
   }
@@ -396,7 +395,7 @@ export default function TaskList() {
             Reset to default sort order
           </button>
         </div>
-        <button type = "button" onClick={displayTopo}>Auto sort</button>
+        <button type = "button" onClick={useToposort}>Auto sort</button>
       </div>
     </>
   );
