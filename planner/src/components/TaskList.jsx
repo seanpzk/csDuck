@@ -91,6 +91,7 @@ export default function TaskList() {
       }
 
       const result = await response.json();
+      console.log(result);
       setCustomPrio(result[0].useCustomPriority);
     }
 
@@ -101,11 +102,11 @@ export default function TaskList() {
 
   // This method fetches the tasks from the database.
   useNonInitialEffect(() => {
-    console.log("Change");
     async function getTasks() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
+      console.log(customPrio);
       const response = await fetch(
         `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
         {

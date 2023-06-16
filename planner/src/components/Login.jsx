@@ -176,6 +176,8 @@ export default function Login(props) {
               </button>
               <br />
             </form>
+            <hr />
+            <h2>Log in using other alternatives</h2>
             <div
               className="other-login-container"
               style={{
@@ -186,9 +188,6 @@ export default function Login(props) {
                 borderRadius: "10px",
               }}
             >
-              <hr />
-
-              <h2>Log in using other alternatives</h2>
               <button onClick={loginWithGoogle}>
                 <img src={googleLogo} />
               </button>
