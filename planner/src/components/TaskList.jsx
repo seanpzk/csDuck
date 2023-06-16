@@ -7,6 +7,7 @@ import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
+import iconDuck from "../assets/iconicDuck.png";
 
 /**
  * Display the information of task in a row.
@@ -68,6 +69,7 @@ export default function TaskList() {
   // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
     async function getCustomPrio() {
+      console.log("triggered getcustom");
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
@@ -86,7 +88,11 @@ export default function TaskList() {
       }
 
       const result = await response.json();
-      setCustomPrio(result[0].useCustomPriority);
+      if (result[0] == undefined) {
+        setCustomPrio("false");
+      } else {
+        setCustomPrio(result[0].useCustomPriority);
+      }
     }
 
     getCustomPrio();
@@ -260,6 +266,7 @@ export default function TaskList() {
       await getTaskData(t, index);
       index++;
     }
+    setCustomPrio(true);
     await customPriorityTrue();
   }
 
@@ -318,7 +325,7 @@ export default function TaskList() {
             </thead>
             <tbody className="table-group-divider">{taskList()}</tbody>
           </table> */}
-          oh
+
           <div className="lines"></div>
           {
             <ul id="List">
@@ -349,20 +356,42 @@ export default function TaskList() {
               marginTop: 10,
             }}
             to="/create"
-            draggable="false"
           >
             ✏️ Add new task
           </NavLink>
+
           <button
             className="btn btn-primary "
-            style={{ fontSize: "80%" }}
+            style={{
+              color: "black",
+              backgroundColor: "lightblue",
+              borderColor: "black",
+              border: "none",
+              padding: "0.5%",
+              fontSize: "80%",
+              fontWeight: "normal",
+              fontFamily: "Arial",
+              width: "12%",
+              margin: 18,
+            }}
             onClick={saveTaskOrder}
           >
             Save current task order
           </button>
           <button
             className="btn btn-primary "
-            style={{ fontSize: "80%" }}
+            style={{
+              color: "black",
+              backgroundColor: "lightblue",
+              // borderColor: "black",
+              border: "none",
+              padding: "0.5%",
+              fontSize: "80%",
+              fontWeight: "normal",
+              fontFamily: "Arial",
+              width: "12%",
+              margin: 18,
+            }}
             onClick={useDefaultSort}
           >
             Reset to default sort order
