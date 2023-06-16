@@ -7,6 +7,8 @@ import login from "./routes/login.mjs";
 import reset from "./routes/reset.mjs";
 import setting from "./routes/setting.mjs"
 import decodeIDToken from "./authenticateToken.mjs";
+import toposort from "./routes/toposort.mjs";
+import dropdown from "./routes/dropdown.mjs";
 import tasklist from "./routes/tasklist.mjs"
 
 
@@ -22,6 +24,8 @@ app.use("/register", registration); // handle incoming request along this path
 app.use("/login", login);
 app.use("/reset", reset);
 app.use("/task", tasks);
+app.use("/toposort", toposort);
+app.use("/dropdown", dropdown);
 app.use("/setting", setting);
 app.use("/tasklist", tasklist);
 

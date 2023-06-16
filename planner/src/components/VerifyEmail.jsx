@@ -4,6 +4,11 @@ import firebaseAuth from "../firebase.config.js";
 import { useEffect, useState } from "react";
 import { sendEmailVerification } from "firebase/auth";
 
+/**
+ * Component that renders the verification email page if user has yet to do so.
+ * 
+ * @return {React.ReactElement} - Renders Resend email verification page.
+ */
 export default function VerifyEmail() {
 
     const [user, setUser] = useState(null);
@@ -13,6 +18,14 @@ export default function VerifyEmail() {
 
     useEffect(() => setUser(firebaseAuth.currentUser), []);
 
+    /**
+     * Allows user to resend email verification every 15 seconds.
+     * Disables button when clicked, enables button after 15 seconds.
+     * 
+     * @function handleResend
+     * @async
+     * @return {void}
+     */
     async function handleResend() {
         if (user) {
             setDisableButton(true);
