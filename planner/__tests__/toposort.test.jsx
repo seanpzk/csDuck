@@ -1,4 +1,68 @@
-import verifyDAG, { Toposort } from '../src/components/helperFunctions/Toposort.jsx';
+import verifyDAG, { Toposort, node } from '../src/components/helperFunctions/Toposort.jsx';
+
+
+describe("node class tests", () => {
+    const task2 = {
+        _id: "task2",
+        deadline: "2023-06-25",
+        description: "Testing purpose",
+        doBefore: [],
+        fireabaseUID: "abcdefggsdf",
+        name: "nameOfTask2",
+        priority: "low"
+    };
+    const task3 = {
+        _id: "task3",
+        deadline: "2023-07-25",
+        description: "Testing purpose",
+        doBefore: [],
+        fireabaseUID: "abcdefggsdf",
+        name: "nameOfTask3",
+        priority: "med"
+    };
+    const task1 = {
+        _id: "task1",
+        deadline: "2023-06-23",
+        description: "Testing purpose",
+        doBefore: [task2, task3],
+        fireabaseUID: "abcdefg",
+        name: "nameOfTask1",
+        priority: "high"
+    };
+    const node1 = new node(task1);
+    const node2 = new node(task2);
+    const node3 = new node(task3);
+    test("Fields of node class after instantiation", () => {
+        expect(node1.task).toBe(task1);
+        expect(node1.task).toEqual(task1);
+        expect(node1.doBefore).toEqual(node1.task.doBefore);
+        // starts with empty outgoingNodes
+        expect(node1.outgoingNode).toEqual([]);
+        expect(node1.doBefore).toEqual(task1.doBefore);
+        // starts with in_deg = -1
+        expect(node1.in_deg).toBe(-1);
+    });
+    test("Functionality of node class methods", () => {
+        expect(node1.checkZero()).toBe(false);
+        // Test setOutgoingNode method
+        node1.setOutgoingNode(node2);
+        expect(node1.outgoingNode).toEqual([node2]);
+        // reset for next test
+        node1.outgoingNode = [];
+        // Test updateOutgoingNodes method (with hashmap)
+        const taskToNode = new Map();
+        taskToNode.set(task1._id, node1);
+        taskToNode.set(task2._id, node2);
+        taskToNode.set(task3._id, node3);
+        taskToNode.forEach(node => node.updateOutgoingNodes(taskToNode));
+        expect(node1.in_deg).toEqual(2);
+        expect(node2.outgoingNode).toEqual([node1]);
+        expect(node3.outgoingNode).toEqual([node1]);
+        taskToNode.forEach(node => {
+            node.outgoingNode = [];
+        });
+    })
+});
 
 /**
  * Refer to "./topoTestCases" folder for the pictorial graphs

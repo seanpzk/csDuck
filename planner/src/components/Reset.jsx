@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import firebaseAuth from "../firebase.config";
+import {sendPasswordResetEmail} from "firebase/auth";
+import "../stylesheets/styles.css";
+import "../stylesheets/resetPassword-stylesheet.css";
+import resetPasswordImg from "../assets/resetPassword.png";
 
 export default function Reset() {
 
     const navigate = useNavigate();
     
     const [resetForm, setForm] = useState( {
-        username: "",
-        password: "",
+        email: ""
     } );
 
     // value passed here is an object
@@ -20,7 +24,10 @@ export default function Reset() {
     async function handleSubmit(event) {
         event.preventDefault();
         const updatedUser = resetForm;
-
+        sendPasswordResetEmail(firebaseAuth, updatedUser.email)
+            .then(() => console.log("Password resetted"))
+            .catch(error => console.log(error.message));
+        /*
         const res = await fetch("http://localhost:5050/reset", {
             method: "POST",
             headers: {
@@ -33,25 +40,20 @@ export default function Reset() {
             window.alert(error);
             return;
         })
-        console.log(res);
-        setForm({ username: "", password: "" });
+        */
+        setForm({ email: "" });
         // resets the form once submitted
         event.target.reset();
-        // ADD RESPONSE FROM SERVER -> ENSURES USER IS CREATED IN DB!!!!!!!!!!!!!!
-        // For some reason, redirect doesn't work here
-        navigate("/");
+        navigate("/login");
     }
 
     return (
         <>
-
-            <p>Reset your password</p>
-
-            <form onSubmit={ handleSubmit }>
-                <label htmlFor = "original-username">Original Username: </label>
-                <input type = "text" id = "original-username" onChange = { (event) => updateForm({ username: event.target.value }) }/>
-                <label htmlFor = "password">Password: </label>
-                <input type = "text" id = "password" onChange = { (event) => updateForm({ password: event.target.value }) }/>
+            <form onSubmit={ handleSubmit } className = "reset-Form">
+                <img src = {resetPasswordImg} className = "resetImg"></img>
+                <h3>Reset Your Password</h3>
+                <label htmlFor = "email">Email Address: </label>
+                <input type = "text" id = "email" onChange = { (event) => updateForm({ email: event.target.value }) }/>
                 <button type = "submit">Reset password</button>
             </form>
         </>

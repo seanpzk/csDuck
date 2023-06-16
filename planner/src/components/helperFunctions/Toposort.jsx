@@ -6,7 +6,7 @@ import firebaseAuth from "../../firebase.config";
  * Acts as a Node in a Graph.
  *  Graph used to carry out Topological sorting 
  * */
-class node {
+export class node {
     
     /**
      * The node Constructor.
@@ -62,7 +62,7 @@ class node {
      * @return {void}
      */
     updateOutgoingNodes(hashmap) {
-        if (this.task.doBefore) {
+        if (this.getTask().doBefore) {
             this.in_deg = this.doBefore.length;
             this.doBefore.forEach(outgoingTask => {
                 if (outgoingTask._id) {
@@ -74,7 +74,6 @@ class node {
             });
         }
     }
-    
 }
 
 /**
@@ -97,7 +96,6 @@ export async function extractExistingTasks() {
     });
     // all tasks of the user from Mongo
     const tasks = await response.json();
-    console.log(tasks);
     return tasks;
 }
 
@@ -239,6 +237,5 @@ export async function Toposort(existingTasks) {
                 })
         }
         result = result.map(node => node.getTask())
-        console.log(result);
         return result;
 }
