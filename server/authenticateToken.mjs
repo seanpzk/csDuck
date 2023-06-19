@@ -26,7 +26,7 @@ export default async function decodeIDToken(req, res, next) {
             // "return" prevents double response <--> Error here, need to find a better way to send to frontend, then redirect.
             // return res.redirect(`http://localhost:5173/`);
             // return here will stop further execution of the middleware stack
-            return res.json( {url: "/login"});
+            return res.status(401).json( {url: "/login"});
         }
         next();
     } else {
