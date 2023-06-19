@@ -39,9 +39,11 @@ export default function Create() {
     // ============= <ADDED CODE HERE =============
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
       await fetch(`${backendURL}/task`, {
         method: "POST", // send data to the server
         headers: {
+          Authorization: "Bearer " + idToken,
           "Content-Type": "application/json", // indicates that the request body is in json format
         },
         body: JSON.stringify(newTask), // convert based on HTTP request format (Google the formats)

@@ -87,7 +87,6 @@ export default function TaskList() {
         window.alert(message);
         return;
       }
-
       const result = await response.json();
       if (result[0] == undefined) {
         setCustomPrio(false);
@@ -319,12 +318,6 @@ export default function TaskList() {
     let topoList = await Toposort(await extractExistingTasks());
     setTasks(topoList);
   }
-
-  // useNonInitialEffect(() => {
-  //   saveTaskOrder(topoTask);
-  //   console.log("Saved");
-  //   console.log(topoTask);
-  // }, [topoTask]);
 
   // This following section will display the table with the tasks of individuals.
   return (
