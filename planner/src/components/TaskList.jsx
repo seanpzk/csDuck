@@ -7,7 +7,7 @@ import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
-import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx"
+import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 
 /**
  * Display the information of task in a row.
@@ -65,8 +65,6 @@ export default function TaskList() {
     customPriority: "",
   });
 
-  useEffect(() => console.log(customPrio), [ customPrio]);
-
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
 
@@ -90,7 +88,11 @@ export default function TaskList() {
         return;
       }
       const result = await response.json();
-      setCustomPrio(result[0].useCustomPriority);
+      if (result[0] == undefined) {
+        setCustomPrio(false);
+      } else {
+        setCustomPrio(result[0].useCustomPriority);
+      }
     }
 
     getCustomPrio();
@@ -104,7 +106,6 @@ export default function TaskList() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      console.log(customPrio);
       const response = await fetch(
         `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
         {
@@ -190,8 +191,6 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList(tasks) {
-    console.log("Tasklist change");
-    console.log(tasks);
     return tasks.map((task, index) => {
       return (
         <Task
@@ -263,7 +262,8 @@ export default function TaskList() {
   //Save the modified task order after performing dnd
   async function saveTaskOrder() {
     let index = 0;
-    for await (const t of tasks) {
+    let _tasks = structuredClone(tasks);
+    for await (const t of _tasks) {
       await getTaskData(t, index);
       index++;
     }
@@ -276,12 +276,12 @@ export default function TaskList() {
    */
   async function useDefaultSort() {
     await customPriorityFalse();
-    if (customPrio == null) {
+    if (customPrio == undefined) {
       setCustomPrio(false);
     } else if (customPrio == false) {
-      setCustomPrio(null);
+      setCustomPrio(undefined);
     } else {
-      setCustomPrio(false);  
+      setCustomPrio(false);
     }
   }
 
@@ -322,8 +322,6 @@ export default function TaskList() {
   // This following section will display the table with the tasks of individuals.
   return (
     <>
-      {/* {console.log(tasks)} */}
-
       <div className="list taskListPage ">
         <h3 style={{ textAlign: "center", margin: 15 }}>📚Task List</h3>{" "}
         <div>
@@ -338,7 +336,7 @@ export default function TaskList() {
             </thead>
             <tbody className="table-group-divider">{taskList()}</tbody>
           </table> */}
-          oh
+
           <div className="lines"></div>
           {
             <ul id="List">
@@ -369,26 +367,50 @@ export default function TaskList() {
               marginTop: 10,
             }}
             to="/create"
-            draggable="false"
           >
             ✏️ Add new task
           </NavLink>
+
           <button
             className="btn btn-primary "
-            style={{ fontSize: "80%" }}
+            style={{
+              color: "black",
+              backgroundColor: "lightblue",
+              borderColor: "black",
+              border: "none",
+              padding: "0.5%",
+              fontSize: "80%",
+              fontWeight: "normal",
+              fontFamily: "Arial",
+              width: "12%",
+              margin: 18,
+            }}
             onClick={saveTaskOrder}
           >
             Save current task order
           </button>
           <button
             className="btn btn-primary "
-            style={{ fontSize: "80%" }}
+            style={{
+              color: "black",
+              backgroundColor: "lightblue",
+              // borderColor: "black",
+              border: "none",
+              padding: "0.5%",
+              fontSize: "80%",
+              fontWeight: "normal",
+              fontFamily: "Arial",
+              width: "12%",
+              margin: 18,
+            }}
             onClick={useDefaultSort}
           >
             Reset to default sort order
           </button>
         </div>
-        <button type = "button" onClick={useToposort}>Auto sort</button>
+        <button type="button" onClick={useToposort}>
+          Auto sort
+        </button>
       </div>
     </>
   );

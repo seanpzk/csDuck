@@ -36,8 +36,6 @@ export default function SettingProfile() {
 
       const info = await response.json();
       setInfo(info[0]);
-      console.log("just finished setting info");
-      console.log(info);
     }
     getInfo();
 
