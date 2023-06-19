@@ -15,7 +15,7 @@ admin.initializeApp({
 // verify Firebase token
 export default async function decodeIDToken(req, res, next) {
     const header = req.headers?.authorization;
-    if (header != "Bearer null" && req.headers?.authorization?.startsWith("Bearer ")) {
+    if (header && header != "Bearer null" && req.headers?.authorization?.startsWith("Bearer ")) {
         const idToken = req.headers.authorization.split("Bearer ")[1];
         try {
             const decodedToken = await admin.auth()?.verifyIdToken(idToken);
@@ -28,6 +28,8 @@ export default async function decodeIDToken(req, res, next) {
             // return here will stop further execution of the middleware stack
             return res.json( {url: "/login"});
         }
+        next();
+    } else {
+        return res.status(401).json({message: "Error! Unauthorised access!"});
     }
-    next();
 }

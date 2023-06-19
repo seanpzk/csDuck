@@ -13,6 +13,26 @@ import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
+export function handleEmailPwLogin(auth, loginDetails) {
+  signInWithEmailAndPassword(
+    auth,
+    loginDetails.email,
+    loginDetails.password
+  )
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log(user);
+      console.log("logged in with email and password");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      throw error;
+    });
+}
+
 /**
  * Componenet that enables Login using three methods.
  * 1) Gooogle Login
@@ -94,23 +114,23 @@ export default function Login(props) {
   /**
    * Handles login using email and password.
    */
-  const handleEmailPwLogin = () =>
-    signInWithEmailAndPassword(
-      firebaseAuth,
-      loginForm.email,
-      loginForm.password
-    )
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        console.log("logged in with email and password");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      });
+  // const handleEmailPwLogin = () =>
+  //   signInWithEmailAndPassword(
+  //     firebaseAuth,
+  //     loginForm.email,
+  //     loginForm.password
+  //   )
+  //     .then((userCredential) => {
+  //       // Signed in
+  //       const user = userCredential.user;
+  //       console.log(user);
+  //       console.log("logged in with email and password");
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       console.log(errorMessage);
+  //     });
 
   /**
    * Submits form to backend. Resets when done.
@@ -119,7 +139,7 @@ export default function Login(props) {
    */
   async function handleSubmit(event) {
     event.preventDefault();
-    handleEmailPwLogin();
+    handleEmailPwLogin(firebaseAuth, loginForm);
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
