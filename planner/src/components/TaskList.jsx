@@ -65,15 +65,12 @@ export default function TaskList() {
     customPriority: "",
   });
 
-  useEffect(() => console.log(customPrio), [customPrio]);
-
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
 
   // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
     async function getCustomPrio() {
-      console.log("triggered getcustom");
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
@@ -93,7 +90,7 @@ export default function TaskList() {
 
       const result = await response.json();
       if (result[0] == undefined) {
-        setCustomPrio("false");
+        setCustomPrio(false);
       } else {
         setCustomPrio(result[0].useCustomPriority);
       }
@@ -110,7 +107,6 @@ export default function TaskList() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      console.log(customPrio);
       const response = await fetch(
         `${backendURL}/task?UID=${UID}&UCP=${customPrio}`,
         {
@@ -196,8 +192,6 @@ export default function TaskList() {
 
   // This method will map out the tasks on the table
   function taskList(tasks) {
-    console.log("Tasklist change");
-    console.log(tasks);
     return tasks.map((task, index) => {
       return (
         <Task
@@ -267,14 +261,15 @@ export default function TaskList() {
   // useNonInitialEffect(() => {}, [taskInfo]);
 
   //Save the modified task order after performing dnd
-  async function saveTaskOrder(tasks) {
+  async function saveTaskOrder() {
     let index = 0;
-    for await (const t of tasks) {
+    let _tasks = structuredClone(tasks);
+    for await (const t of _tasks) {
       await getTaskData(t, index);
       index++;
     }
-    setCustomPrio(true);
     await customPriorityTrue();
+    setCustomPrio(true);
   }
 
   /**
@@ -282,10 +277,10 @@ export default function TaskList() {
    */
   async function useDefaultSort() {
     await customPriorityFalse();
-    if (customPrio == null) {
+    if (customPrio == undefined) {
       setCustomPrio(false);
     } else if (customPrio == false) {
-      setCustomPrio(null);
+      setCustomPrio(undefined);
     } else {
       setCustomPrio(false);
     }
@@ -334,8 +329,6 @@ export default function TaskList() {
   // This following section will display the table with the tasks of individuals.
   return (
     <>
-      {/* {console.log(tasks)} */}
-
       <div className="list taskListPage ">
         <h3 style={{ textAlign: "center", margin: 15 }}>📚Task List</h3>{" "}
         <div>
