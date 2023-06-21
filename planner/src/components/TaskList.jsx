@@ -233,7 +233,7 @@ export default function TaskList() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     const response = await fetch(`http://localhost:5050/task/${task._id}`, {
       method: "GET",
-      header: {
+      headers: {
         Authorization: "Bearer " + idToken,
       },
     });
