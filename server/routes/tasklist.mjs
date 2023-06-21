@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
     const firebaseUID = req.query.UID;
     let collection = await db.collection("tasklist");
     let results = await collection.find({firebaseUID: firebaseUID}).toArray();
-    res.send(results).status(200);
+    res.status(200).send(results);
   });
 
 // This section will help you create by default a custom priority set to false.
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     };
     let collection = await db.collection("tasklist");
     let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    res.status(204).send(result);
   });
 
  // This section will help you update the custom priority.

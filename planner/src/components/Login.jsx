@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../stylesheets/styles.css";
+// import "../stylesheets/styles.css";
 import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  sendEmailVerification
+  sendEmailVerification,
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import googleLogo from "../assets/google.png";
@@ -14,11 +14,7 @@ import facebookLogo from "../assets/facebook.png";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
 export function handleEmailPwLogin(auth, loginDetails) {
-  signInWithEmailAndPassword(
-    auth,
-    loginDetails.email,
-    loginDetails.password
-  )
+  signInWithEmailAndPassword(auth, loginDetails.email, loginDetails.password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
@@ -38,15 +34,14 @@ export function handleEmailPwLogin(auth, loginDetails) {
  * 1) Gooogle Login
  * 2) Facebook Login
  * 3) Email and password Login
- * 
- * @param {Object} props 
+ *
+ * @param {Object} props
  * @param {boolean} props.auth - Tracks if user is authenticated
  * @param {function} props.setAuth - set State of auth
  * @returns {React.ReactElement} - The login form/page
  * @description need to use SSL/TLS to securely send data from client to server
  */
 export default function Login(props) {
-
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
 
@@ -60,7 +55,7 @@ export default function Login(props) {
    * Handles login using Google.
    * Automatically create, login and verifies email.
    * Creates user in MongoDB
-   * 
+   *
    * @return {void}
    */
   async function loginWithGoogle() {
@@ -77,14 +72,14 @@ export default function Login(props) {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }
 
   /**
    * Handles login using Facebook.
    * Automatically create, login.
    * Sends email verification to user!
    * Creates user in MongoDB
-   * 
+   *
    * @return {void}
    */
   async function loginWithFacebook() {
@@ -103,7 +98,7 @@ export default function Login(props) {
         const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(errorMessage);
       });
-  };
+  }
 
   const updateForm = (value) => {
     return setForm((prev) => {
@@ -134,7 +129,7 @@ export default function Login(props) {
 
   /**
    * Submits form to backend. Resets when done.
-   * 
+   *
    * @param {Event} event
    */
   async function handleSubmit(event) {

@@ -367,6 +367,7 @@ export default function TaskList() {
               marginTop: 10,
             }}
             to="/create"
+            draggable="false"
           >
             ✏️ Add new task
           </NavLink>
