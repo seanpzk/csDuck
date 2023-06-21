@@ -7,12 +7,41 @@ import {
 import firebaseAuth from "../firebase.config";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
+  /**
+   * Handles the email and password creation.
+   * 
+   * @function handleEmailPwCreation
+   * @async
+   * @param {Object} auth firebaseAuth
+   * @param {Object} registrationForm Form Object
+   * @param {string} registrationForm.email email of User
+   * @param {string} registrationForm.password password of User 
+   * @return {Object} User created
+   */
+  export async function handleEmailPwCreation(auth, registrationForm) {
+    let user;
+    await createUserWithEmailAndPassword(auth, registrationForm.email, registrationForm.password)
+      .then(async (userCredential) => {
+        user = userCredential.user;
+        // updateUser(user);
+        console.log("registered with email and password");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        // console.log(errorMessage);
+        throw error;
+      });
+      return user;
+  }
+
 /**
  * Component that handles the registration of a new user via email and password.
  * 
+ * @param {Object} props Property brought forward
+ * @param { function } props.handleSubmitMock Mock version of handleSubmit - used for jest testing
  * @returns {React.ReactElement} - The registration form page
  */
-export default function Register() {
+export default function Register(props) {
 
   const [newUserCreated, updateUser] = useState(null);
   /** New user creation form to be submitted to backend */
@@ -32,26 +61,6 @@ export default function Register() {
       return { ...prev, ...value };
     });
   };
-
-  /**
-   * Handles the email and password creation.
-   * 
-   * @function handleEmailPwCreation
-   * @async
-   * @return {void}
-   */
-  async function handleEmailPwCreation() {
-    await createUserWithEmailAndPassword(firebaseAuth, creationForm.email, creationForm.password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        updateUser(user);
-        console.log("registered with email and password");
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      });
-  }
 
   /**
    * Sends email verification emails to newly created users.
@@ -82,7 +91,7 @@ export default function Register() {
    */
   async function handleSubmit(event) {
       event.preventDefault();
-      await handleEmailPwCreation();
+      updateUser(await handleEmailPwCreation(firebaseAuth, creationForm));
       const newUser = creationForm;
       await CreateUserMongo();
       // resets the form once submitted
@@ -95,7 +104,7 @@ export default function Register() {
       <div className="register">
         <form
           className="register-style-form"
-          onSubmit={handleSubmit}
+          onSubmit={props.handleSubmitMock || handleSubmit}
           style={{
             width: "20rem",
             border: "1px solid grey",
@@ -106,8 +115,9 @@ export default function Register() {
             borderRadius: "10px",
             boxShadow: "0 0 10px lightgrey",
           }}
+          data-testid= "register-form"
         >
-          <label htmlFor="email">Email: </label>
+          <label htmlFor="email" data-testid= "label-email">Email: </label>
           <input
             type="text"
             name="password"
@@ -115,8 +125,9 @@ export default function Register() {
             value={creationForm.email}
             placeholder="Your email"
             onChange={(event) => updateForm({ email: event.target.value })}
+            data-testid='input-email'
           />
-          <label htmlFor="password">Password: </label>
+          <label htmlFor="password" data-testid= "label-password">Password: </label>
           <input
             type="text"
             name="password"
@@ -124,6 +135,7 @@ export default function Register() {
             value={creationForm.password}
             placeholder="Your password"
             onChange={(event) => updateForm({ password: event.target.value })}
+            data-testid= "input-password"
           />
           <button
             type="submit"
@@ -134,6 +146,7 @@ export default function Register() {
               // filter: "drop-shadow(0px 10px 10px lightgrey)",
               borderRadius: "10px",
             }}
+            data-testid= 'submit-button'
           >
             Create user
           </button>

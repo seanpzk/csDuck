@@ -9,7 +9,7 @@ import { sendEmailVerification } from "firebase/auth";
  * 
  * @return {React.ReactElement} - Renders Resend email verification page.
  */
-export default function VerifyEmail() {
+export default function VerifyEmail(props) {
 
     const [user, setUser] = useState(null);
     const [disableButton, setDisableButton] = useState(false);
@@ -24,6 +24,8 @@ export default function VerifyEmail() {
      * 
      * @function handleResend
      * @async
+     * @param {Object} props
+     * @param {function} props.handleResendMock Mock version of handleResend for jest test
      * @return {void}
      */
     async function handleResend() {
@@ -54,9 +56,10 @@ export default function VerifyEmail() {
                 <div>
                     <h4>Did not receive the email?</h4>
                     <div className = {buttonLabel ? "button-label" : "hide"}>Try again in {time}</div>
-                    <button onClick = {handleResend} 
+                    <button onClick = {props.handleResendMock || handleResend} 
                         className ="submit-button"
-                        disabled= {disableButton}>Click here to resend</button>
+                        disabled= {disableButton}
+                        data-testid='resend-button'>Click here to resend</button>
                 </div>
             </div>
         </>
