@@ -21,6 +21,7 @@ export default async function decodeIDToken(req, res, next) {
             const decodedToken = await admin.auth()?.verifyIdToken(idToken);
             req["currentUser"] = decodedToken;
         } catch (error) {
+            console.log(idToken);
             console.log(error);
             console.log("Request not authenticated");
             // "return" prevents double response <--> Error here, need to find a better way to send to frontend, then redirect.

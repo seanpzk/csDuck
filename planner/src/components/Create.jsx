@@ -34,19 +34,18 @@ export default function Create() {
   async function onSubmit(e) {
     e.preventDefault();
     // When a post request is sent to the create url, we'll add a new record to the database.
-    const newTask = { ...task }; // why do we need the ... here?
+    const newTask = { ...task };
     console.log(newTask);
-    // ============= <ADDED CODE HERE =============
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       await fetch(`${backendURL}/task`, {
-        method: "POST", // send data to the server
+        method: "POST",
         headers: {
           Authorization: "Bearer " + idToken,
-          "Content-Type": "application/json", // indicates that the request body is in json format
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTask), // convert based on HTTP request format (Google the formats)
+        body: JSON.stringify(newTask),
       }).catch((error) => {
         window.alert(error);
         return;

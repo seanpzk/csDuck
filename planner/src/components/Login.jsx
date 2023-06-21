@@ -13,8 +13,16 @@ import googleLogo from "../assets/google.png";
 import facebookLogo from "../assets/facebook.png";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 
-export function handleEmailPwLogin(auth, loginDetails) {
-  signInWithEmailAndPassword(
+/**
+ * User login using email and password
+ * 
+ * @param {Object} auth - firebaseAuth object
+ * @param {Object} loginDetails - user that is logging in
+ * @param {string} loginDetails.email - email of user logging in
+ * @param {string} loginDetails.password - password of user logging in
+ */
+export async function handleEmailPwLogin(auth, loginDetails) {
+  await signInWithEmailAndPassword(
     auth,
     loginDetails.email,
     loginDetails.password
@@ -40,8 +48,9 @@ export function handleEmailPwLogin(auth, loginDetails) {
  * 3) Email and password Login
  * 
  * @param {Object} props 
- * @param {boolean} props.auth - Tracks if user is authenticated
- * @param {function} props.setAuth - set State of auth
+ * @param {boolean} props.auth Tracks if user is authenticated
+ * @param {function} props.setAuth set State of auth
+ * @param {function} props.handleSubmitMock Mock version of handleSubmit for jest testing
  * @returns {React.ReactElement} - The login form/page
  * @description need to use SSL/TLS to securely send data from client to server
  */
@@ -71,8 +80,6 @@ export default function Login(props) {
           GoogleAuthProvider.credentialFromResult(result).accessToken;
         const user = result.user;
         // props.setAuth(true);
-        console.log(token);
-        console.log(user);
       })
       .catch((error) => {
         console.log(error);
@@ -102,6 +109,7 @@ export default function Login(props) {
         const errorMessage = error.message;
         const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(errorMessage);
+        throw error;
       });
   };
 
@@ -139,7 +147,7 @@ export default function Login(props) {
    */
   async function handleSubmit(event) {
     event.preventDefault();
-    handleEmailPwLogin(firebaseAuth, loginForm);
+    await handleEmailPwLogin(firebaseAuth, loginForm);
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
@@ -160,8 +168,8 @@ export default function Login(props) {
               boxShadow: "0 0 10px lightgrey",
             }}
           >
-            <form className="login-style-form" onSubmit={handleSubmit}>
-              <label htmlFor="email">Email:</label>
+            <form className="login-style-form" onSubmit={props.handleSubmitMock || handleSubmit} data-testid='login-form'>
+              <label htmlFor="email" data-testid='email-label'>Email:</label>
               <input
                 type="text"
                 name="email"
@@ -169,8 +177,9 @@ export default function Login(props) {
                 value={loginForm.email}
                 placeholder="Your email"
                 onChange={(event) => updateForm({ email: event.target.value })}
+                data-testid='email-input'
               />
-              <label htmlFor="password">Password:</label>
+              <label htmlFor="password" data-testid="password-label">Password:</label>
               <input
                 type="text"
                 name="password"
@@ -180,9 +189,11 @@ export default function Login(props) {
                 onChange={(event) =>
                   updateForm({ password: event.target.value })
                 }
+                data-testid= "password-input"
               />
 
               <button
+              data-testid = "login-button"
                 type="submit"
                 className="btn btn-light"
                 style={{
@@ -208,11 +219,11 @@ export default function Login(props) {
                 borderRadius: "10px",
               }}
             >
-              <button onClick={loginWithGoogle}>
-                <img src={googleLogo} />
+              <button onClick={props.loginWithGoogleMock || loginWithGoogle} data-testid = "google-login">
+                <img src={googleLogo} data-testid ="googleImg"/>
               </button>
-              <button onClick={loginWithFacebook}>
-                <img src={facebookLogo} />
+              <button onClick={props.loginWithFacebookMock || loginWithFacebook} data-testid = "facebook-login">
+                <img src={facebookLogo} data-testid ="facebookImg"/>
               </button>
               <hr />
             </div>
