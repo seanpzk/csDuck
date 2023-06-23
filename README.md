@@ -7,18 +7,17 @@ Orbital project
 ## To install in planner
 
 ```
-npm install vite@latest
-npm install react-bootstrap bootstrap@5.2.3
-npm install react-phone-input-2
+npm install vite@latest 
+react-bootstrap 
+bootstrap@5.2.3 
+react-phone-input-2 
+jest 
+babel-jest 
+@babel/preset-env 
+@babel/preset-react 
+react-test-renderer
+identity-obj-proxy
 ```
-
-<!--
-## To install in server
-
-```
-npm install mongodb express cors dotenv js-sha512
-```
--->
 
 ## Run the application
 
@@ -27,4 +26,16 @@ cd planner;
 npm run dev;
 cd server;
 node server.mjs;
+```
+
+## Testing using jest
+Test firebaseAuthEmail / anything that requires firebase calls: remove the following code in jest.config.cjs
+```
+testEnvironment: "jsdom"
+```
+
+Test react:
+Following code must be present
+```
+testEnvironment: "jsdom"
 ```

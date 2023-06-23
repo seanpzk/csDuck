@@ -30,13 +30,11 @@ export async function handleEmailPwLogin(auth, loginDetails) {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log(user);
       console.log("logged in with email and password");
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorMessage);
       throw error;
     });
 }
@@ -50,7 +48,6 @@ export async function handleEmailPwLogin(auth, loginDetails) {
  * @param {Object} props 
  * @param {boolean} props.auth Tracks if user is authenticated
  * @param {function} props.setAuth set State of auth
- * @param {function} props.handleSubmitMock Mock version of handleSubmit for jest testing
  * @returns {React.ReactElement} - The login form/page
  * @description need to use SSL/TLS to securely send data from client to server
  */
@@ -76,9 +73,9 @@ export default function Login(props) {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
       .then(async (result) => {
         await CreateUserMongo();
-        const token =
-          GoogleAuthProvider.credentialFromResult(result).accessToken;
-        const user = result.user;
+        // const token =
+        //   GoogleAuthProvider.credentialFromResult(result).accessToken;
+        // const user = result.user;
         // props.setAuth(true);
       })
       .catch((error) => {
@@ -101,13 +98,13 @@ export default function Login(props) {
         await sendEmailVerification(result.user)
           .then(console.log("Email verification sent"))
           .catch((error) => console.log(error));
-        const token =
-          FacebookAuthProvider.credentialFromResult(result).accessToken;
+        // const token =
+        //   FacebookAuthProvider.credentialFromResult(result).accessToken;
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        const credential = FacebookAuthProvider.credentialFromError(error);
+        // const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(errorMessage);
         throw error;
       });
@@ -118,27 +115,6 @@ export default function Login(props) {
       return { ...prev, ...value };
     });
   };
-
-  /**
-   * Handles login using email and password.
-   */
-  // const handleEmailPwLogin = () =>
-  //   signInWithEmailAndPassword(
-  //     firebaseAuth,
-  //     loginForm.email,
-  //     loginForm.password
-  //   )
-  //     .then((userCredential) => {
-  //       // Signed in
-  //       const user = userCredential.user;
-  //       console.log(user);
-  //       console.log("logged in with email and password");
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       console.log(errorMessage);
-  //     });
 
   /**
    * Submits form to backend. Resets when done.
@@ -168,7 +144,7 @@ export default function Login(props) {
               boxShadow: "0 0 10px lightgrey",
             }}
           >
-            <form className="login-style-form" onSubmit={props.handleSubmitMock || handleSubmit} data-testid='login-form'>
+            <form className="login-style-form" onSubmit={handleSubmit} data-testid='login-form'>
               <label htmlFor="email" data-testid='email-label'>Email:</label>
               <input
                 type="text"
@@ -178,6 +154,7 @@ export default function Login(props) {
                 placeholder="Your email"
                 onChange={(event) => updateForm({ email: event.target.value })}
                 data-testid='email-input'
+                required
               />
               <label htmlFor="password" data-testid="password-label">Password:</label>
               <input
@@ -190,6 +167,7 @@ export default function Login(props) {
                   updateForm({ password: event.target.value })
                 }
                 data-testid= "password-input"
+                required
               />
 
               <button
@@ -219,10 +197,10 @@ export default function Login(props) {
                 borderRadius: "10px",
               }}
             >
-              <button onClick={props.loginWithGoogleMock || loginWithGoogle} data-testid = "google-login">
+              <button onClick={loginWithGoogle} data-testid = "google-login">
                 <img src={googleLogo} data-testid ="googleImg"/>
               </button>
-              <button onClick={props.loginWithFacebookMock || loginWithFacebook} data-testid = "facebook-login">
+              <button onClick={loginWithFacebook} data-testid = "facebook-login">
                 <img src={facebookLogo} data-testid ="facebookImg"/>
               </button>
               <hr />

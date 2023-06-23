@@ -28,7 +28,6 @@ import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
       })
       .catch((error) => {
         const errorMessage = error.message;
-        // console.log(errorMessage);
         throw error;
       });
       return user;
@@ -104,7 +103,7 @@ export default function Register(props) {
       <div className="register">
         <form
           className="register-style-form"
-          onSubmit={props.handleSubmitMock || handleSubmit}
+          onSubmit={handleSubmit}
           style={{
             width: "20rem",
             border: "1px solid grey",
@@ -126,6 +125,7 @@ export default function Register(props) {
             placeholder="Your email"
             onChange={(event) => updateForm({ email: event.target.value })}
             data-testid='input-email'
+            required
           />
           <label htmlFor="password" data-testid= "label-password">Password: </label>
           <input
@@ -136,6 +136,7 @@ export default function Register(props) {
             placeholder="Your password"
             onChange={(event) => updateForm({ password: event.target.value })}
             data-testid= "input-password"
+            required
           />
           <button
             type="submit"

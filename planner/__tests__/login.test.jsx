@@ -1,15 +1,32 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Login from "../src/components/Login.jsx";
 import { BrowserRouter } from "react-router-dom";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+
+jest.mock("firebase/auth", () => ({
+    // tells jest that everything else remain the same
+    ...jest.requireActual("firebase/auth"),
+    signInWithEmailAndPassword: jest.fn(() => Promise.resolve({data : {}})),
+    getAuth: jest.fn(),
+    signInWithPopup: jest.fn(() => Promise.resolve({data: {}}))
+}));
+
+jest.mock("../src/components/helperFunctions/CreateUserMongo.jsx", () => ({
+    __esModule: true,
+    default: jest.fn()
+}))
 
 describe("Testing of the login form", () => {
-    beforeEach(() => render(
+    beforeEach(() => {
+        jest.clearAllMocks();
+        render(
         <BrowserRouter>
             <Login />
-        </BrowserRouter>));
+        </BrowserRouter>)
+    });
 
-    test('test login form loaded', () => {
+    test('Login form loaded', () => {
         const loginForm = screen.getByTestId('login-form');
         expect(loginForm).toBeInTheDocument();
         expect(loginForm).toHaveClass('login-style-form');
@@ -40,58 +57,40 @@ describe("Testing of the login form", () => {
         });
         expect(passwordInput.value).toBe('randomPassword');
     });
+
+    // Test submit button
+    test("login button", async () => {
+        const submitButton = screen.getByTestId('login-button');
+        expect(submitButton).toBeInTheDocument();
+        expect(submitButton).toHaveAttribute('type', 'submit');
+        expect(submitButton).toBeEnabled();
+
+        // Verifies that the button calls handleSubmit
+        fireEvent.click(submitButton);
+        expect(signInWithEmailAndPassword).toHaveBeenCalledTimes(1);
+    });
+
+    // Test Google login icon
+    test("Google login button", () => {
+        const googleLogin = screen.getByTestId('google-login');
+        expect(googleLogin).toBeInTheDocument();
+        expect(googleLogin).toBeEnabled();
+        const googleImg = screen.getByTestId('googleImg');
+        expect(googleImg).toBeInTheDocument();
+        // Check if button is linked to the correct function
+        fireEvent.click(googleLogin);
+        expect(signInWithPopup).toHaveBeenCalledTimes(1);
+    });
+
+    // Test Facebook login icon
+    test("Facebook login button", () => {
+        const facebookLogin = screen.getByTestId('facebook-login');
+        expect(facebookLogin).toBeInTheDocument();
+        expect(facebookLogin).toBeEnabled();
+        const facebookImg = screen.getByTestId('facebookImg');
+        expect(facebookImg).toBeInTheDocument();
+        // Check if button is linked to the correct function
+        fireEvent.click(facebookLogin);
+        expect(signInWithPopup).toHaveBeenCalledTimes(1);
+    });
 })
-
-// Test submit button
-test("Test login button", () => {
-    const handleSubmitMock = jest.fn();
-    render(
-        <BrowserRouter>
-            <Login handleSubmitMock={handleSubmitMock} />
-        </BrowserRouter>
-    )
-    const submitButton = screen.getByTestId('login-button');
-    expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toHaveAttribute('type', 'submit');
-    expect(submitButton).toBeEnabled();
-
-    // Verifies that the button calls handleSubmit
-    fireEvent.click(submitButton);
-    expect(handleSubmitMock).toHaveBeenCalled();
-});
-
-// Test Google login icon
-test("Test Google login button", () => {
-    const loginWithGoogleMock = jest.fn();
-    render(
-    <BrowserRouter>
-            <Login loginWithGoogleMock = {loginWithGoogleMock} />
-    </BrowserRouter>
-    );
-    const googleLogin = screen.getByTestId('google-login');
-    expect(googleLogin).toBeInTheDocument();
-    expect(googleLogin).toBeEnabled();
-    const googleImg = screen.getByTestId('googleImg');
-    expect(googleImg).toBeInTheDocument();
-    // Check if button is linked to the correct function
-    fireEvent.click(googleLogin);
-    expect(loginWithGoogleMock).toHaveBeenCalled();
-});
-
-// Test Facebook login icon
-test("Test Facebook login button", () => {
-    const loginWithFacebookMock = jest.fn();
-    render(
-        <BrowserRouter>
-                <Login loginWithFacebookMock= {loginWithFacebookMock} />
-        </BrowserRouter>
-        );
-    const facebookLogin = screen.getByTestId('facebook-login');
-    expect(facebookLogin).toBeInTheDocument();
-    expect(facebookLogin).toBeEnabled();
-    const facebookImg = screen.getByTestId('facebookImg');
-    expect(facebookImg).toBeInTheDocument();
-    // Check if button is linked to the correct function
-    fireEvent.click(facebookLogin);
-    expect(loginWithFacebookMock).toHaveBeenCalled();
-});

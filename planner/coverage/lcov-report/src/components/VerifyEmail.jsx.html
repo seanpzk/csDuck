@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/21</span>
+                <span class='fraction'>0/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/7</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.57% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/19</span>
+                <span class='fraction'>0/19</span>
             </div>
         
             
@@ -142,12 +142,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,7 +180,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,14 +206,14 @@ import { sendEmailVerification } from "firebase/auth";
  * 
  * @return {React.ReactElement} - Renders Resend email verification page.
  */
-export default function VerifyEmail(props) {
+export default function <span class="fstat-no" title="function not covered" >VerifyEmail(</span>props) {
 &nbsp;
-    const [user, setUser] = useState(null);
-    const [disableButton, setDisableButton] = useState(false);
-    const [time, setTime] = useState(15);
-    const [buttonLabel, setButtonLabel] = useState(false);
+    const [user, setUser] = <span class="cstat-no" title="statement not covered" >useState(null);</span>
+    const [disableButton, setDisableButton] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+    const [time, setTime] = <span class="cstat-no" title="statement not covered" >useState(15);</span>
+    const [buttonLabel, setButtonLabel] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
 &nbsp;
-    useEffect(() =&gt; setUser(firebaseAuth.currentUser), []);
+<span class="cstat-no" title="statement not covered" >    useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >setUser(firebaseAuth.currentUser),</span> []);</span>
 &nbsp;
     /**
      * Allows user to resend email verification every 15 seconds.
@@ -246,14 +246,14 @@ export default function VerifyEmail(props) {
         }
     }
 &nbsp;
-    return (
+<span class="cstat-no" title="statement not covered" >    return (</span>
         &lt;&gt;
             &lt;div className="verify-Form"&gt;
                 &lt;h1&gt;Verify your Account&lt;/h1&gt;
                 &lt;div&gt;
                     &lt;h4&gt;Did not receive the email?&lt;/h4&gt;
-                    &lt;div className = {buttonLabel ? <span class="branch-0 cbranch-no" title="branch not covered" >"button-label" </span>: "hide"}&gt;Try again in {time}&lt;/div&gt;
-                    &lt;button onClick = {props.handleResendMock || <span class="branch-1 cbranch-no" title="branch not covered" >handleResend} </span>
+                    &lt;div className = {buttonLabel ? "button-label" : "hide"}&gt;Try again in {time}&lt;/div&gt;
+                    &lt;button onClick = {props.handleResendMock || handleResend} 
                         className ="submit-button"
                         disabled= {disableButton}
                         data-testid='resend-button'&gt;Click here to resend&lt;/button&gt;
@@ -268,7 +268,7 @@ export default function VerifyEmail(props) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-20T13:54:55.311Z
+                at 2023-06-21T06:35:19.782Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

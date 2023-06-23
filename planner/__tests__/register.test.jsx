@@ -2,6 +2,19 @@ import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Register from "../src/components/Register.jsx";
 import { BrowserRouter } from "react-router-dom";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+jest.mock("firebase/auth", () => ({
+    // tells jest that everything else remain the same
+    ...jest.requireActual("firebase/auth"),
+    getAuth: jest.fn(),
+    createUserWithEmailAndPassword: jest.fn(() => Promise.resolve({data: {}}))
+}));
+
+jest.mock("../src/components/helperFunctions/CreateUserMongo.jsx", () => ({
+    __esModule: true,
+    default: jest.fn()
+}))
 
 describe('Should render register form components', () => {
     beforeEach(() => render(
@@ -49,10 +62,8 @@ describe('Should render register form components', () => {
         });
         expect(inputPassword.value).toBe("number password");
     });
-
     // Test submit button
     test("Test submit button", () => {
-        const handleSubmitMock = jest.fn();
         const submitButton = screen.getByTestId('submit-button');
         expect(submitButton).toBeInTheDocument();
         expect(submitButton).toHaveAttribute('type', 'submit');
@@ -60,6 +71,6 @@ describe('Should render register form components', () => {
 
         // Verifies that the form submission button is correctly linked
         fireEvent.click(submitButton);
-        expect(handleSubmitMock).toHaveBeenCalled();
+        expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
     });
 });

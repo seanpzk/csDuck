@@ -53,7 +53,7 @@ export default function Reset() {
                 <img src = {resetPasswordImg} className = "resetImg"></img>
                 <h3>Reset Your Password</h3>
                 <label htmlFor = "email">Email Address: </label>
-                <input type = "text" id = "email" onChange = { (event) => updateForm({ email: event.target.value }) }/>
+                <input type = "text" id = "email" onChange = { (event) => updateForm({ email: event.target.value }) } required/>
                 <button type = "submit">Reset password</button>
             </form>
         </>

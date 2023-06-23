@@ -35,7 +35,6 @@ export default function Create() {
     e.preventDefault();
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task };
-    console.log(newTask);
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -78,6 +77,7 @@ export default function Create() {
             id="name"
             value={task.name}
             onChange={(e) => updateTask({ name: e.target.value })}
+            required
           />
         </div>
         <div className="form-group">
@@ -111,6 +111,7 @@ export default function Create() {
               value="Low"
               checked={task.priority === "Low"}
               onChange={(e) => updateTask({ priority: e.target.value })}
+              required
             />
             <label htmlFor="priorityLow" className="form-check-label">
               Low

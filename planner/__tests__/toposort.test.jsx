@@ -67,217 +67,126 @@ describe("node class tests", () => {
 /**
  * Refer to "./topoTestCases" folder for the pictorial graphs
  */
-test('VerifyDAG function', async () => {
-    // verifyDAG0
-    expect(await verifyDAG({}, [])).toBe(true);
-    // verifyDAG1
-    expect(await verifyDAG({name: "task1", 
-    deadline: "", 
-    priority: "", 
-    description: "", 
-    firebaseUID: "sadf", 
-    doBefore: []}
-    , [])).toBe(true);
-    // verifyDAG2
-    expect(await verifyDAG({
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }, [{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }])).toBe(true);
-    // verifyDAG3
-    expect(await verifyDAG({
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task3",
-        priority: ""
-    }, [{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }])).toBe(true);
-    // verifyDAG4
-    expect(await verifyDAG({
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "3",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task3",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, [{
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }, {
-        _id: "3",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task3",
-        priority: ""
-    }])).toBe(false);
-    // verifyDAG5
-    expect(await verifyDAG({
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [{
+describe("Tests for VerifyDAG Function", () => {
+    describe("Empty Graph", () => {
+        test('VerifyDAG 0', async () => {
+            expect(await verifyDAG({}, [])).toBe(true);
+        });
+    })
+
+    describe("Graph with no dependencies", () => {
+        test("VerifyDAG 1", async () => {
+            expect(await verifyDAG({
+                name: "task1", 
+                deadline: "", 
+                priority: "", 
+                description: "", 
+                firebaseUID: "sadf", 
+                doBefore: []
+            }
+            , [])).toBe(true);
+        });
+        test("VerifyDAG 9", async () => {
+            expect(await verifyDAG({
                 _id: "1",
-                deadline: "",
-                description: "",
-                doBefore: [],
-                fireabaseUID: "asdfasdf",
-                name: "task1",
-                priority: "" 
-            }],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }, {
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: "" 
-        }],
-        fireabaseUID: "asdasdfvqwerfasdf",
-        name: "task3",
-        priority: ""
-    }, [{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, 
-    {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "sdvcdsf",
-        name: "task2",
-        priority: ""
-    }])).toEqual(true);
-    // verifyDAG6
-    expect(await verifyDAG({
-        _id: "4",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [{
-                _id: "1",
-                deadline: "",
+                deadline: "2023-06-23",
                 description: "",
                 doBefore: [],
                 fireabaseUID: "asdfasdf",
                 name: "task1",
                 priority: ""
-            }],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }, {
-            _id: "3",
-            deadline: "",
-            description: "",
-            doBefore: [{
+            }, [{
+                _id: "2",
+                deadline: "2023-05-01",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "2022-12-27",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }
+            ])).toBeTruthy();
+        });
+    });
+
+    describe("Graph with cyclic dependencies", () => {
+        test("VerifyDAG 4", async () => {
+            expect(await verifyDAG({
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "3",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task3",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, [{
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }])).toBe(false);
+        });
+
+        test("VerifyDAG 7", async () => {
+            expect(await verifyDAG({
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, [{
                 _id: "1",
                 deadline: "",
                 description: "",
@@ -301,55 +210,28 @@ test('VerifyDAG function', async () => {
                 fireabaseUID: "asdfasdf",
                 name: "task2",
                 priority: ""
-            }],
-            fireabaseUID: "asdfasdf",
-            name: "task3",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task4",
-        priority: ""
-    }, [{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }, {
-        _id: "3",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }, {
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [{
+            }])).toBe(false);
+        });
+    });
+
+    describe("Graph with dependencies", () => {
+        test("VerifyDAG 2", async () => {
+            expect(await verifyDAG({
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, [{
                 _id: "1",
                 deadline: "",
                 description: "",
@@ -357,205 +239,692 @@ test('VerifyDAG function', async () => {
                 fireabaseUID: "asdfasdf",
                 name: "task1",
                 priority: ""
-            }],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task3",
-        priority: ""
-    }])).toBe(true);
-    // verifyDAG7
-    expect(await verifyDAG({
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "2",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, [{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }])).toBe(false);
+            }])).toBe(true);
+        });
+
+        test("VerifyDAG 3", async () => {
+            expect(await verifyDAG({
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }, [{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }])).toBe(true);
+        });
+
+        test("VerfiyDAG 5", async () => {
+            expect(await verifyDAG({
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: "" 
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }, {
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: "" 
+                }],
+                fireabaseUID: "asdasdfvqwerfasdf",
+                name: "task3",
+                priority: ""
+            }, [{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, 
+            {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "sdvcdsf",
+                name: "task2",
+                priority: ""
+            }])).toEqual(true);
+        });
+
+        test("VerifyDAG 6", async () => {
+            expect(await verifyDAG({
+                _id: "4",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "3",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }, {
+                        _id: "2",
+                        deadline: "",
+                        description: "",
+                        doBefore: [{
+                            _id: "1",
+                            deadline: "",
+                            description: "",
+                            doBefore: [],
+                            fireabaseUID: "asdfasdf",
+                            name: "task1",
+                            priority: ""
+                        }],
+                        fireabaseUID: "asdfasdf",
+                        name: "task2",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task3",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }, [{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }])).toBe(true);
+        });
+    });
+
+    describe("Graph with self-referencing nodes", () => {
+        test("VerifyDAG 8", async () => {
+            expect(await verifyDAG({
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, [{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }])).toBeTruthy();
+        });
+
+        test("VerifyDAG 11", async () => {
+            expect(await verifyDAG({
+                _id: "5",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "4",
+                    deadline: "2023-02-22",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task4",
+                    priority: ""
+                }, {
+                    _id: "5",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "4",
+                        deadline: "2023-02-22",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task4",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task5",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task5",
+                priority: ""
+            }, [{
+                _id: "4",
+                deadline: "2023-02-22",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }, {
+                _id: "1",
+                deadline: "2023-06-23",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "2023-06-23",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }])).toBeFalsy();
+        });
+    });
+    
+    describe("Graph with Partially connected components", () => {
+        test("VerifyDAG 10", async () => {
+            expect(await verifyDAG({
+                _id: "5",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "4",
+                    deadline: "2023-02-22",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task4",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task5",
+                priority: ""
+            }, [{
+                _id: "4",
+                deadline: "2023-02-22",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }, {
+                _id: "1",
+                deadline: "2023-06-23",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "2",
+                    deadline: "",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "2023-06-23",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }])).toBeTruthy();
+        })
+    });
 });
 
-test('Verify Toposort output', async () => {
-    // Empty set
-    expect(await Toposort([])).toEqual([]);
-    // Topo1
-    expect((await Toposort([{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }])).map(task => task._id)).toEqual(["1"]);
-    // Topo2
-    expect((await Toposort([{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }])).map(task => task._id)).toEqual(["1", "2"]);
-    // Topo3
-    expect((await Toposort([{
-        _id: "1",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }, {
-        _id: "3",
-        deadline: "",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task3",
-        priority: ""
-    }, {
-        _id: "4",
-        deadline: "",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task4",
-        priority: ""
-    }])).map(task => task._id)).toEqual(["1", "4", "3", "2"]);
+describe("Tests for Toposort Function", () => {
+    describe("Empty Graph", () => {
+        test("Empty Set", async () => {
+            expect(await Toposort([])).toEqual([]);
+        });
+    });
 
-    // Topo4
-    expect((await Toposort([{
-        _id: "1",
-        deadline: "2023-06-23",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task1",
-        priority: ""
-    }, {
-        _id: "2",
-        deadline: "2023-06-27",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "2023-06-23",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task2",
-        priority: ""
-    }, {
-        _id: "3",
-        deadline: "2023-06-26",
-        description: "",
-        doBefore: [{
-            _id: "1",
-            deadline: "2023-06-23",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task1",
-            priority: ""
-        }, {
-            _id: "2",
-            deadline: "2023-06-27",
-            description: "",
-            doBefore: [],
-            fireabaseUID: "asdfasdf",
-            name: "task2",
-            priority: ""
-        }],
-        fireabaseUID: "asdfasdf",
-        name: "task3",
-        priority: ""
-    }, {
-        _id: "4",
-        deadline: "2023-06-22",
-        description: "",
-        doBefore: [],
-        fireabaseUID: "asdfasdf",
-        name: "task4",
-        priority: ""
-    }])).map(task => task._id)).toEqual(["4", "1", "2", "3"]);
+    describe("Graph with no dependencies", () => {
+        test("Topo 1", async () => {
+            expect((await Toposort([{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }])).map(task => task._id)).toEqual(["1"]);
+        });
+    });
+
+    describe("Graph with dependencies", () => {
+        test("Topo 2", async () => {
+            expect((await Toposort([{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }])).map(task => task._id)).toEqual(["1", "2"]);
+        });
+
+        test("Topo 3", async () => {
+            expect((await Toposort([{
+                _id: "1",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }, {
+                _id: "4",
+                deadline: "",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }])).map(task => task._id)).toEqual(["1", "4", "3", "2"]);
+        });
+
+        test("Topo 4", async () => {
+            expect((await Toposort([{
+                _id: "1",
+                deadline: "2023-06-23",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "2023-06-27",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "2023-06-26",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-06-23",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "2",
+                    deadline: "2023-06-27",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }, {
+                _id: "4",
+                deadline: "2023-06-22",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }])).map(task => task._id)).toEqual(["4", "1", "2", "3"]);
+        });
+    });
+
+    describe("Graph with Partially connected Components", () => {
+        test("Topo 5", async () => {
+            expect((await Toposort([{
+                _id: "4",
+                deadline: "2023-02-22",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task4",
+                priority: ""
+            }, {
+                _id: "1",
+                deadline: "2023-03-22",
+                description: "",
+                doBefore: [],
+                fireabaseUID: "asdfasdf",
+                name: "task1",
+                priority: ""
+            }, {
+                _id: "2",
+                deadline: "2023-05-23",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-03-22",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task2",
+                priority: ""
+            }, {
+                _id: "3",
+                deadline: "2023-06-24",
+                description: "",
+                doBefore: [{
+                    _id: "1",
+                    deadline: "2023-03-22",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task1",
+                    priority: ""
+                }, {
+                    _id: "2",
+                    deadline: "2023-05-23",
+                    description: "",
+                    doBefore: [{
+                        _id: "1",
+                        deadline: "2023-06-23",
+                        description: "",
+                        doBefore: [],
+                        fireabaseUID: "asdfasdf",
+                        name: "task1",
+                        priority: ""
+                    }],
+                    fireabaseUID: "asdfasdf",
+                    name: "task2",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task3",
+                priority: ""
+            }, {
+                _id: "5",
+                deadline: "2023-04-22",
+                description: "",
+                doBefore: [{
+                    _id: "4",
+                    deadline: "2023-02-22",
+                    description: "",
+                    doBefore: [],
+                    fireabaseUID: "asdfasdf",
+                    name: "task4",
+                    priority: ""
+                }],
+                fireabaseUID: "asdfasdf",
+                name: "task5",
+                priority: ""
+            }])).map(task => task._id)).toEqual(["4", "1", "5", "2", "3"]);
+        });
+    });
 });

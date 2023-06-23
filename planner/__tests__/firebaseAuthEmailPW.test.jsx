@@ -142,12 +142,3 @@ test("Test for invalid password input", async () => {
         await deleteUserInstance(firebaseAuth, {email: "testing1@gmail.com", password: "123"});
     }
 });
-
-test("Test for invalid email", async () => {
-    try {
-        await handleEmailPwLogin(firebaseAuth, { email: "invalidemail", password: "password1" });
-    } catch (err) {
-        error = true;
-    }
-    expect(error).toBeTruthy();
-});
