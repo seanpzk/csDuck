@@ -58,8 +58,6 @@ export default function RegInfo() {
         page2: false,
         page3: false,
     })
-    //const incrPage = () => setPage(pageNum + 1);
-    //const decPage = () => setPage(pageNum - 1);
 
     function toggleActive(value) {
         return setActive((prev) => {
@@ -71,15 +69,16 @@ export default function RegInfo() {
         return (
             <div className = { isActive.page1 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 1</h3>
-                <div>
+                <div className= "input-div">
                     <label htmlFor = "username">Username: </label>
                     <br/>
                     <input placeholder="Enter username" 
                         name = "username" 
                         id = "username" 
-                        onChange= {event => updateForm({ username: event.target.value})} />
+                        onChange= {event => updateForm({ username: event.target.value})} 
+                        required />
                 </div>
-                <div>
+                <div className= "input-div">
                     <label htmlFor = "phoneNumber">Phone Number: </label>
                     <PhoneInput 
                     country={"sg"}
@@ -87,6 +86,7 @@ export default function RegInfo() {
                     name = "phoneNumber"
                     id = "phoneNumber"
                     dropdownClass="drop-down"
+                    required
                     />
                 </div>
                 <button type = "button" onClick = {() => toggleActive({ page1: !isActive.page1, page2: !isActive.page2})}>Next</button>
@@ -98,11 +98,11 @@ export default function RegInfo() {
         return (
             <div className = { isActive.page2 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 2</h3>
-                <div>
+                <div className= "input-div">
                     <label htmlFor = "email">Email: </label>
                     <input placeholder = "email" name = "email" id = "email" />
                 </div>
-                <div>
+                <div className= "input-div">
                     <label htmlFor = "password">Password: </label>
                     <input placeholder = "password" name = "password" id = "password" />
                 </div>
@@ -117,10 +117,14 @@ export default function RegInfo() {
     function page3() {
        return (<div className = { isActive.page3 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 3</h3>
-                <label htmlFor = "postalCode">Postal Code: </label>
-                <input placeholder = "Postal Code" name = "postalCode"/>
-                <label htmlFor = "country">Country: </label>
-                <input placeholder = "Country" name = "country" />
+                <div className= "input-div">
+                    <label htmlFor = "postalCode">Postal Code: </label>
+                    <input placeholder = "Postal Code" name = "postalCode"/>
+                </div>
+                <div className= "input-div">
+                    <label htmlFor = "country">Country: </label>
+                    <input placeholder = "Country" name = "country" />
+                </div>
                 <div className = "reg-nav">
                     <button type = "button" onClick = {() => toggleActive({ page2: !isActive.page2, page3: !isActive.page3})}>Previous</button>
                     <button type = "submit">Submit</button>
