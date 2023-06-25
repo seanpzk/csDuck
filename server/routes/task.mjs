@@ -60,7 +60,8 @@ router.get("/", async (req, res) => {
     }
    }, {
     $sort: {
-     sortPriority: -1
+     sortPriority: -1,
+     deadline: -1
     }
    }]).toArray();}
 
