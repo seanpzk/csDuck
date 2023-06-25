@@ -71,6 +71,11 @@ export default function TaskList() {
   // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
     async function getCustomPrio() {
+      const currentUser = firebaseAuth.currentUser;
+      if (currentUser == null) {
+        console.log("currentUser is null");
+        return;
+      }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
@@ -103,7 +108,15 @@ export default function TaskList() {
   // This method fetches the tasks from the database.
   useNonInitialEffect(() => {
     async function getTasks() {
+      const currentUser = firebaseAuth.currentUser;
+      if (currentUser == null) {
+        console.log("currentUser is null");
+        return;
+      }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
+
+      console.log(currentUser);
+
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
       const response = await fetch(
@@ -322,7 +335,7 @@ export default function TaskList() {
   // This following section will display the table with the tasks of individuals.
   return (
     <>
-      <div className="list taskListPage ">
+      <div className="list taskListPage " data-testid="tasklistTitle">
         <h3 style={{ textAlign: "center", margin: 15 }}>📚Task List</h3>{" "}
         <div>
           {/* <table className="table table-bordered table-striped align-middle">
@@ -339,7 +352,7 @@ export default function TaskList() {
 
           <div className="lines"></div>
           {
-            <ul id="List">
+            <ul id="List" data-testid="tasklistHeaders">
               <li
                 style={{
                   borderBottom: " double darkgrey",

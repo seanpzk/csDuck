@@ -10,18 +10,18 @@
 
 .data-step {
   position: absolute;
-    width: 50vw;
-    min-width: 200px;
-    background-color: white;
-    border: 1px solid #333;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    max-width: 500px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    animation: slideIn 1s ease-in-out forwards;
-    align-items: center;
+  width: 500px;
+  min-width: 200px;
+  background-color: white;
+  border: 1px solid #333;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 1s ease-in-out forwards;
+  align-items: center;
 }
 
 .step-title {
@@ -112,24 +112,38 @@
   }
 
   .input-div {
-    margin-top: 1vh;
-    width: inherit;
+    position: relative;
+    width: 100%;
     margin-left: 1vw;
-    display: flex;
+    display: flex; 
     flex-direction: row;
   }
 
   .input-div > label {
-    margin-left: 2vw;
-    width: 15vw;
+    width: 20%;
     min-width: 50px;
-    text-align: center;
     margin: auto;
+    text-align: center;
   }
 
   .input-div > input {
-     width: 30vw;
+     width: 70%;
      margin: auto;
+     margin-left: 1vw;
+     margin-bottom: 1vh;
+     border: 1px solid rgb(202, 202, 202);
   }
 
- 
+  .phone-input-div {
+    margin-top: 2vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 3.5rem;
+  }
+
+  .phone-input-div > label {
+    white-space: nowrap;
+    margin: auto;
+    margin-right: 2.5vw;
+  }

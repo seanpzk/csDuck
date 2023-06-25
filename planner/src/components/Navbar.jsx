@@ -73,7 +73,11 @@ export default function Navbar(props) {
             </NavLink>
           )}
           {!props.auth ? (
-            <NavLink className="btn btn-outline-success me-2" to="/login">
+            <NavLink
+              className="btn btn-outline-success me-2"
+              to="/login"
+              name="login-btn"
+            >
               Login
             </NavLink>
           ) : (

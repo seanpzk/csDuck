@@ -61,6 +61,8 @@ export default function Login(props) {
     email: "",
     password: "",
   });
+  // error Message
+  const [error, setError] = useState(null);
 
   /**
    * Handles login using Google.
@@ -97,7 +99,9 @@ export default function Login(props) {
         await CreateUserMongo();
         await sendEmailVerification(result.user)
           .then(console.log("Email verification sent"))
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error)
+          });
         // const token =
         //   FacebookAuthProvider.credentialFromResult(result).accessToken;
       })
@@ -123,7 +127,16 @@ export default function Login(props) {
    */
   async function handleSubmit(event) {
     event.preventDefault();
-    await handleEmailPwLogin(firebaseAuth, loginForm);
+    await handleEmailPwLogin(firebaseAuth, loginForm)
+      .catch(error => {
+        if (error.message === "Firebase: Error (auth/invalid-email).") {
+          setError("Invalid Email");
+        } else if (error.message === "Firebase: Error (auth/user-not-found).") {
+          setError("Email not found");
+        } else if (error.message === "Firebase: Error (auth/wrong-password).") {
+          setError("Wrong password");
+        }
+      });
     setForm({ email: "", password: "" });
     // resets the form once submitted
     event.target.reset();
@@ -145,6 +158,13 @@ export default function Login(props) {
             }}
           >
             <form className="login-style-form" onSubmit={handleSubmit} data-testid='login-form'>
+              <h1 className='login-header'>Login</h1>
+              <div>
+                Don't have an account? 
+                <NavLink style={{ color: "blue", margin: 5, 'text-decoration': "none" }} to="/register">
+                Register here.
+                </NavLink>
+              </div>
               <label htmlFor="email" data-testid='email-label'>Email:</label>
               <input
                 type="text"
@@ -169,7 +189,7 @@ export default function Login(props) {
                 data-testid= "password-input"
                 required
               />
-
+            {error ? <h5 className= "error-alert" style ={{'margin-top':"1vh"}}>{error}</h5> : <h3 style= {{display: "none"}}></h3>}
               <button
               data-testid = "login-button"
                 type="submit"
@@ -205,14 +225,12 @@ export default function Login(props) {
               </button>
               <hr />
             </div>
-
-            <NavLink style={{ color: "blue", margin: 5 }} to="/register">
-              Don't have an account? Register here.
-            </NavLink>
-
-            <NavLink style={{ color: "red", margin: 5 }} to="/reset">
-              Forgot your password? Reset here
-            </NavLink>
+            <div>
+              Forgot your password? 
+              <NavLink style={{ color: "red", margin: 5, "text-decoration": "none" }} to="/reset">
+                Reset here
+              </NavLink>
+            </div>
           </div>
         </>
       ) : (

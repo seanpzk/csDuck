@@ -14,7 +14,7 @@ export default function RegInfo() {
             firebaseUID: "",
             username: "",
             phoneNumber: "",
-            email: ""
+            email: firebaseAuth.currentUser.email
         }
     );
 
@@ -69,6 +69,7 @@ export default function RegInfo() {
         return (
             <div className = { isActive.page1 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 1</h3>
+                <h10>Your username is how your friends will see you</h10>
                 <div className= "input-div">
                     <label htmlFor = "username">Username: </label>
                     <br/>
@@ -77,17 +78,6 @@ export default function RegInfo() {
                         id = "username" 
                         onChange= {event => updateForm({ username: event.target.value})} 
                         required />
-                </div>
-                <div className= "input-div">
-                    <label htmlFor = "phoneNumber">Phone Number: </label>
-                    <PhoneInput 
-                    country={"sg"}
-                    onChange={(input) => updateForm({phoneNumber: input})}
-                    name = "phoneNumber"
-                    id = "phoneNumber"
-                    dropdownClass="drop-down"
-                    required
-                    />
                 </div>
                 <button type = "button" onClick = {() => toggleActive({ page1: !isActive.page1, page2: !isActive.page2})}>Next</button>
             </div>
@@ -98,17 +88,31 @@ export default function RegInfo() {
         return (
             <div className = { isActive.page2 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 2</h3>
-                <div className= "input-div">
+                <h10>Your Phone number will be used in the event you forget your email and for multi-factor Authentication</h10>
+                <div className="phone-input-div">
+                    <label htmlFor = "phoneNumber">Phone Number: </label>
+                    <PhoneInput
+                    country={"sg"}
+                    onChange={(input) => updateForm({phoneNumber: input})}
+                    name = "phoneNumber"
+                    id = "phoneNumber"
+                    dropdownClass="drop-down"
+                    inputStyle= {{width: "98%", height: "100%"}}
+                    containerStyle ={{width: "100%", height: "100%"}}
+                    />
+                </div>
+                {/* <div className= "input-div">
                     <label htmlFor = "email">Email: </label>
                     <input placeholder = "email" name = "email" id = "email" />
                 </div>
                 <div className= "input-div">
                     <label htmlFor = "password">Password: </label>
                     <input placeholder = "password" name = "password" id = "password" />
-                </div>
+                </div> */}
                 <div className="reg-nav">
                     <button type = "button" onClick = {() => toggleActive({ page1: !isActive.page1, page2: !isActive.page2})}>Previous</button>
-                    <button type = "button" onClick = {() => toggleActive({ page2: !isActive.page2, page3: !isActive.page3})}>Next </button>
+                    {/* <button type = "button" onClick = {() => toggleActive({ page2: !isActive.page2, page3: !isActive.page3})}>Next </button> */}
+                    <button type = "submit">Submit</button>
                 </div>
             </div>
         )
