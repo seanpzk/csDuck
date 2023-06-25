@@ -236,7 +236,7 @@ export default function Login(props) {
       ) : (
         <>
           <h1>You are logged in</h1>
-          <NavLink style={{ color: "black" }} to="/">
+          <NavLink style={{ color: "black" }} to="/mytasks">
             Go to task list
           </NavLink>
         </>
