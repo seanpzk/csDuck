@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import DoBefore from "./DoBefore";
-import verifyDAG, { extractExistingTasks } from "./helperFunctions/Toposort.jsx";
+import verifyDAG, {
+  extractExistingTasks,
+} from "./helperFunctions/Toposort.jsx";
 
 export default function Edit() {
   const [form, setForm] = useState({
@@ -10,7 +12,7 @@ export default function Edit() {
     deadline: "",
     priority: "",
     description: "",
-    doBefore: []
+    doBefore: [],
   });
   const params = useParams();
   const navigate = useNavigate();

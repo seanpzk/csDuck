@@ -126,7 +126,7 @@ export default function SettingProfile() {
                 ></input>
               </Col>
             </Row>
-            <Row className="setting-body-row flex-nowrap">
+            {/* <Row className="setting-body-row flex-nowrap">
               <Col xs lg="2">
                 Email:
               </Col>
@@ -145,13 +145,13 @@ export default function SettingProfile() {
                   style={{
                     width: "100%",
                     color: "black",
-                    backgroundColor: "pink",
+                    backgroundColor: "lightgreen",
                     border: "none",
                   }}
-                  value="Verify email"
+                  value="Email verified "
                 ></input>
               </Col>
-            </Row>
+            </Row> */}
 
             <Row className="setting-body-row">
               <Col lg="2">Bio:</Col>
