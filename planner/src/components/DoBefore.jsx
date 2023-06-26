@@ -80,7 +80,6 @@ export default function DoBefore(props) {
                 hideSelectedOptions = {true} // doesn't work with object as value i think
                 onChange={e => props.updateTask({doBefore: taskIdToTask(e.map(pair => pair.value), tasks)})} />
             </div>
-            <button type = "button">Automatically Sort</button>
         </>
     )
 }

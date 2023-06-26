@@ -115,7 +115,7 @@ export default function Register(props) {
           onSubmit={handleSubmit}
           style={{
             width: "40vw",
-            height: "60vh",
+            height: "70vh",
             border: "1px solid grey",
             // paddingLeft: "10vh",
             // paddingBlock: "3%",
