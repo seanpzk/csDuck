@@ -65,7 +65,7 @@ router.get("/", async (req, res) => {
     }
    }]).toArray();}
 
-  res.send(results).status(200);
+  res.status(200).send(results);
 });
 
 // This section will help you get a single record by MongoDB object_id
@@ -91,7 +91,7 @@ router.post("/", async (req, res) => {
   };
   let collection = await db.collection("task");
   let result = await collection.insertOne(newDocument);
-  res.send(result).status(204);
+  res.status(200).send(result);
 });
 
 // This section will help you update a record by id.
@@ -111,7 +111,7 @@ router.patch("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let result = await collection.updateOne(query, updates);
 
-  res.send(result).status(200);
+  res.status(200).send(result);
 });
 
 // This section will help you delete a record
@@ -121,7 +121,7 @@ router.delete("/:id", async (req, res) => {
   const collection = db.collection("task");
   let result = await collection.deleteOne(query);
 
-  res.send(result).status(200);
+  res.status(200).send(result);
 });
 
 export default router;

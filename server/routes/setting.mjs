@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     const firebaseUID = req.query.UID;
     let collection = await db.collection("users");
     let results = await collection.find({$and: [{firebaseUID:firebaseUID}, {registration: true}]}).toArray();
-    res.send(results).status(200);
+    res.status(200).send(results);
 })
 
 router.patch("/", async(req, res) => {
@@ -25,7 +25,7 @@ router.patch("/", async(req, res) => {
     };
     let collection = await db.collection("users");
     let result = await collection.updateOne(query, updates);
-    res.send(result).status(200)
+    res.status(200).send(result)
     console.log("updated results")
     console.log(result);
 })
