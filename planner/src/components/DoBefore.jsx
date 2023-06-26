@@ -5,6 +5,26 @@ import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 
 /**
+ * Converts an array of taskId into an array of tasks containing only those tasksID specified.
+ * 
+ * @function taskIdToTask
+ * @param {String[]} taskIdArray Array containing Strings of task._id
+ * @param {Object[]} taskArray Array containing task objects obtained from mongoDB
+ * @returns {Object[]} array of Task objects obtained from MongoDB
+ */
+export function taskIdToTask(taskIdArray, taskArray) {
+    if (taskIdArray.length == 0) {
+        return [];
+    }
+    // HashMap stores task_id : task
+    const idToTask = new Map();
+    taskArray.forEach(task => {
+        idToTask.set(task._id, task);
+    });
+    return taskIdArray.map(id => idToTask.get(id));
+}
+
+/**
  * Component that is called in Create.jsx. Renders the Dropdown input bar in Creation of Tasks.
  * 
  * @param {Object} props - Property brought from Create.jsx
@@ -16,22 +36,6 @@ export default function DoBefore(props) {
       // Track state of options in dropdown
     const [dropdownOptions, setDropdownOptions] = useState([]);
     const [tasks, setTasks] = useState([]);
-
-    /**
-     * Converts an array of taskId into an array of tasks containing only those tasksID specified.
-     * 
-     * @function taskIdToTask
-     * @param {String[]} taskArray - Array containing Strings of task._id from MongoDB
-     * @returns {Object} Task - Task object obtained from MongoDB
-     */
-    function taskIdToTask(taskIdArray, taskArray) {
-        // HashMap stores task_id : task
-        const idToTask = new Map();
-        taskArray.forEach(task => {
-            idToTask.set(task._id, task);
-        });
-        return taskIdArray.map(id => idToTask.get(id));
-    }
 
     /**
      * Extracts previous tasks input from users from MongoDB.
@@ -66,7 +70,7 @@ export default function DoBefore(props) {
 
     return (
         <>
-            <div onMouseEnter={dropDown}>
+            <div onMouseEnter={dropDown} data-testid='dropdown'>
                 <label>Tasks that should be done before this (Optional)</label>
                 <Select 
                 closeMenuOnSelect={false}
@@ -76,7 +80,6 @@ export default function DoBefore(props) {
                 hideSelectedOptions = {true} // doesn't work with object as value i think
                 onChange={e => props.updateTask({doBefore: taskIdToTask(e.map(pair => pair.value), tasks)})} />
             </div>
-            <button type = "button">Automatically Sort</button>
         </>
     )
 }

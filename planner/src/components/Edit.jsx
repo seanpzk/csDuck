@@ -26,6 +26,7 @@ export default function Edit() {
         {
           method: "GET",
           headers: {
+            "Content-Type": "application/json",
             Authorization: "Bearer " + idToken,
           },
         }
@@ -71,6 +72,7 @@ export default function Edit() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     if (await verifyDAG(editedPerson, await extractExistingTasks())) {
       console.log("DAG PRESENT");
+      console.log(idToken);
       // This will send a post request to update the data in the database.
       await fetch(`http://localhost:5050/task/${params.id}`, {
         method: "PATCH",

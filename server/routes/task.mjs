@@ -73,8 +73,8 @@ router.get("/:id", async (req, res) => {
   let collection = await db.collection("task");
   let query = {_id: new ObjectId(req.params.id)};
   let result = await collection.findOne(query);
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
+  if (!result) res.status(404).send("Not found");
+  else res.status(200).send(result);
 });
 
 // This section will help you create a new record.

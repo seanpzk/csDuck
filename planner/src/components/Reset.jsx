@@ -52,9 +52,9 @@ export default function Reset() {
             <form onSubmit={ handleSubmit } className = "reset-Form">
                 <img src = {resetPasswordImg} className = "resetImg"></img>
                 <h3>Reset Your Password</h3>
-                <label htmlFor = "email">Email Address: </label>
-                <input type = "text" id = "email" onChange = { (event) => updateForm({ email: event.target.value }) }/>
-                <button type = "submit">Reset password</button>
+                <label htmlFor = "email" data-testid='email-label'>Email Address: </label>
+                <input type = "text" id = "email" data-testid='email-input' onChange = { (event) => updateForm({ email: event.target.value }) } required/>
+                <button type = "submit" data-testid='submit-button'>Reset password</button>
             </form>
         </>
     )
