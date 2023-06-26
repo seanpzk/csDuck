@@ -28,7 +28,6 @@ import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
       })
       .catch((error) => {
         const errorMessage = error.message;
-        // console.log(errorMessage);
         throw error;
       });
       return user;
@@ -44,6 +43,9 @@ import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
 export default function Register(props) {
 
   const [newUserCreated, updateUser] = useState(null);
+  // track errorMessage
+  const [error, setError] = useState(null);
+
   /** New user creation form to be submitted to backend */
   const [creationForm, setForm] = useState({
     email: "",
@@ -91,7 +93,13 @@ export default function Register(props) {
    */
   async function handleSubmit(event) {
       event.preventDefault();
-      updateUser(await handleEmailPwCreation(firebaseAuth, creationForm));
+      updateUser(
+        await handleEmailPwCreation(firebaseAuth, creationForm)
+          .catch(error => {
+            setError(error.message);
+            return;
+          })
+      );
       const newUser = creationForm;
       await CreateUserMongo();
       // resets the form once submitted
@@ -104,19 +112,20 @@ export default function Register(props) {
       <div className="register">
         <form
           className="register-style-form"
-          onSubmit={props.handleSubmitMock || handleSubmit}
+          onSubmit={handleSubmit}
           style={{
-            width: "20rem",
+            width: "40vw",
+            height: "70vh",
             border: "1px solid grey",
             // paddingLeft: "10vh",
-            paddingBlock: "3%",
-            paddingLeft: "20px",
-            paddingRight: "20px",
+            // paddingBlock: "3%",
+            padding: "5rem",
             borderRadius: "10px",
             boxShadow: "0 0 10px lightgrey",
           }}
           data-testid= "register-form"
         >
+          <h1 style= {{"text-align": "center"}}>Create Your Free Account</h1>
           <label htmlFor="email" data-testid= "label-email">Email: </label>
           <input
             type="text"
@@ -126,8 +135,9 @@ export default function Register(props) {
             placeholder="Your email"
             onChange={(event) => updateForm({ email: event.target.value })}
             data-testid='input-email'
+            required
           />
-          <label htmlFor="password" data-testid= "label-password">Password: </label>
+          <label htmlFor="password" data-testid= "label-password" style ={{"margin-top": "2vh"}}>Password: </label>
           <input
             type="text"
             name="password"
@@ -136,7 +146,9 @@ export default function Register(props) {
             placeholder="Your password"
             onChange={(event) => updateForm({ password: event.target.value })}
             data-testid= "input-password"
+            required
           />
+          {error ? <h5 className= "error-alert" style ={{'margin-top':"1vh"}}>{error}</h5> : <h3 style= {{display: "none"}}></h3>}
           <button
             type="submit"
             className="btn btn-light"
@@ -145,6 +157,12 @@ export default function Register(props) {
               border: "0.5px solid",
               // filter: "drop-shadow(0px 10px 10px lightgrey)",
               borderRadius: "10px",
+              "text-align": "center",
+              width: "50%",
+              margin: "auto",
+              "margin-top": "4vh",
+              padding: "1rem",
+              "font-weight": "bold",
             }}
             data-testid= 'submit-button'
           >

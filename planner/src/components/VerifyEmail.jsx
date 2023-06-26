@@ -16,7 +16,9 @@ export default function VerifyEmail(props) {
     const [time, setTime] = useState(15);
     const [buttonLabel, setButtonLabel] = useState(false);
 
-    useEffect(() => setUser(firebaseAuth.currentUser), []);
+    useEffect(() => {
+        setUser(firebaseAuth.currentUser), []
+    });
 
     /**
      * Allows user to resend email verification every 15 seconds.
@@ -28,7 +30,7 @@ export default function VerifyEmail(props) {
      * @param {function} props.handleResendMock Mock version of handleResend for jest test
      * @return {void}
      */
-    async function handleResend() {
+    async function handleResend(event) {
         if (user) {
             setDisableButton(true);
             setButtonLabel(true);
@@ -56,7 +58,7 @@ export default function VerifyEmail(props) {
                 <div>
                     <h4>Did not receive the email?</h4>
                     <div className = {buttonLabel ? "button-label" : "hide"}>Try again in {time}</div>
-                    <button onClick = {props.handleResendMock || handleResend} 
+                    <button onClick = { handleResend } 
                         className ="submit-button"
                         disabled= {disableButton}
                         data-testid='resend-button'>Click here to resend</button>
