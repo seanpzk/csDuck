@@ -156,7 +156,7 @@ export default function TaskList() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(ucp),
       headers: {
@@ -177,7 +177,7 @@ export default function TaskList() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(ucp),
       headers: {
@@ -244,7 +244,7 @@ export default function TaskList() {
 
   async function getTaskData(task, index) {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-    const response = await fetch(`http://localhost:5050/task/${task._id}`, {
+    const response = await fetch(`${backendURL}/task/${task._id}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + idToken,
@@ -315,7 +315,7 @@ export default function TaskList() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/task/${_taskInfo._id}`, {
+    await fetch(`${backendURL}/task/${_taskInfo._id}`, {
       method: "PATCH",
       body: JSON.stringify(editedTask),
       headers: {

@@ -1,11 +1,12 @@
 import { useState, React, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
 import firebaseAuth from "../firebase.config";
 import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
+import { checkVerified }from "./helperFunctions/checkVerified.jsx"
 
   /**
    * Handles the email and password creation.
@@ -42,6 +43,7 @@ import CreateUserMongo from "./helperFunctions/CreateUserMongo.jsx";
  */
 export default function Register(props) {
 
+  const navigate = useNavigate();
   const [newUserCreated, updateUser] = useState(null);
   // track errorMessage
   const [error, setError] = useState(null);
@@ -105,6 +107,7 @@ export default function Register(props) {
       // resets the form once submitted
       setForm({ email: "", password: "" });
       event.target.reset();
+      navigate('/login');
   }
 
   return (

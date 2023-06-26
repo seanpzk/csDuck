@@ -1,1 +1,1 @@
-export const backendURL = 'http://localhost:5050';
+export const backendURL = 'https://testing-edited.onrender.com';

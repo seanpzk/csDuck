@@ -20,7 +20,7 @@ export default function Edit() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const id = params.id.toString();
       const response = await fetch(
-        `http://localhost:5050/task/${params.id.toString()}`,
+        `${backendURL}/task/${params.id.toString()}`,
         {
           method: "GET",
           headers: {
@@ -72,7 +72,7 @@ export default function Edit() {
       console.log("DAG PRESENT");
       console.log(idToken);
       // This will send a post request to update the data in the database.
-      await fetch(`http://localhost:5050/task/${params.id}`, {
+      await fetch(`${backendURL}/task/${params.id}`, {
         method: "PATCH",
         body: JSON.stringify(editedPerson),
         headers: {
@@ -167,10 +167,7 @@ export default function Edit() {
           </div>
         </div>
         <br />
-        {/* ======= Edit DONE HERE ==========*/}
         <DoBefore task = {form} updateTask = {updateForm} />
-        {/* ==========EDIT ENDS HERE ===============*/}
-
         <div className="form-group">
           <input
             type="submit"

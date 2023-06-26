@@ -37,9 +37,12 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [userVerified, setVerification] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
   /**
-   * Checks if the user has registered their details
+   * Checks if the user has registered their details.
+   * This is an expensive call, limit this.
    * 
    * @param {Object} User - fireabse User object
    * @return {boolean} - If registered
@@ -56,42 +59,69 @@ const App = () => {
     }).catch((error) => console.log(error));
     const resObj = await response.json();
     if (resObj.message === "not registered") {
-      return false;
-    }
-    return true;
+      setRegistered(false);
+      navigate("/reginfo");
+    } else {
+      setRegistered(true);
+    };
   }
 
-  /**
-   * Redirects user to /verifyEmail if have yet to register details.
-   * 
-   * @return {void}
-   */
-  async function checkVerified() {
-    setUser(firebaseAuth.currentUser);
-    // not the best way... This looks for any path with /reginfo
-    if (user && !location.pathname.includes("/reginfo")) {
+  useEffect(() => {
+    // console.log("This is an expensive call");
+    if (user && !location.pathname.includes("/reginfo") && !location.pathname.includes("/verifyEmail")) {
       user.reload();
+      console.log(user.emailVerified);
       if (user.emailVerified) {
-        const registered = await checkRegistered(user);
-        if (!registered) {
-          console.log("Email verified and not registered");
-          navigate("/reginfo");
-        }
+        checkRegistered(user);
       } else {
         navigate("/verifyEmail");
       }
     }
-  }
+  }, [user, location, userVerified]);
+
+  /**
+   * This hook is for navigation to reg-info page ONLY FROM verifyEmail.
+   * 
+   * Purpose: Only redirect when email is verified
+   */
+  useEffect(() => {
+    if (user && userVerified == true && location.pathname.includes("/verifyEmail")) {
+      // console.log("redirected");
+      navigate('/reginfo');
+    } else if (!user) {
+      navigate('/login');
+    }
+  }, [user, userVerified]);
 
   // Forces user to input their registration details if they have yet to do so
   /**
    * Constantly checks if the user has verified their email.
    * Forces users to have a valid email address.
    */
+  // useEffect(() => {
+  //   const interval = setInterval(checkVerified, 1000);
+  //   return () => clearInterval(interval);
+  // }, [user]);
+
   useEffect(() => {
-    const interval = setInterval(checkVerified, 1000);
+    const interval = setInterval(() => {
+      setUser(firebaseAuth.currentUser);
+      if (user) {
+        user.reload();
+        // console.log(user.emailVerified);
+        if (user.emailVerified) {
+          // console.log("SET VERIFICATION TRUE");
+          setVerification(true);
+          clearInterval(interval);
+        }
+      }
+    }, 1000);
     return () => clearInterval(interval);
   }, [user]);
+
+  useEffect(() => {
+    setUser(firebaseAuth.currentUser);
+  }, [location, userVerified]);
 
   const [auth, setAuth] = useState(false);
 

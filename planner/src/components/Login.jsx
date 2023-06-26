@@ -139,6 +139,7 @@ export default function Login(props) {
       });
     setForm({ email: "", password: "" });
     // resets the form once submitted
+    console.log(firebaseAuth.currentUser);
     event.target.reset();
   }
 
