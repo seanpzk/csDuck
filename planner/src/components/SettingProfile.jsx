@@ -97,7 +97,9 @@ export default function SettingProfile() {
             </Link>
           </Col>
           <Col className="setting-header-subgroups">
-            <div className="setting-header-text">Appearance</div>
+            <Link className="setting-header-text " to="/settings/appearance">
+              Appearance
+            </Link>
           </Col>
         </Row>
       </div>

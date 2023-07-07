@@ -72,6 +72,7 @@ export default function SettingSecurity() {
               Profile
             </Link>
           </Col>
+
           <Col className="setting-header-subgroups">
             <Link
               className="setting-header-text "
@@ -81,8 +82,11 @@ export default function SettingSecurity() {
               Security
             </Link>
           </Col>
+
           <Col className="setting-header-subgroups">
-            <div className="setting-header-text">Appearance</div>
+            <Link className="setting-header-text " to="/settings/appearance">
+              Appearance
+            </Link>
           </Col>
         </Row>
       </div>
