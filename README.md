@@ -17,6 +17,8 @@ babel-jest
 @babel/preset-react 
 react-test-renderer
 identity-obj-proxy
+@heroicons/react
+
 ```
 
 ## Run the application
