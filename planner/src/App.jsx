@@ -22,6 +22,7 @@ import NotFound from "./components/NotFound";
 import firebaseAuth from "./firebase.config";
 import RegInfo from "./components/RegInfo";
 import TaskList from "./components/TaskList";
+import { UserPresence } from "./components/helperFunctions/UserPresence"
 
 import SettingProfile from "./components/SettingProfile";
 import SettingSecurity from "./components/SettingSecurity";
@@ -39,6 +40,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [userVerified, setVerification] = useState(false);
   const [registered, setRegistered] = useState(false);
+  const [sidebarActive, setSidebar] = useState(false);
 
   /**
    * Checks if the user has registered their details.
@@ -67,7 +69,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    // console.log("This is an expensive call");
     if (user && !location.pathname.includes("/reginfo") && !location.pathname.includes("/verifyEmail")) {
       user.reload();
       console.log(user.emailVerified);
@@ -86,7 +87,7 @@ const App = () => {
    */
   useEffect(() => {
     if (user && userVerified == true && location.pathname.includes("/verifyEmail")) {
-      // console.log("redirected");
+      console.log("redirected");
       navigate('/reginfo');
     } else if (!user) {
       navigate('/login');
@@ -127,7 +128,8 @@ const App = () => {
 
   return (
     <div className="app">
-      <Navbar auth={auth} setAuth={setAuth} />
+      <UserPresence auth = {auth} />
+      <Navbar auth={auth} setAuth={setAuth} sidebarActive={sidebarActive} setSidebar={setSidebar} />
       <Routes>
         <Route exact path="/" element={<Homepage auth={auth} />} />
         <Route path="/edit/:id" element={<Edit />} />
@@ -140,7 +142,7 @@ const App = () => {
         <Route path="/reginfo" element={<RegInfo />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/mytasks" element={<TaskList />} />
+        <Route path="/mytasks" element={<TaskList sidebarActive={sidebarActive} setSidebar={setSidebar} />} />
         <Route path="/settings/profile" element={<SettingProfile />} />
         <Route path="/settings/security" element={<SettingSecurity />}></Route>
         <Route path="/verifyEmail" element={<VerifyEmail />} />

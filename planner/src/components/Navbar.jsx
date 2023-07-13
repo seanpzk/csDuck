@@ -5,14 +5,23 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
 // We import NavLink to utilize the react router.
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import firebaseAuth from "../firebase.config";
+import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
 
-// Here, we display our Navbar
+/**
+ * Navbar component
+ * 
+ * @param {Object} props 
+ * @param {Boolean} props.sidebarActive 
+ * @param {Function} props.setSidebar
+ * @returns jsx component navbar
+ */
 export default function Navbar(props) {
   const navigate = useNavigate();
+  let location = useLocation();
   useEffect(() =>
     firebaseAuth.onAuthStateChanged(() =>
       props.setAuth(firebaseAuth.currentUser != null)
@@ -20,6 +29,7 @@ export default function Navbar(props) {
   );
 
   async function handleLogout() {
+    UserPresenceLogout(firebaseAuth.currentUser);
     await firebaseAuth.signOut();
     navigate("/login");
   }
@@ -98,6 +108,11 @@ export default function Navbar(props) {
               >
                 Settings
               </NavLink>
+              {
+                location.pathname === '/mytasks'
+                  ? <button type = "button" onClick = {event => props.setSidebar(prev => !prev)}>Friends</button>
+                  : <></>
+              }
             </>
           )}
         </form>

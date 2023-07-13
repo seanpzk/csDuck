@@ -1,0 +1,13 @@
+.side-bar {
+    height: 100vh;
+    background-color: red;
+    width: 500px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-flow: column wrap;
+    overflow-y: auto;
+    font-size: 1.5vh;
+}

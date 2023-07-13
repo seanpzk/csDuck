@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
-import firebaseAuth from "../firebase.config";
+import firebaseAuth, { realtimeDb } from "../firebase.config";
+import { ref, set } from "firebase/database"
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
 import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
+import Friends from "./Friends.jsx";
 
 /**
  * Display the information of task in a row.
@@ -49,11 +51,57 @@ const Task = (props) => (
       >
         Delete
       </button>
+      |
+      <button
+        className="btn btn-link "
+        style={{ fontSize: "calc(3px + 0.7vw)" }}
+        onClick= {(event) => setCurrent(props.task)}
+      >
+        <div>Set</div>
+      </button>
     </li>
   </div>
 );
 
-export default function TaskList() {
+async function setCurrent(task) {
+  const currentUser = firebaseAuth.currentUser;
+  if (currentUser) {
+    const idToken = await currentUser?.getIdToken();
+    const uid = currentUser.uid;
+    const response = await fetch(`${backendURL}/setCurrentTask`, {
+      method : "PATCH",
+      headers: {
+        Authorization: "Bearer " + idToken,
+        "Content-Type": "application/json",
+      }, 
+      body: JSON.stringify(task)
+    })
+    .catch((error) => {
+      window.alert(error);
+      return;
+    });
+    console.log(await response.json());
+    if (response.ok) {
+      // We successfully set the current task in mongoDb
+      // now set it in realtime dataabase firebase
+      const user = firebaseAuth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        const currentTaskRef = ref(realtimeDb, 'users/' + uid + '/currentTask');
+        set(currentTaskRef, task.name);
+      }
+    }
+  }
+}
+
+/**
+ * 
+ * @param {Object} props 
+ * @param {Function} props.setSidebar
+ * @param {Boolean} props.sidebarActive
+ * @return jsx component for the tasklist
+ */
+export default function TaskList(props) {
   const [customPrio, setCustomPrio] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskInfo, setTaskInfo] = useState({
@@ -86,13 +134,12 @@ export default function TaskList() {
           "Content-Type": "application/json",
         },
       });
-
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         window.alert(message);
         return;
       }
-      const result = await response.json();
+      let result = await response.json();  
       if (result[0] == undefined) {
         setCustomPrio(false);
       } else {
@@ -106,7 +153,7 @@ export default function TaskList() {
   }, [tasks.length]);
 
   // This method fetches the tasks from the database.
-  useNonInitialEffect(() => {
+  useEffect(() => {
     async function getTasks() {
       const currentUser = firebaseAuth.currentUser;
       if (currentUser == null) {
@@ -114,8 +161,6 @@ export default function TaskList() {
         return;
       }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-
-      console.log(currentUser);
 
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
@@ -139,7 +184,6 @@ export default function TaskList() {
       const tasks = await response.json();
       setTasks(tasks);
     }
-
     getTasks();
 
     return;
@@ -425,6 +469,11 @@ export default function TaskList() {
           Auto sort
         </button>
       </div>
+      {
+        props.sidebarActive
+        ? <Friends />
+        : <></>
+      }
     </>
   );
 }
