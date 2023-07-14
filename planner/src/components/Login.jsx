@@ -161,7 +161,7 @@ export default function Login(props) {
               <h1 className='login-header'>Login</h1>
               <div>
                 Don't have an account? 
-                <NavLink style={{ color: "blue", margin: 5, 'text-decoration': "none" }} to="/register">
+                <NavLink style={{ color: "blue", margin: 5, 'textDecoration': "none" }} to="/register">
                 Register here.
                 </NavLink>
               </div>
@@ -227,7 +227,7 @@ export default function Login(props) {
             </div>
             <div>
               Forgot your password? 
-              <NavLink style={{ color: "red", margin: 5, "text-decoration": "none" }} to="/reset">
+              <NavLink style={{ color: "red", margin: 5, "textDecoration": "none" }} to="/reset">
                 Reset here
               </NavLink>
             </div>

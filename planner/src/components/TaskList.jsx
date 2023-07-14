@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
-import firebaseAuth from "../firebase.config";
+import firebaseAuth, { realtimeDb } from "../firebase.config";
+import { ref, set } from "firebase/database"
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
@@ -9,6 +10,8 @@ import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
 import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 import ThemeSwitcher from "./ThemeSwitcher";
+import Friends from "./Friends.jsx";
+import iconFriend from "../assets/friends.png";
 
 /**
  * Display the information of task in a row.
@@ -47,11 +50,57 @@ const Task = (props) => (
       >
         Delete
       </button>
+      |
+      <button
+        className="btn btn-link "
+        style={{ fontSize: "calc(3px + 0.7vw)" }}
+        onClick= {(event) => setCurrent(props.task)}
+      >
+        <div>Set Current Task</div>
+      </button>
     </li>
   </div>
 );
 
-export default function TaskList() {
+async function setCurrent(task) {
+  const currentUser = firebaseAuth.currentUser;
+  if (currentUser) {
+    const idToken = await currentUser?.getIdToken();
+    const uid = currentUser.uid;
+    const response = await fetch(`${backendURL}/setCurrentTask`, {
+      method : "PATCH",
+      headers: {
+        Authorization: "Bearer " + idToken,
+        "Content-Type": "application/json",
+      }, 
+      body: JSON.stringify(task)
+    })
+    .catch((error) => {
+      window.alert(error);
+      return;
+    });
+    console.log(await response.json());
+    if (response.ok) {
+      // We successfully set the current task in mongoDb
+      // now set it in realtime dataabase firebase
+      const user = firebaseAuth.currentUser;
+      if (user) {
+        const uid = user.uid;
+        const currentTaskRef = ref(realtimeDb, 'users/' + uid + '/currentTask');
+        set(currentTaskRef, task.name);
+      }
+    }
+  }
+}
+
+/**
+ * 
+ * @param {Object} props 
+ * @param {Function} props.setSidebar
+ * @param {Boolean} props.sidebarActive
+ * @return jsx component for the tasklist
+ */
+export default function TaskList(props) {
   const [allowCustomisation, setAllowCustomisation] = useState();
   const [customPrio, setCustomPrio] = useState();
   const [tasks, setTasks] = useState([]);
@@ -63,6 +112,13 @@ export default function TaskList() {
     doBefore: [],
     customPriority: "",
   });
+  const [sideBarButtonStyle, setSideBarButtonStyle] = useState({
+    position: "fixed",
+    right: "0px",
+    bottom: "0px",
+    backgroundColor: "transparent"
+  });
+  const [sideBarStyle, setSideBarStyle] = useState({});
 
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
@@ -122,13 +178,12 @@ export default function TaskList() {
           "Content-Type": "application/json",
         },
       });
-
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         window.alert(message);
         return;
       }
-      const result = await response.json();
+      let result = await response.json();  
       if (result[0] == undefined) {
         setCustomPrio(false);
       } else {
@@ -150,8 +205,6 @@ export default function TaskList() {
         return;
       }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
-
-      console.log(currentUser);
 
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
@@ -175,7 +228,6 @@ export default function TaskList() {
       const tasks = await response.json();
       setTasks(tasks);
     }
-
     getTasks();
 
     return;
@@ -192,7 +244,7 @@ export default function TaskList() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(ucp),
       headers: {
@@ -213,7 +265,7 @@ export default function TaskList() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(ucp),
       headers: {
@@ -280,7 +332,7 @@ export default function TaskList() {
 
   async function getTaskData(task, index) {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-    const response = await fetch(`http://localhost:5050/task/${task._id}`, {
+    const response = await fetch(`${backendURL}/task/${task._id}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + idToken,
@@ -351,7 +403,7 @@ export default function TaskList() {
     const idToken = await firebaseAuth.currentUser?.getIdToken();
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/task/${_taskInfo._id}`, {
+    await fetch(`${backendURL}/task/${_taskInfo._id}`, {
       method: "PATCH",
       body: JSON.stringify(editedTask),
       headers: {
@@ -462,6 +514,15 @@ export default function TaskList() {
         </button>
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
+      <button 
+      style= {sideBarButtonStyle}
+        onClick={event => {
+          setSideBarStyle({width: "25vw"});
+          setSideBarButtonStyle({display: "hidden"})
+      }}>
+        <img src={iconFriend} height="50px" width="50px"/>
+      </button>
+        <Friends sideBarStyle={sideBarStyle} setSideBarStyle={setSideBarStyle} setSideBarButtonStyle={setSideBarButtonStyle}/>
     </>
   );
 }

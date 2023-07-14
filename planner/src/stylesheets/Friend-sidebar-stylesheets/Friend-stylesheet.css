@@ -1,0 +1,109 @@
+.side-bar {
+    height: 100vh;
+    background-color: burlywood;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    font-size: 1.5vh;
+    transition: 0.5s;
+}
+
+.collapse-button {
+    text-align: right;
+    height: 5%;
+}
+
+.currentUserInfo {
+    height: 10%;
+    background-color: green;
+}
+
+.friendList {
+    background-color: aqua;
+    height: 90%;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.userBox {
+    display: grid;
+    height: 10vh;
+    background-color: pink;
+    border: 1px solid gray;
+}
+
+.userBox > button {
+    float: right;
+    background-color: green;
+    vertical-align: top;
+    height: 100%;
+    width: 20%;
+}
+
+.friend {
+    height: 25%;
+    background-color: orange;
+    border: 1px dotted black;
+}
+
+.input-field {
+    display: inline-block;
+    height: 100%;
+    width: 90%;
+    padding: 0px;
+    margin:0px; 
+    vertical-align: top;
+}
+
+.button-submit {
+    display: inline-block;
+    width: 10%;
+    height: 100%;
+    background-color: purple;
+    padding: 0px;
+    vertical-align: top;
+}
+
+.button-submit > img {
+    height: 100%;
+    width: 100%;
+}
+
+.uid-info {
+    font-size: 0.8rem;
+    height: 3vh;
+}
+
+.uid-info > div {
+    vertical-align: top;
+    height: 100%;
+    width: 80%;
+    overflow-x: scroll;
+    display: inline-block;
+}
+
+.uid-info > button {
+    vertical-align: top;
+    width: 3vw;
+    margin-left: 2vw;
+    height: inherit;
+    padding: 0;
+}
+.uid-info > button > img {
+    vertical-align: top;
+    height: 100%;
+    width: 100%;
+}
+
+.username {
+    font-weight: bold;
+    width: 80%;
+    background-color: orange;
+}
+
+.user-currentTask {
+    display: inline-block;
+}

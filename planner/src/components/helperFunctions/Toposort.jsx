@@ -66,10 +66,20 @@ export class node {
             this.in_deg = this.doBefore.length;
             this.doBefore.forEach(outgoingTask => {
                 if (outgoingTask._id) {
-                    hashmap.get(outgoingTask._id).setOutgoingNode(this);
+                    const item = hashmap.get(outgoingTask._id);
+                    if (item) {
+                        item.setOutgoingNode(this);
+                    } else {
+                        console.log("not working");
+                    }
                 } else {
+                    const item = hashmap.get("-1");
+                    if (item) {
+                        item.setOutgoingNode(this);
+                    } else {
+                        console.log("not working");
+                    }
                     // for newTask without id
-                    hashmap.get("-1").setOutgoingNode(this);
                 }
             });
         }

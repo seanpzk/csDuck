@@ -11,7 +11,9 @@ router.post("/", async(req, res) => {
     const newUser = {
         firebaseUID: req.body.firebaseUID,
         email: req.body?.email,
-        registration: false
+        registration: false,
+        username: "",
+        currentTask: ""
     }
 
     const result = await db.collection("users")
@@ -26,7 +28,6 @@ router.post("/", async(req, res) => {
 
 router.patch("/", async(req, res) => {
     const uid = req.body.firebaseUID;
-    console.log("new" + uid);
     const result = await db.collection("users")
         .updateOne({firebaseUID: uid},
             {$set: { username: req.body.username, 
