@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
-import { ref, onValue, push, get, off, onChildAdded, onChildRemoved } from "firebase/database"
-import RemoveFriend from "./removeFriend";
+import { ref, onValue, push, get, off, onChildAdded, onChildRemoved, set } from "firebase/database"
 import "../stylesheets/Friend-sidebar-stylesheets/Friend-stylesheet.css";
 import addFriendIcon from "../assets/addFriend.png";
+import clipboardIcon from "../assets/clipboardIcon.png";
+import removeFriendIcon from "../assets/removeFriend.png";
 
 export default function Friends(props) {
+    // track current user's name
+    const [currentUserName, setCurrentUserName] = useState("");
+    // Tracks list of friend uids.
     const [friendList, setFriendList] = useState([]);
+    // Track list of friend names. Order should correspond to friendList.
     const [friendNames, setFriendNames] = useState([]);
+    // Form for creating user
     const [friendForm, setFriendForm] = useState({
         friendId : ""
     })
@@ -16,6 +22,7 @@ export default function Friends(props) {
     // tracks listeners on friend's currentTask
     const [listeners, setListeners] = useState({});
     const [myUID, setUID] = useState("");
+    const [collapseButtonStyle, setCollapseButtonStyle] = useState()
 
     const updateForm = (value) => {
         return setFriendForm((prev) => {
@@ -30,7 +37,8 @@ export default function Friends(props) {
     );
 
     /**
-     * Fetches the friendList whenever Friends is first loaded
+     * Fetches the friendList whenever Friends is first loaded.
+     * Adds listener to friendList in realtime database to react respond when friends are removed/added.
      */
     useEffect(() => {
         const currentUserUID = firebaseAuth.currentUser?.uid;
@@ -66,36 +74,56 @@ export default function Friends(props) {
                     return copy;
                 })
             })
-        })
+        });
+        // Retrieve currentUser name
+        firebaseAuth.currentUser?.getIdToken()
+            .then(idToken => uidToName(currentUserUID, idToken))
+                .then(name => setCurrentUserName(name));
     }, []);
 
     /**
-     * Update currentTask items whenever friendList is updated
+     * Obtains the username of user from mongodb corresponding to uid.
+     * 
+     * @param {String} uid 
+     * @param {String} idToken Used for authentication to backend
+     * @return Promise(username) of uid
+     */
+    function uidToName(uid, idToken) {
+        return new Promise((resolve) => {
+            const response = fetch(`${backendURL}/setting?UID=${uid}`, {
+                method: "GET",
+                headers: {
+                    Authorization: "Bearer " + idToken,  
+                    "Content-Type": "application/json",
+                }
+            }).then(res => res.json()
+                .then(data => {
+                    resolve(data[0].username);
+                    }
+                ));
+        });
+    }
+
+    /**
+     * Update (currentTaskList, friendNames) whenever friendList is updated.
      */
     useEffect(() => {
         obtainCurrentTask(friendList);
         updateFriendNames(friendList);
     }, [friendList]);
 
+    /**
+     * Updates the state of friendNames in react based on friendList.
+     * 
+     * @param {Array} friendList array containing the uid of friends
+     */
     function updateFriendNames(friendList) {
         const currentUser = firebaseAuth.currentUser;
         currentUser.getIdToken()
             .then(idToken => {
                 // obtain the respective array of names
                 const promises = friendList.map(frienduid => {
-                    return new Promise((resolve) => {
-                        const response = fetch(`${backendURL}/setting?UID=${frienduid}`, {
-                            method: "GET",
-                            headers: {
-                                Authorization: "Bearer " + idToken,  
-                                "Content-Type": "application/json",
-                            }
-                        }).then(res => res.json()
-                            .then(data => {
-                                resolve(data[0].username);
-                                }
-                            ));
-                    });
+                    return uidToName(frienduid, idToken);
                 });
                 Promise.all(promises)
                     .then(names => {
@@ -195,6 +223,51 @@ export default function Friends(props) {
         event.target.reset();
     }
 
+    /** 
+     * Removes friend UID from friendlist in realtime database + react state
+    */
+    function removeFriendList(uid) {
+        const friendListRef = ref(realtimeDb, '/users/' + myUID + '/friendList');
+        get(friendListRef)
+            .then(snapshot => {
+                snapshot.forEach(child => console.log(child.val()));
+                const friendArr = snapshot.val() || [];
+                // remove array from the existing array
+                const modifiedArr = Object.values(friendArr).filter(item => item != uid);
+                // remove listener and update state
+                listeners[uid]();
+                const modifiedListeners = {...props.listeners}
+                delete modifiedListeners.uid
+                setListeners(modifiedListeners);
+
+                set(friendListRef, modifiedArr);
+                setFriendList(modifiedArr);
+            })
+    }
+
+    function deleteFriend(friendList, index) {
+        console.log("CLicked");
+        firebaseAuth.currentUser?.getIdToken()
+        .then(idToken => {
+            fetch(`${backendURL}/removeFriend?currentUserUID=${myUID}&friendUID=${friendList[index]}`, {
+                method: "DELETE",
+                headers: {
+                Authorization: "Bearer " + idToken,
+                "Content-Type": "application/json"
+                }
+            }).then(res => {
+                if (res.ok) {
+                    return res.json()
+                } else {
+                    console.log(res.json());
+                    throw new Error("Error: " + res.status);
+                }
+            })
+            .then(data => removeFriendList(friendList[index]))
+            .catch(error => console.log(error));
+        });
+    }
+
     /**
      * Creates the component for the information (name, currentTask) of each friend.
      * Dynamically creates elements based on the state of (friendNames, currentTaskList).
@@ -206,9 +279,14 @@ export default function Friends(props) {
             .map((item, index) => {
                 const name = friendNames[index];
                 return (
-                    <div key = {index}>
-                        <div>{name}</div>
-                        <div>{item}</div>
+                    <div key = {index} className = "userBox">
+                        <div className="username">{name}</div>
+                        <div className="user-currentTask">{item}</div>
+                        <button
+                            onClick={(event) => deleteFriend(friendList, index)}
+                        >
+                            <img src ={removeFriendIcon} alt ="delete friend" height="100%" width="100%"/>
+                        </button>
                     </div>
                 )
             });
@@ -216,36 +294,64 @@ export default function Friends(props) {
 
     return (
         <>
-            <div className = "side-bar">
-                {
-                    myUID != "" 
-                    ? <>
-                        <h1>Here is your user id</h1>    
-                        <h3>{myUID}</h3>
-                    </> 
-                    : <></>
-                }
-                <form 
-                    onSubmit={addFriend}
+            <div 
+            className = "side-bar"
+            style={props.sideBarStyle}
+            >
+                <div
+                    className="collapse-button"
+                    style = {collapseButtonStyle}
                 >
-                    <input 
-                    placeholder = {"Friend-id"} 
-                    required
-                    onChange={(event) => updateForm({friendId: event.target.value})}
-                    />r
-                    <button type = "submit">
-                        <img src = {addFriendIcon} alt = "Add Friend" height="20%" width="30px"/>
-                    </button>
-                </form>
-                <RemoveFriend 
-                    listeners = {listeners} 
-                    setListeners={setListeners} 
-                    friendList={friendList} 
-                    setFriendList={setFriendList} 
-                />
-                <div>{Object.keys(currentTaskList).length > 0 
+                    <button type = "button" 
+                    style={{'background-color': "red", height: "100%", width: "3vw"}}
+                        onClick={event => {
+                            props.setSideBarStyle({
+                                width: "0px",
+                                position:"fixed"});
+                            props.setSideBarButtonStyle({
+                                position: "fixed",
+                                right: "0px",
+                                bottom: "0px",
+                                backgroundColor: "transparent"
+                            })
+                        }}
+                    >x</button>
+                </div>
+                <div className="currentUserInfo">
+                    {
+                        myUID != "" 
+                        ? <>
+                            <div>
+                                <div className="username">{currentUserName}</div>
+                                <div className={"uid-info"}>
+                                    <div>{myUID}</div>
+                                    <button type = "button" onClick={(event) => navigator.clipboard.writeText(myUID)}>
+                                        <img src={clipboardIcon} />
+                                    </button>
+                                </div>
+                            </div>
+                        </> 
+                        : <></>
+                    }
+                    <form 
+                        onSubmit={addFriend}
+                        className={"friend"}
+                    >
+                        <input 
+                        className = {"input-field"}
+                        placeholder = {"Friend-id"} 
+                        required
+                        maxLength={"36"}
+                        onChange={(event) => updateForm({friendId: event.target.value})}
+                        />
+                        <button type = "submit" className={"button-submit"}>
+                            <img src = {addFriendIcon} alt = "Add Friend" />
+                        </button>
+                    </form>
+                </div>
+                <div className = "friendList">{Object.keys(currentTaskList).length > 0 
                     ? displayUserItems(currentTaskList, friendNames)
-                    : <></>
+                    : <h3>No Friends At The Moment</h3>
                     }</div>
             </div>
         </>

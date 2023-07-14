@@ -10,6 +10,7 @@ import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
 import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 import Friends from "./Friends.jsx";
+import iconFriend from "../assets/friends.png";
 
 /**
  * Display the information of task in a row.
@@ -112,6 +113,13 @@ export default function TaskList(props) {
     doBefore: [],
     customPriority: "",
   });
+  const [sideBarButtonStyle, setSideBarButtonStyle] = useState({
+    position: "fixed",
+    right: "0px",
+    bottom: "0px",
+    backgroundColor: "transparent"
+  });
+  const [sideBarStyle, setSideBarStyle] = useState({});
 
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
@@ -469,11 +477,15 @@ export default function TaskList(props) {
           Auto sort
         </button>
       </div>
-      {
-        props.sidebarActive
-        ? <Friends />
-        : <></>
-      }
+      <button 
+      style= {sideBarButtonStyle}
+        onClick={event => {
+          setSideBarStyle({width: "25vw"});
+          setSideBarButtonStyle({display: "hidden"})
+      }}>
+        <img src={iconFriend} height="50px" width="50px"/>
+      </button>
+        <Friends sideBarStyle={sideBarStyle} setSideBarStyle={setSideBarStyle} setSideBarButtonStyle={setSideBarButtonStyle}/>
     </>
   );
 }

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 
 // We import NavLink to utilize the react router.
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import firebaseAuth from "../firebase.config";
 import { UserPresenceLogout } from "./helperFunctions/UserPresence";
@@ -21,7 +21,6 @@ import iconDuck from "../assets/iconicDuck.png";
  */
 export default function Navbar(props) {
   const navigate = useNavigate();
-  let location = useLocation();
   useEffect(() =>
     firebaseAuth.onAuthStateChanged(() =>
       props.setAuth(firebaseAuth.currentUser != null)
@@ -108,11 +107,6 @@ export default function Navbar(props) {
               >
                 Settings
               </NavLink>
-              {
-                location.pathname === '/mytasks'
-                  ? <button type = "button" onClick = {event => props.setSidebar(prev => !prev)}>Friends</button>
-                  : <></>
-              }
             </>
           )}
         </form>
