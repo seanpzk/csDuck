@@ -13,7 +13,7 @@ function ShowTaskInfo(props) {
         variant="outline"
         style={{
           color: "#555",
-          borderColor: "#f5f5f5",
+          // borderColor: "#f5f5f5",
           fontFamily: "courier, monospace",
           fontSize: "calc(3px + 0.7vw)",
           fontWeight: "bold",

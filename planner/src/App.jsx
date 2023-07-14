@@ -26,6 +26,7 @@ import { UserPresence } from "./components/helperFunctions/UserPresence"
 
 import SettingProfile from "./components/SettingProfile";
 import SettingSecurity from "./components/SettingSecurity";
+import SettingAppearance from "./components/SettingAppearance";
 
 import VerifyEmail from "./components/VerifyEmail";
 import { backendURL } from "./components/helperFunctions/serverUrl";
@@ -43,9 +44,8 @@ const App = () => {
   const [sidebarActive, setSidebar] = useState(false);
 
   /**
-   * Checks if the user has registered their details.
-   * This is an expensive call, limit this.
-   * 
+   * Checks if the user has registered their details
+   *
    * @param {Object} User - fireabse User object
    * @return {boolean} - If registered
    */
@@ -145,6 +145,10 @@ const App = () => {
         <Route path="/mytasks" element={<TaskList sidebarActive={sidebarActive} setSidebar={setSidebar} />} />
         <Route path="/settings/profile" element={<SettingProfile />} />
         <Route path="/settings/security" element={<SettingSecurity />}></Route>
+        <Route
+          path="/settings/appearance"
+          element={<SettingAppearance />}
+        ></Route>
         <Route path="/verifyEmail" element={<VerifyEmail />} />
       </Routes>
     </div>

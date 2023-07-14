@@ -9,6 +9,7 @@ import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
 import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
+import ThemeSwitcher from "./ThemeSwitcher";
 import Friends from "./Friends.jsx";
 import iconFriend from "../assets/friends.png";
 
@@ -27,13 +28,10 @@ const Task = (props) => (
       onDragEnd={props.handleSort}
       onDragOver={(e) => e.preventDefault()}
     >
-      {/* {props.task.name} */}
       <ShowTaskInfo task={props.task}></ShowTaskInfo>
       <colgroup />
-      {/* {props.task.deadline}&nbsp; */}
       {props.task.deadline || "nil"}
       <colgroup />
-      {/* {props.task.priority}&nbsp; */}
       {props.task.priority || "nil"}
       <colgroup />
       <button
@@ -58,7 +56,7 @@ const Task = (props) => (
         style={{ fontSize: "calc(3px + 0.7vw)" }}
         onClick= {(event) => setCurrent(props.task)}
       >
-        <div>Set</div>
+        <div>Set Current Task</div>
       </button>
     </li>
   </div>
@@ -103,6 +101,7 @@ async function setCurrent(task) {
  * @return jsx component for the tasklist
  */
 export default function TaskList(props) {
+  const [allowCustomisation, setAllowCustomisation] = useState();
   const [customPrio, setCustomPrio] = useState();
   const [tasks, setTasks] = useState([]);
   const [taskInfo, setTaskInfo] = useState({
@@ -123,6 +122,43 @@ export default function TaskList(props) {
 
   const navigate = useNavigate();
   const [topoTask, setTopo] = useState([]);
+
+  // This method will determine if Theme Switcher is visible or not.
+  useEffect(() => {
+    async function getCustomisationState() {
+      const currentUser = firebaseAuth.currentUser;
+      if (currentUser == null) {
+        console.log("currentUser is null");
+        return;
+      }
+      const idToken = await firebaseAuth.currentUser?.getIdToken();
+      const UID = firebaseAuth.currentUser.uid;
+      // creates a default GET request -> included UID
+      const response = await fetch(`${backendURL}/tasklist?UID=${UID}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + idToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+      const result = await response.json();
+      if (result[0] == undefined) {
+        setAllowCustomisation(false);
+      } else {
+        setAllowCustomisation(result[0].allowCustomisation);
+      }
+    }
+
+    getCustomisationState();
+
+    return;
+  }, [tasks.length]);
 
   // This method tells whether customPrio is enabled or disabled when site is first rendered.
   useEffect(() => {
@@ -161,7 +197,7 @@ export default function TaskList(props) {
   }, [tasks.length]);
 
   // This method fetches the tasks from the database.
-  useEffect(() => {
+  useNonInitialEffect(() => {
     async function getTasks() {
       const currentUser = firebaseAuth.currentUser;
       if (currentUser == null) {
@@ -476,6 +512,7 @@ export default function TaskList(props) {
         <button type="button" onClick={useToposort}>
           Auto sort
         </button>
+        {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
       <button 
       style= {sideBarButtonStyle}

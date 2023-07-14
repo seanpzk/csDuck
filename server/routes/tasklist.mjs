@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     let newDocument = {
         useCustomPriority: req.body.useCustomPriority,
+        allowCustomisation: false,
     };
     let collection = await db.collection("tasklist");
     let result = await collection.insertOne(newDocument);
@@ -29,9 +30,14 @@ router.post("/", async (req, res) => {
  // This section will help you update the custom priority.
 router.patch("/", async (req, res) => {
     const firebaseUID = req.body.UID;
-  const updates =  {
+  const updates =  (req.body.useCustomPriority == undefined) ? {
     $set: {
-        useCustomPriority: req.body.useCustomPriority
+        allowCustomisation: req.body.allowCustomisation,
+    }
+  } 
+  : {
+    $set: {
+        useCustomPriority: req.body.useCustomPriority,
     }
   };
 
