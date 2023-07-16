@@ -11,11 +11,16 @@ import firebaseAuth from "../firebase.config";
 import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
 
+import GoogleLogin from "./helperFunctions/googleCalendar/GoogleLogin";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { backendURL } from "./helperFunctions/serverUrl";
+
 /**
  * Navbar component
- * 
- * @param {Object} props 
- * @param {Boolean} props.sidebarActive 
+ *
+ * @param {Object} props
+ * @param {Boolean} props.sidebarActive
  * @param {Function} props.setSidebar
  * @returns jsx component navbar
  */
@@ -101,6 +106,14 @@ export default function Navbar(props) {
               <NavLink className="btn btn-outline-success me-2" to="/mytasks">
                 My Tasks
               </NavLink>
+              <a
+                className="btn btn-outline-success me-2"
+                href="http://localhost:5050/googlecalendar"
+                target="_blank"
+                role="button"
+              >
+                Connect to google calendar 📅
+              </a>
               <NavLink
                 className="btn btn-outline-success me-2"
                 to="/settings/profile"

@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@firebase/auth": "^0.23.2",
+    "@google-cloud/local-auth": "^2.1.0",
     "@heroicons/react": "^2.0.18",
+    "@react-oauth/google": "^0.11.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "chai": "^4.3.7",
@@ -20,6 +22,7 @@
     "esbuild": "0.18.3",
     "firebase": "^10.0.0",
     "geckodriver": "^4.0.4",
+    "googleapis": "^105.0.0",
     "heap-js": "^2.3.0",
     "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
