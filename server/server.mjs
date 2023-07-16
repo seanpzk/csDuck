@@ -13,7 +13,6 @@ import tasklist from "./routes/tasklist.mjs";
 import setCurrentTask from "./routes/setCurrentTask.mjs";
 import addFriend from "./routes/addFriend.mjs";
 import removeFriend from "./routes/removeFriend.mjs";
-import tasklist from "./routes/tasklist.mjs";
 import googlecalendar from "./routes/googlecalendar.mjs";
 
 const PORT = process.env.PORT || 5050;
