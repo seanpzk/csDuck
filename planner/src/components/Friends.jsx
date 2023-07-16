@@ -246,7 +246,6 @@ export default function Friends(props) {
     }
 
     function deleteFriend(friendList, index) {
-        console.log("CLicked");
         firebaseAuth.currentUser?.getIdToken()
         .then(idToken => {
             fetch(`${backendURL}/removeFriend?currentUserUID=${myUID}&friendUID=${friendList[index]}`, {
@@ -321,15 +320,11 @@ export default function Friends(props) {
                     {
                         myUID != "" 
                         ? <>
-                            <div>
-                                <div className="username">{currentUserName}</div>
-                                <div className={"uid-info"}>
-                                    <div>{myUID}</div>
-                                    <button type = "button" onClick={(event) => navigator.clipboard.writeText(myUID)}>
-                                        <img src={clipboardIcon} />
-                                    </button>
-                                </div>
-                            </div>
+                            <div className="username">{currentUserName}</div>
+                            <div className={"uid-info"}>{myUID}</div>
+                            <button type = "button" onClick={(event) => navigator.clipboard.writeText(myUID)}>
+                                <img src={clipboardIcon} />
+                            </button>
                         </> 
                         : <></>
                     }
