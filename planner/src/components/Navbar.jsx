@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { NavLink } from "react-router-dom";
 
 import firebaseAuth from "../firebase.config";
+import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
 
 import GoogleLogin from "./helperFunctions/googleCalendar/GoogleLogin";
@@ -15,7 +16,14 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { backendURL } from "./helperFunctions/serverUrl";
 
-// Here, we display our Navbar
+/**
+ * Navbar component
+ *
+ * @param {Object} props
+ * @param {Boolean} props.sidebarActive
+ * @param {Function} props.setSidebar
+ * @returns jsx component navbar
+ */
 export default function Navbar(props) {
   const navigate = useNavigate();
   useEffect(() =>
@@ -25,6 +33,7 @@ export default function Navbar(props) {
   );
 
   async function handleLogout() {
+    UserPresenceLogout(firebaseAuth.currentUser);
     await firebaseAuth.signOut();
     navigate("/login");
   }

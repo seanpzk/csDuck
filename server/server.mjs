@@ -10,6 +10,10 @@ import decodeIDToken from "./authenticateToken.mjs";
 import toposort from "./routes/toposort.mjs";
 import dropdown from "./routes/dropdown.mjs";
 import tasklist from "./routes/tasklist.mjs";
+import setCurrentTask from "./routes/setCurrentTask.mjs";
+import addFriend from "./routes/addFriend.mjs";
+import removeFriend from "./routes/removeFriend.mjs";
+import tasklist from "./routes/tasklist.mjs";
 import googlecalendar from "./routes/googlecalendar.mjs";
 
 const PORT = process.env.PORT || 5050;
@@ -29,7 +33,9 @@ app.use("/toposort", toposort);
 app.use("/dropdown", dropdown);
 app.use("/setting", setting);
 app.use("/tasklist", tasklist);
-app.use("/googlecalendar", googlecalendar);
+app.use("/setCurrentTask", setCurrentTask);
+app.use("/addFriend", addFriend);
+app.use("/removeFriend", removeFriend);app.use("/googlecalendar", googlecalendar);
 
 
 

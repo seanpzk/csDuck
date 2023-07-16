@@ -88,7 +88,7 @@ export default function RegInfo() {
         return (
             <div className = { isActive.page2 ? "data-step" : "disappear" }>
                 <h3 className = "step-title">Step 2</h3>
-                <h10>Your Phone number will be used in the event you forget your email and for multi-factor Authentication</h10>
+                <h3>Your Phone number will be used in the event you forget your email and for multi-factor Authentication</h3>
                 <div className="phone-input-div">
                     <label htmlFor = "phoneNumber">Phone Number: </label>
                     <PhoneInput

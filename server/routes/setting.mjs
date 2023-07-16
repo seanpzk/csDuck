@@ -25,10 +25,7 @@ router.patch("/", async(req, res) => {
     };
     let collection = await db.collection("users");
     let result = await collection.updateOne(query, updates);
-    res.status(200).send(result)
-    console.log("updated results")
-    console.log(result);
+    res.status(200).send(result);
 })
-
 
 export default router;
