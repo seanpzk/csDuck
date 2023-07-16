@@ -10,6 +10,11 @@ import { NavLink } from "react-router-dom";
 import firebaseAuth from "../firebase.config";
 import iconDuck from "../assets/iconicDuck.png";
 
+import GoogleLogin from "./helperFunctions/googleCalendar/GoogleLogin";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { backendURL } from "./helperFunctions/serverUrl";
+
 // Here, we display our Navbar
 export default function Navbar(props) {
   const navigate = useNavigate();
@@ -92,6 +97,14 @@ export default function Navbar(props) {
               <NavLink className="btn btn-outline-success me-2" to="/mytasks">
                 My Tasks
               </NavLink>
+              <a
+                className="btn btn-outline-success me-2"
+                href="http://localhost:5050/googlecalendar"
+                target="_blank"
+                role="button"
+              >
+                Connect to google calendar 📅
+              </a>
               <NavLink
                 className="btn btn-outline-success me-2"
                 to="/settings/profile"

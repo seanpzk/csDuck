@@ -9,11 +9,12 @@ import setting from "./routes/setting.mjs"
 import decodeIDToken from "./authenticateToken.mjs";
 import toposort from "./routes/toposort.mjs";
 import dropdown from "./routes/dropdown.mjs";
-import tasklist from "./routes/tasklist.mjs"
-
+import tasklist from "./routes/tasklist.mjs";
+import googlecalendar from "./routes/googlecalendar.mjs";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
+
 
 app.use(cors());
 app.use(express.json()); // I suppose these two statements are middleware, which are invoked in every path
@@ -28,6 +29,8 @@ app.use("/toposort", toposort);
 app.use("/dropdown", dropdown);
 app.use("/setting", setting);
 app.use("/tasklist", tasklist);
+app.use("/googlecalendar", googlecalendar);
+
 
 
 // start the Express server
