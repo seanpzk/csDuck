@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
-import { ref, onValue, push, get, off, onChildAdded, onChildRemoved, set } from "firebase/database"
+import { ref, onValue, push, get, onChildAdded, onChildRemoved, set } from "firebase/database"
 import "../stylesheets/Friend-sidebar-stylesheets/Friend-stylesheet.css";
 import addFriendIcon from "../assets/addFriend.png";
 import clipboardIcon from "../assets/clipboardIcon.png";
@@ -22,7 +22,8 @@ export default function Friends(props) {
     // tracks listeners on friend's currentTask
     const [listeners, setListeners] = useState({});
     const [myUID, setUID] = useState("");
-    const [collapseButtonStyle, setCollapseButtonStyle] = useState()
+    const [collapseButtonStyle, setCollapseButtonStyle] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const updateForm = (value) => {
         return setFriendForm((prev) => {
@@ -181,7 +182,7 @@ export default function Friends(props) {
                 push(friendListRef, friendUID, error => console.log(error));
                 console.log("Updated in realtime db");
             } else {
-                console.log("User uid doesn't exist in realtime database");
+                console.log("User uid doesn't exist in realtime database")
             }
         }, error => console.log(error));
     }
@@ -209,7 +210,11 @@ export default function Friends(props) {
                 if (res.ok) {
                     return res.json()
                 } else {
-                    throw new Error("Error: " + res.status);
+                    res.text().then(txt => {
+                        setErrorMessage(txt);
+                        setTimeout(() => setErrorMessage(""), 5000);
+                        throw new Error("Error: " + txt)
+                    });
                 }
               })
               .then(data => {
@@ -302,7 +307,7 @@ export default function Friends(props) {
                     style = {collapseButtonStyle}
                 >
                     <button type = "button" 
-                    style={{'background-color': "red", height: "100%", width: "3vw"}}
+                    style={{'background-color': "#D90202", height: "100%", width: "3vw", border: "2px solid black", "border-radius": "50%"}}
                         onClick={event => {
                             props.setSideBarStyle({
                                 width: "0px",
@@ -321,9 +326,9 @@ export default function Friends(props) {
                         myUID != "" 
                         ? <>
                             <div className="username">{currentUserName}</div>
-                            <div className={"uid-info"}>{myUID}</div>
+                            <div className={"uid-info"} title="User-id">{myUID}</div>
                             <button type = "button" onClick={(event) => navigator.clipboard.writeText(myUID)}>
-                                <img src={clipboardIcon} />
+                                <img src={clipboardIcon} height = "100%" width="100%"/>
                             </button>
                         </> 
                         : <></>
@@ -331,14 +336,16 @@ export default function Friends(props) {
                     <form 
                         onSubmit={addFriend}
                         className={"friend"}
+                        title="Enter Your Friend's User ID which is shown below the username!"
                     >
                         <input 
                         className = {"input-field"}
-                        placeholder = {"Friend-id"} 
+                        placeholder = {"User-id"} 
                         required
                         maxLength={"36"}
                         onChange={(event) => updateForm({friendId: event.target.value})}
                         />
+                        <div className={"error-message"}>{errorMessage}</div>
                         <button type = "submit" className={"button-submit"}>
                             <img src = {addFriendIcon} alt = "Add Friend" />
                         </button>
