@@ -12,7 +12,6 @@ import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
 
 import GoogleLogin from "./helperFunctions/googleCalendar/GoogleLogin";
-import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { backendURL } from "./helperFunctions/serverUrl";
 

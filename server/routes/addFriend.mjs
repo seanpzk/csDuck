@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
     const friend = await db.collection("users")
         .findOne({firebaseUID: friendUID});
     if (!friend) {
-        res.status(500).json({message: "No user with that UID found"});
+        res.status(500).json('No user with that UID found');
         return;
     }
     const relationships = await db.collection("friend-relationships");
@@ -30,9 +30,10 @@ router.post("/", async (req, res) => {
             user2 : friendUID
         });
         console.log("Insert new friend");
-        res.status(200).json({message: "Successfully added friend"});
+        res.status(200).json("Successfully added friend");
     } else {
-        res.status(500).json({message: "Friend already exists!"});
+        res.status(500).json("Friend already exists!");
+        return;
     }
 })
 

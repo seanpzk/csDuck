@@ -20,7 +20,7 @@ export default function SettingProfile() {
       const idToken = await firebaseAuth.currentUser?.getIdToken();
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
-      const response = await fetch(`${backendURL}/setting`, {
+      const response = await fetch(`${backendURL}/setting?UID=${UID}`, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + idToken,

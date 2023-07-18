@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
-import { ref, set } from "firebase/database";
+import { ref, set, remove } from "firebase/database";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
@@ -277,6 +277,8 @@ export default function TaskList(props) {
 
   // This method will delete a task
   async function deleteTask(id) {
+    // Send whenever we make a request to backend
+    const uid = firebaseAuth.currentUser?.uid;
     const idToken = await firebaseAuth.currentUser?.getIdToken();
     const response = await fetch(`${backendURL}/task/${id}`, {
       method: "GET",
@@ -296,7 +298,15 @@ export default function TaskList(props) {
       headers: {
         Authorization: "Bearer " + idToken,
       },
-    }).then((response) => RedirectLogin(response, navigate));
+    }).then(async response => {
+      const val = await response.json();
+      if (response.ok && val.isCurrentTask) {
+        // Remove currentTask if this task is the current one!
+        const currentTaskRef = ref(realtimeDb, 'users/' + uid + '/currentTask');
+        remove(currentTaskRef);
+      }
+      // RedirectLogin(response, navigate)
+    });
 
     const newTasks = tasks.filter((el) => el._id !== id);
     setTasks(newTasks);
@@ -526,14 +536,16 @@ export default function TaskList(props) {
         </button>
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
-      <button
-        style={sideBarButtonStyle}
-        onClick={(event) => {
-          setSideBarStyle({ width: "25vw" });
-          setSideBarButtonStyle({ display: "hidden" });
-        }}
-      >
-        <img src={iconFriend} height="50px" width="50px" />
+      <button 
+      style= {sideBarButtonStyle}
+        onClick={event => {
+          setSideBarStyle({
+            width: "25vw", 
+            "border-left": "5px solid rgb(67, 99, 98)"
+          });
+          setSideBarButtonStyle({display: "hidden"})
+      }}>
+        <img src={iconFriend} height="50px" width="50px"/>
       </button>
       <Friends
         sideBarStyle={sideBarStyle}

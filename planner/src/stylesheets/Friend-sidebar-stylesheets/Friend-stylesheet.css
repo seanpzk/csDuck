@@ -1,6 +1,6 @@
 .side-bar {
     height: 100vh;
-    background-color: burlywood;
+    background-color: white;
     width: 0;
     position: fixed;
     z-index: 1;
@@ -9,47 +9,96 @@
     right: 0;
     font-size: 1.5vh;
     transition: 0.5s;
+    z-index: 2;
 }
 
 .username {
     font-weight: bold;
-    background-color: orange;
 }
 
 .collapse-button {
     text-align: right;
     height: 5%;
+    font-size: 1.5rem;
+    line-height: 50%;
+    background-color: rgb(165, 246, 165);
 }
 
 .currentUserInfo {
     display: grid;
     grid-template-columns: 80% 20%;
-    grid-template-rows: 30% 40% 30%;
-    height: 10%;
-    background-color: green;
+    grid-template-rows: 40% 30% 30%;
+    height: 15%;
+    background-color: rgb(165, 246, 165);
 }
 
 .currentUserInfo > .username {
     grid-area: 1 / 1 / 2 / 2;
     padding-left: 10%;
+    font-size: 1.5rem;
 }
 
 .currentUserInfo > .uid-info {
     grid-area: 2 / 1 / 3 / 2;
-    padding-left: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x:hidden;
 }
 
 .currentUserInfo > button {
     grid-area: 2 / 2 / 3 / 3;
+    padding: 0px;
+    background-color: transparent;
 }
 
 .currentUserInfo > form {
     grid-area: 3 / 1 / 4 / 3;
 }
 
+.currentUserInfo > button > img {
+    padding: 20%;
+    padding-top: 0px;
+    padding-bottom: 2px;
+}
+
+.currentUserInfo > form > .input-field {
+    height: 100%;
+    width: 90%;
+    padding: 0px;
+    padding-left: 5%;
+    font-size: 1rem;
+    margin:0px; 
+    vertical-align: top;
+    border-radius: 0px;
+}
+
+.currentUserInfo > form > button {
+    grid-area: 3 / 2 / 4 / 3;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.currentUserInfo > form > button > img {
+    object-fit:  center;
+    padding: 10%;
+    z-index: 2;
+}
+
+.currentUserInfo > form > .error-message {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    z-index: 5;
+    color: black;
+    background-color: #FFCCCC ;
+    border: 1px solid red;
+    font-weight: bold;
+}
+
 .friendList {
-    background-color: aqua;
-    height: 90%;
+    height: 85%;
     width: 100%;
     overflow-y: scroll;
 }
@@ -61,10 +110,9 @@
     justify-content: center;
     align-items: center;
     height: 10vh;
-    background-color: pink;
     border: 1px solid gray;
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .userBox > .username {
@@ -75,7 +123,7 @@
 
 .userBox > button {
     grid-area: 1 / 2 / 3 / 3;
-    background-color: green;
+    background-color: transparent;
     margin: 20%;
     border: 2px solid black;
     border-radius: 20px;
@@ -83,53 +131,30 @@
     transition-duration: 0.5s;
 }
 
+.userBox > button > img {
+    scale: 2.5;
+    opacity: 0;
+}
+
 .userBox:hover > button {
+    opacity: 1;
+    transition-duration: 0.5s;
+}
+
+.userBox:hover > button > img {
     opacity: 1;
 }
 
 .userBox > .user-currentTask {
     padding-left: 10%;
     grid-area: 2 / 1 / 3 / 2;
-    background-color: red;
-}
-
-.currentUserInfo > form {
-    background-color: orange;
-    border: 1px dotted black;
-}
-
-.currentUserInfo > button > img {
-    height: 100%;
-    width: 30%;
-    scale: 1.5;
-    border: 2px solid black;
-    padding: 2px;
-    border-radius: 5px;
-}
-
-.currentUserInfo > form > button > img {
-    object-fit:  center;
-    padding: 10%;
-    z-index: 2;
-}
-
-.input-field {
-    display: inline-block;
-    height: 100%;
-    width: 75%;
-    padding: 0px;
-    padding-left: 5%;
-    margin:0px; 
-    margin-left: 5%;
-    margin-right: 5%;
-    vertical-align: top;
+    font-size: 1rem;
 }
 
 .button-submit {
     display: inline-block;
     width: 10%;
     height: 100%;
-    background-color: purple;
     padding: 0px;
     vertical-align: top;
 }
@@ -157,7 +182,7 @@
     width: 3vw;
     margin-left: 2vw;
     height: inherit;
-    padding: 0;
+    padding: 0;   
 }
 .uid-info > button > img {
     vertical-align: top;

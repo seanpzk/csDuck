@@ -79,8 +79,6 @@ router.get("/:id", async (req, res) => {
 
 // This section will help you create a new record.
 router.post("/", async (req, res) => {
-  console.log("BEFORE");
-  console.log(req.body.doBefore);
   let newDocument = {
     name: req.body.name,
     deadline: req.body.deadline,
@@ -118,11 +116,20 @@ router.patch("/:id", async (req, res) => {
 // This section will help you delete a record
 router.delete("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
-
+  let currentTask = false;
   const collection = db.collection("task");
+  const doc = await collection.findOne(query);
+  const userCollection = db.collection("users");
+  const user = await userCollection.findOne({firebaseUID: doc.firebaseUID});
+  console.log(doc);
+  // delete current task only if the task is the current task
+  if (user.currentTask == doc.name) {
+    await userCollection.updateOne({firebaseUID: doc.firebaseUID}, 
+      {$set: {currentTask: ""}});
+    currentTask = true;
+  }
   let result = await collection.deleteOne(query);
-
-  res.status(200).send(result);
+  res.status(200).json({isCurrentTask: currentTask});
 });
 
 export default router;

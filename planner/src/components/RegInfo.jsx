@@ -29,6 +29,7 @@ export default function RegInfo() {
         event.preventDefault();
         const idToken = await firebaseAuth.currentUser?.getIdToken();
         const regForm = form;
+        console.log(idToken);
 
         const response = await fetch(`${backendURL}/register`, {
             method: "PATCH",
