@@ -61,7 +61,7 @@ export default function VerifyEmail(props) {
                     <button onClick = { handleResend } 
                         className ="submit-button"
                         disabled= {disableButton}
-                        data-testid='resend-button'>Click here to resend</button>
+                        data-testid='resend-button'>Resend Email</button>
                 </div>
             </div>
         </>

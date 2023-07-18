@@ -8,6 +8,7 @@ import { backendURL } from "./serverUrl";
 export default async function CreateUserMongo() {
   const user = firebaseAuth?.currentUser;
   const idToken = await user.getIdToken();
+  console.log(idToken);
 
   await fetch(`${backendURL}/register`, {
     method: "POST",

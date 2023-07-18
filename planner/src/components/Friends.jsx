@@ -175,12 +175,18 @@ export default function Friends(props) {
      */
     async function addFriendList(friendUID) {
         const currentUserUID = firebaseAuth.currentUser?.uid;
+        // Add for currentUser
         const friendListRef = ref(realtimeDb, 'users/' + currentUserUID + '/friendList');
         const friendRef = ref(realtimeDb, 'users/' + friendUID);
         await get(friendRef).then(snapshot => {
             if (snapshot.exists()) {
                 push(friendListRef, friendUID, error => console.log(error));
                 console.log("Updated in realtime db");
+                // Add for friend
+                console.log(friendUID);
+                const friend_friendListRef = ref(realtimeDb, 'users/' + friendUID + '/friendList');
+                push(friend_friendListRef, currentUserUID, error => console.log(error));
+        
             } else {
                 console.log("User uid doesn't exist in realtime database")
             }
@@ -198,29 +204,35 @@ export default function Friends(props) {
         friendForm["firebaseUID"] = firebaseAuth.currentUser?.uid;
         const currentUser = firebaseAuth.currentUser;
         const idToken = await firebaseAuth.currentUser?.getIdToken();
-        if (currentUser) {
-            await fetch(`${backendURL}/addFriend`, {
-                method: "POST",
-                headers: {
-                  Authorization: "Bearer " + idToken,
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(friendForm)
-              }).then(res => {
-                if (res.ok) {
-                    return res.json()
-                } else {
-                    res.text().then(txt => {
-                        setErrorMessage(txt);
-                        setTimeout(() => setErrorMessage(""), 5000);
-                        throw new Error("Error: " + txt)
-                    });
-                }
-              })
-              .then(data => {
-                addFriendList(friendForm.friendId)
-              })
-              .catch(error => console.log(error));
+        if (friendForm.friendId == currentUser.uid || friendForm.friendId == "") {
+            setErrorMessage("Enter your friend's User ID!");
+            setTimeout(() => setErrorMessage(""), 5000);
+        }
+        else{
+            if (currentUser) {
+                await fetch(`${backendURL}/addFriend`, {
+                    method: "POST",
+                    headers: {
+                    Authorization: "Bearer " + idToken,
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(friendForm)
+                }).then(res => {
+                    if (res.ok) {
+                        return res.json()
+                    } else {
+                        res.text().then(txt => {
+                            setErrorMessage(txt);
+                            setTimeout(() => setErrorMessage(""), 5000);
+                            throw new Error("Error: " + txt)
+                        });
+                    }
+                })
+                .then(data => {
+                    addFriendList(friendForm.friendId)
+                })
+                .catch(error => console.log(error));
+            }
         }
         setFriendForm({
             friendId: ""
@@ -247,6 +259,13 @@ export default function Friends(props) {
 
                 set(friendListRef, modifiedArr);
                 setFriendList(modifiedArr);
+            })
+        const friend_friendListRef = ref(realtimeDb, '/users/' + uid + '/friendList');
+        get(friend_friendListRef)
+            .then(snapshot => {
+                const friend_friendArr = snapshot.val() || [];
+                const modifiedArr = Object.values(friend_friendArr).filter(item => item != myUID);
+                set(friend_friendListRef, modifiedArr);
             })
     }
 
@@ -281,11 +300,12 @@ export default function Friends(props) {
     function displayUserItems(currentTaskList, friendNames) {
         return Object.values(currentTaskList)
             .map((item, index) => {
+                console.log(item);
                 const name = friendNames[index];
                 return (
                     <div key = {index} className = "userBox">
                         <div className="username">{name}</div>
-                        <div className="user-currentTask">{item}</div>
+                        <div className="user-currentTask">{item || "Chilling at the moment"}</div>
                         <button
                             onClick={(event) => deleteFriend(friendList, index)}
                         >
