@@ -28,6 +28,7 @@ router.post("/", async(req, res) => {
 
 router.patch("/", async(req, res) => {
     const uid = req.body.firebaseUID;
+    console.log(req.body.username);
     const result = await db.collection("users")
         .updateOne({firebaseUID: uid},
             {$set: { username: req.body.username, 
