@@ -3,7 +3,12 @@ import { useNavigate } from "react-router";
 import firebaseAuth from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import DoBefore from "./DoBefore";
-import verifyDAG, { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
+import verifyDAG, {
+  Toposort,
+  extractExistingTasks,
+} from "./helperFunctions/Toposort.jsx";
+// import CreateEvent from "./helperFunctions/googleCalendar/CreateEvent";
+import ScheduleEvent from "./helperFunctions/googleCalendar/ScheduleEvent";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -12,7 +17,7 @@ export default function Create() {
     priority: "",
     description: "",
     firebaseUID: "",
-    doBefore: []
+    doBefore: [],
   });
 
   const navigate = useNavigate();
@@ -35,6 +40,7 @@ export default function Create() {
     e.preventDefault();
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task };
+    ScheduleEvent(newTask);
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -59,7 +65,7 @@ export default function Create() {
       priority: "",
       description: "",
       firebaseUID: "",
-      doBefore: []
+      doBefore: [],
     });
     navigate("/mytasks");
   }
@@ -70,7 +76,9 @@ export default function Create() {
       <h3>Add new task</h3>
       <form onSubmit={onSubmit} data-testid="create-form">
         <div className="form-group">
-          <label htmlFor="name" data-testid="name-label">Task Name</label>
+          <label htmlFor="name" data-testid="name-label">
+            Task Name
+          </label>
           <input
             type="text"
             className="form-control"
@@ -82,7 +90,9 @@ export default function Create() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="Deadline" data-testid="deadline-label">Deadline</label>
+          <label htmlFor="Deadline" data-testid="deadline-label">
+            Deadline
+          </label>
           <input
             type="date"
             className="form-control"
@@ -93,7 +103,10 @@ export default function Create() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="Description" data-testid="description-label"> Task description</label>
+          <label htmlFor="Description" data-testid="description-label">
+            {" "}
+            Task description
+          </label>
           <input
             type="text"
             className="form-control"
@@ -103,58 +116,77 @@ export default function Create() {
             data-testid="description-input"
           />
         </div>
-        <label htmlFor="Priority" data-testid="priority-label">Priority</label>
+        <label htmlFor="Priority" data-testid="priority-label">
+          Priority
+        </label>
         <div className="form-group">
           <div className="form-check form-check-inline">
-          <label htmlFor="priorityLow" className="form-check-label" data-testid='low-priority-label'>
-            <input
-              className="form-check-input"
-              type="radio"
-              name="priorityOptions"
-              id="priorityLow"
-              value="Low"
-              checked={task.priority === "Low"}
-              onChange={(e) => updateTask({ priority: e.target.value })}
-              required
-              data-testid='low-priority-input'
-            />
-            Low
-          </label>
+            <label
+              htmlFor="priorityLow"
+              className="form-check-label"
+              data-testid="low-priority-label"
+            >
+              <input
+                className="form-check-input"
+                type="radio"
+                name="priorityOptions"
+                id="priorityLow"
+                value="Low"
+                checked={task.priority === "Low"}
+                onChange={(e) => updateTask({ priority: e.target.value })}
+                required
+                data-testid="low-priority-input"
+              />
+              Low
+            </label>
           </div>
           <div className="form-check form-check-inline">
-          <label htmlFor="priorityMedium" className="form-check-label" data-testid='med-priority-label'>
-            <input
-              className="form-check-input"
-              type="radio"
-              name="priorityOptions"
-              id="priorityMedium"
-              value="Medium"
-              checked={task.priority === "Medium"}
-              onChange={(e) => updateTask({ priority: e.target.value })}
-              data-testid='med-priority-input'
-            />
+            <label
+              htmlFor="priorityMedium"
+              className="form-check-label"
+              data-testid="med-priority-label"
+            >
+              <input
+                className="form-check-input"
+                type="radio"
+                name="priorityOptions"
+                id="priorityMedium"
+                value="Medium"
+                checked={task.priority === "Medium"}
+                onChange={(e) => updateTask({ priority: e.target.value })}
+                data-testid="med-priority-input"
+              />
               Medium
-          </label>
+            </label>
           </div>
           <div className="form-check form-check-inline">
-          <label htmlFor="priorityHigh" className="form-check-label" data-testid='high-priority-label'>
-            <input
-              className="form-check-input"
-              type="radio"
-              name="priorityOptions"
-              id="priorityHigh"
-              value="High"
-              checked={task.priority === "High"}
-              onChange={(e) => updateTask({ priority: e.target.value })}
-              data-testid='high-priority-input'
-            />
+            <label
+              htmlFor="priorityHigh"
+              className="form-check-label"
+              data-testid="high-priority-label"
+            >
+              <input
+                className="form-check-input"
+                type="radio"
+                name="priorityOptions"
+                id="priorityHigh"
+                value="High"
+                checked={task.priority === "High"}
+                onChange={(e) => updateTask({ priority: e.target.value })}
+                data-testid="high-priority-input"
+              />
               High
-          </label>
+            </label>
           </div>
         </div>
-        <DoBefore updateTask = {updateTask} />
+        <DoBefore updateTask={updateTask} />
         <div className="form-group">
-          <input type="submit" value="Add task" className="btn btn-primary" data-testid="submit-button"/>
+          <input
+            type="submit"
+            value="Add task"
+            className="btn btn-primary"
+            data-testid="submit-button"
+          />
         </div>
       </form>
     </div>

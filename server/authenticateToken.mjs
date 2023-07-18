@@ -1,5 +1,7 @@
 import admin from "firebase-admin";
 import { readFile } from "fs/promises";
+import { url } from "inspector";
+import { urlToHttpOptions } from "url";
 //import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 // read json files manually, since es6 doesn't support
 const json = JSON.parse(
@@ -15,7 +17,10 @@ admin.initializeApp({
 // verify Firebase token
 export default async function decodeIDToken(req, res, next) {
     const header = req.headers?.authorization;
-    if (header && header != "Bearer null" && req.headers?.authorization?.startsWith("Bearer ")) {
+    if (req.url.startsWith("/googlecalendar")) {
+        next();
+    }
+    else if (header && header != "Bearer null" && req.headers?.authorization?.startsWith("Bearer ")) {
         const idToken = req.headers.authorization.split("Bearer ")[1];
         try {
             const decodedToken = await admin.auth()?.verifyIdToken(idToken);

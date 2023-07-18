@@ -21,13 +21,21 @@ identity-obj-proxy
 
 ```
 
+## To install in server
+
+```
+npm install googleapis
+dayjs
+
+```
+
 ## Run the application
 
 ```
 cd planner;
 npm run dev;
 cd server;
-node server.mjs;
+node server.mjs; (or npm run dev)
 ```
 
 ## Testing using jest

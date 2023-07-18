@@ -13,9 +13,11 @@ import tasklist from "./routes/tasklist.mjs";
 import setCurrentTask from "./routes/setCurrentTask.mjs";
 import addFriend from "./routes/addFriend.mjs";
 import removeFriend from "./routes/removeFriend.mjs";
+import googlecalendar from "./routes/googlecalendar.mjs";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
+
 
 app.use(cors());
 app.use(express.json()); // I suppose these two statements are middleware, which are invoked in every path
@@ -32,7 +34,9 @@ app.use("/setting", setting);
 app.use("/tasklist", tasklist);
 app.use("/setCurrentTask", setCurrentTask);
 app.use("/addFriend", addFriend);
-app.use("/removeFriend", removeFriend);
+app.use("/removeFriend", removeFriend);app.use("/googlecalendar", googlecalendar);
+
+
 
 // start the Express server
 app.listen(PORT, () => {
