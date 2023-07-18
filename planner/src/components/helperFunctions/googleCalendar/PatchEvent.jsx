@@ -1,9 +1,10 @@
 import firebaseAuth from "../../../firebase.config";
 import { backendURL } from "../serverUrl";
 
-export default async function ScheduleEvent(eventDetails) {
+export default async function PatchEvent(eventDetails) {
+  console.log(eventDetails);
   const idToken = await firebaseAuth.currentUser?.getIdToken();
-  await fetch(`${backendURL}/googlecalendar/schedule_event`, {
+  await fetch(`${backendURL}/googlecalendar/patch_event`, {
     method: "POST",
     body: JSON.stringify(eventDetails),
     headers: {

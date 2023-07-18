@@ -6,6 +6,7 @@ import verifyDAG, {
   extractExistingTasks,
 } from "./helperFunctions/Toposort.jsx";
 import { backendURL } from "./helperFunctions/serverUrl";
+import PatchEvent from "./helperFunctions/googleCalendar/PatchEvent";
 
 export default function Edit() {
   const [form, setForm] = useState({
@@ -62,7 +63,7 @@ export default function Edit() {
 
   async function onSubmit(e) {
     e.preventDefault();
-    const editedPerson = {
+    const editedTask = {
       _id: params.id,
       name: form.name,
       deadline: form.deadline,
@@ -71,13 +72,23 @@ export default function Edit() {
       doBefore: form.doBefore,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
-    if (await verifyDAG(editedPerson, await extractExistingTasks())) {
+    const id = params.id.toString();
+    const response = await fetch(`${backendURL}/task/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + idToken,
+      },
+    });
+    const result = await response.json();
+    var eventID = result.googleCalendarEventID;
+    PatchEvent({ ...editedTask, eventID });
+    if (await verifyDAG(editedTask, await extractExistingTasks())) {
       console.log("DAG PRESENT");
       console.log(idToken);
       // This will send a post request to update the data in the database.
       await fetch(`${backendURL}/task/${params.id}`, {
         method: "PATCH",
-        body: JSON.stringify(editedPerson),
+        body: JSON.stringify(editedTask),
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + idToken,
@@ -170,7 +181,7 @@ export default function Edit() {
           </div>
         </div>
         <br />
-        <DoBefore task = {form} updateTask = {updateForm} />
+        <DoBefore task={form} updateTask={updateForm} />
         <div className="form-group">
           <input
             type="submit"

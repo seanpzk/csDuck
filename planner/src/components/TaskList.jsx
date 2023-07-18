@@ -184,7 +184,10 @@ export default function TaskList(props) {
         return;
       }
       let result = await response.json();
+      console.log(result);
       if (result[0] == undefined) {
+        console.log("here");
+        customPriorityFalse();
         setCustomPrio(false);
       } else {
         setCustomPrio(result[0].useCustomPriority);
