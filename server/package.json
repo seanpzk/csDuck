@@ -16,5 +16,8 @@
     "firebase-admin": "^11.8.0",
     "js-sha512": "^0.8.0",
     "mongodb": "^5.5.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.3.3"
   }
 }

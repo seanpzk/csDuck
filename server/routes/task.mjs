@@ -117,9 +117,6 @@ router.delete("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
   let currentTask = false;
   const collection = db.collection("task");
-  // const item = await collection.findOne(query);
-  // console.log(item);
-  // const uid = item.firebaseUID;
   const doc = await collection.findOne(query);
   const userCollection = db.collection("users");
   const user = await userCollection.findOne({firebaseUID: doc.firebaseUID});
