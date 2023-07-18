@@ -10,11 +10,6 @@ import { NavLink } from "react-router-dom";
 import firebaseAuth from "../firebase.config";
 import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
-
-import GoogleLogin from "./helperFunctions/googleCalendar/GoogleLogin";
-import axios from "axios";
-import { backendURL } from "./helperFunctions/serverUrl";
-
 /**
  * Navbar component
  *
