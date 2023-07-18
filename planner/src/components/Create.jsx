@@ -9,6 +9,7 @@ import verifyDAG, {
 } from "./helperFunctions/Toposort.jsx";
 // import CreateEvent from "./helperFunctions/googleCalendar/CreateEvent";
 import ScheduleEvent from "./helperFunctions/googleCalendar/ScheduleEvent";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Create() {
   const [task, setTask] = useState({
@@ -38,8 +39,11 @@ export default function Create() {
   // This function will handle the submission.
   async function onSubmit(e) {
     e.preventDefault();
+    var eventID = uuidv4().replace(/-/g, "");
     // When a post request is sent to the create url, we'll add a new record to the database.
-    const newTask = { ...task };
+    const newTask = { ...task, eventID };
+    console.log(newTask);
+    console.log(newTask.eventID);
     ScheduleEvent(newTask);
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");

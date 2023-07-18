@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
-import { ref, set } from "firebase/database"
+import { ref, set } from "firebase/database";
 import { backendURL } from "./helperFunctions/serverUrl";
 import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
@@ -12,6 +12,7 @@ import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Friends from "./Friends.jsx";
 import iconFriend from "../assets/friends.png";
+import DeleteEvent from "./helperFunctions/googleCalendar/DeleteEvent";
 
 /**
  * Display the information of task in a row.
@@ -54,7 +55,7 @@ const Task = (props) => (
       <button
         className="btn btn-link "
         style={{ fontSize: "calc(3px + 0.7vw)" }}
-        onClick= {(event) => setCurrent(props.task)}
+        onClick={(event) => setCurrent(props.task)}
       >
         <div>Set Current Task</div>
       </button>
@@ -68,14 +69,13 @@ async function setCurrent(task) {
     const idToken = await currentUser?.getIdToken();
     const uid = currentUser.uid;
     const response = await fetch(`${backendURL}/setCurrentTask`, {
-      method : "PATCH",
+      method: "PATCH",
       headers: {
         Authorization: "Bearer " + idToken,
         "Content-Type": "application/json",
-      }, 
-      body: JSON.stringify(task)
-    })
-    .catch((error) => {
+      },
+      body: JSON.stringify(task),
+    }).catch((error) => {
       window.alert(error);
       return;
     });
@@ -86,7 +86,7 @@ async function setCurrent(task) {
       const user = firebaseAuth.currentUser;
       if (user) {
         const uid = user.uid;
-        const currentTaskRef = ref(realtimeDb, 'users/' + uid + '/currentTask');
+        const currentTaskRef = ref(realtimeDb, "users/" + uid + "/currentTask");
         set(currentTaskRef, task.name);
       }
     }
@@ -94,8 +94,8 @@ async function setCurrent(task) {
 }
 
 /**
- * 
- * @param {Object} props 
+ *
+ * @param {Object} props
  * @param {Function} props.setSidebar
  * @param {Boolean} props.sidebarActive
  * @return jsx component for the tasklist
@@ -116,7 +116,7 @@ export default function TaskList(props) {
     position: "fixed",
     right: "0px",
     bottom: "0px",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   });
   const [sideBarStyle, setSideBarStyle] = useState({});
 
@@ -183,7 +183,7 @@ export default function TaskList(props) {
         window.alert(message);
         return;
       }
-      let result = await response.json();  
+      let result = await response.json();
       if (result[0] == undefined) {
         setCustomPrio(false);
       } else {
@@ -277,8 +277,20 @@ export default function TaskList(props) {
 
   // This method will delete a task
   async function deleteTask(id) {
-    // Send whenever we make a request to backend
     const idToken = await firebaseAuth.currentUser?.getIdToken();
+    const response = await fetch(`${backendURL}/task/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + idToken,
+      },
+    });
+    const result = await response.json();
+    var eventID = result.googleCalendarEventID;
+    console.log("googlecalendareventid is ");
+    console.log(eventID);
+    DeleteEvent({ eventID });
+    // Send whenever we make a request to backend
+
     await fetch(`${backendURL}/task/${id}`, {
       method: "DELETE",
       headers: {
@@ -514,15 +526,20 @@ export default function TaskList(props) {
         </button>
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
-      <button 
-      style= {sideBarButtonStyle}
-        onClick={event => {
-          setSideBarStyle({width: "25vw"});
-          setSideBarButtonStyle({display: "hidden"})
-      }}>
-        <img src={iconFriend} height="50px" width="50px"/>
+      <button
+        style={sideBarButtonStyle}
+        onClick={(event) => {
+          setSideBarStyle({ width: "25vw" });
+          setSideBarButtonStyle({ display: "hidden" });
+        }}
+      >
+        <img src={iconFriend} height="50px" width="50px" />
       </button>
-        <Friends sideBarStyle={sideBarStyle} setSideBarStyle={setSideBarStyle} setSideBarButtonStyle={setSideBarButtonStyle}/>
+      <Friends
+        sideBarStyle={sideBarStyle}
+        setSideBarStyle={setSideBarStyle}
+        setSideBarButtonStyle={setSideBarButtonStyle}
+      />
     </>
   );
 }

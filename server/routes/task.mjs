@@ -87,7 +87,8 @@ router.post("/", async (req, res) => {
     priority: req.body.priority,
     description: req.body.description,
     firebaseUID: req.body.firebaseUID,
-    doBefore: req.body.doBefore
+    doBefore: req.body.doBefore,
+    googleCalendarEventID: req.body.eventID
   };
   let collection = await db.collection("task");
   let result = await collection.insertOne(newDocument);

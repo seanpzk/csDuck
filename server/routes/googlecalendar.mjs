@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from 'dotenv';
 dotenv.config({});
 import { google } from "googleapis";
-import dayjs from "dayjs";
+
 
 const router = express.Router();
 
@@ -57,12 +57,21 @@ router.post("/schedule_event", async (req, res) => {
       end: {
         date: req.body.deadline,
         timeZone: "Asia/Singapore"
-      }
+      },
+      id: req.body.eventID
       
     }
   });
-
   res.status(200).send( {text: "Event scheduled successfully" });
+});
+
+router.post("/delete_event", async (req, res) => {
+  await calendar.events.delete({
+    calendarId: 'primary',
+    auth: oauth2Client,
+    eventId: req.body.eventID
+  });
+  res.status(200).send( {text: "Event deleted successfully" });
 });
 
 export default router;
