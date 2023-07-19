@@ -121,7 +121,6 @@ router.delete("/:id", async (req, res) => {
   const doc = await collection.findOne(query);
   const userCollection = db.collection("users");
   const user = await userCollection.findOne({firebaseUID: doc.firebaseUID});
-  console.log(doc);
   // delete current task only if the task is the current task
   if (user.currentTask == doc.name) {
     await userCollection.updateOne({firebaseUID: doc.firebaseUID}, 

@@ -25,7 +25,7 @@ export default function SettingAppearance() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(update),
       headers: {
@@ -44,7 +44,7 @@ export default function SettingAppearance() {
     };
 
     // This will send a post request to update the data in the database.
-    await fetch(`http://localhost:5050/tasklist`, {
+    await fetch(`${backendURL}/tasklist`, {
       method: "PATCH",
       body: JSON.stringify(update),
       headers: {

@@ -22,7 +22,7 @@ import NotFound from "./components/NotFound";
 import firebaseAuth from "./firebase.config";
 import RegInfo from "./components/RegInfo";
 import TaskList from "./components/TaskList";
-import { UserPresence } from "./components/helperFunctions/UserPresence"
+import { UserPresence } from "./components/helperFunctions/UserPresence";
 
 import SettingProfile from "./components/SettingProfile";
 import SettingSecurity from "./components/SettingSecurity";
@@ -65,13 +65,16 @@ const App = () => {
       navigate("/reginfo");
     } else {
       setRegistered(true);
-    };
+    }
   }
 
   useEffect(() => {
-    if (user && !location.pathname.includes("/reginfo") && !location.pathname.includes("/verifyEmail")) {
+    if (
+      user &&
+      !location.pathname.includes("/reginfo") &&
+      !location.pathname.includes("/verifyEmail")
+    ) {
       user.reload();
-      console.log(user.emailVerified);
       if (user.emailVerified) {
         checkRegistered(user);
       } else {
@@ -82,15 +85,19 @@ const App = () => {
 
   /**
    * This hook is for navigation to reg-info page ONLY FROM verifyEmail.
-   * 
+   *
    * Purpose: Only redirect when email is verified
    */
   useEffect(() => {
-    if (user && userVerified == true && location.pathname.includes("/verifyEmail")) {
+    if (
+      user &&
+      userVerified == true &&
+      location.pathname.includes("/verifyEmail")
+    ) {
       console.log("redirected");
-      navigate('/reginfo');
+      navigate("/reginfo");
     } else if (!user) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [user, userVerified]);
 
@@ -128,8 +135,13 @@ const App = () => {
 
   return (
     <div className="app">
-      <UserPresence auth = {auth} />
-      <Navbar auth={auth} setAuth={setAuth} sidebarActive={sidebarActive} setSidebar={setSidebar} />
+      <UserPresence auth={auth} />
+      <Navbar
+        auth={auth}
+        setAuth={setAuth}
+        sidebarActive={sidebarActive}
+        setSidebar={setSidebar}
+      />
       <Routes>
         <Route exact path="/" element={<Homepage auth={auth} />} />
         <Route path="/edit/:id" element={<Edit />} />
@@ -142,7 +154,12 @@ const App = () => {
         <Route path="/reginfo" element={<RegInfo />} />
         <Route path="/reset" element={<Reset />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/mytasks" element={<TaskList sidebarActive={sidebarActive} setSidebar={setSidebar} />} />
+        <Route
+          path="/mytasks"
+          element={
+            <TaskList sidebarActive={sidebarActive} setSidebar={setSidebar} />
+          }
+        />
         <Route path="/settings/profile" element={<SettingProfile />} />
         <Route path="/settings/security" element={<SettingSecurity />}></Route>
         <Route

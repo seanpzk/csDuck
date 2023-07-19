@@ -10,6 +10,7 @@ import { NavLink } from "react-router-dom";
 import firebaseAuth from "../firebase.config";
 import { UserPresenceLogout } from "./helperFunctions/UserPresence";
 import iconDuck from "../assets/iconicDuck.png";
+import { backendURL } from "./helperFunctions/serverUrl";
 /**
  * Navbar component
  *
@@ -102,7 +103,7 @@ export default function Navbar(props) {
               </NavLink>
               <a
                 className="btn btn-outline-success me-2"
-                href="http://localhost:5050/googlecalendar"
+                href={`${backendURL}/googlecalendar`}
                 target="_blank"
                 role="button"
               >

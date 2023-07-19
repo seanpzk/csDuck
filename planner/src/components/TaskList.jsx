@@ -128,7 +128,7 @@ export default function TaskList(props) {
     async function getCustomisationState() {
       const currentUser = firebaseAuth.currentUser;
       if (currentUser == null) {
-        console.log("currentUser is null");
+        console.log("currentUser is null, no customisation state");
         return;
       }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -184,9 +184,7 @@ export default function TaskList(props) {
         return;
       }
       let result = await response.json();
-      console.log(result);
       if (result[0] == undefined) {
-        console.log("here");
         customPriorityFalse();
         setCustomPrio(false);
       } else {
@@ -204,7 +202,9 @@ export default function TaskList(props) {
     async function getTasks() {
       const currentUser = firebaseAuth.currentUser;
       if (currentUser == null) {
-        console.log("currentUser is null");
+        console.log(
+          "currentUser is null, no tasks to be fetched from database."
+        );
         return;
       }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -291,8 +291,6 @@ export default function TaskList(props) {
     });
     const result = await response.json();
     var eventID = result.googleCalendarEventID;
-    console.log("googlecalendareventid is ");
-    console.log(eventID);
     DeleteEvent({ eventID });
     // Send whenever we make a request to backend
 
@@ -301,11 +299,11 @@ export default function TaskList(props) {
       headers: {
         Authorization: "Bearer " + idToken,
       },
-    }).then(async response => {
+    }).then(async (response) => {
       const val = await response.json();
       if (response.ok && val.isCurrentTask) {
         // Remove currentTask if this task is the current one!
-        const currentTaskRef = ref(realtimeDb, 'users/' + uid + '/currentTask');
+        const currentTaskRef = ref(realtimeDb, "users/" + uid + "/currentTask");
         remove(currentTaskRef);
       }
       // RedirectLogin(response, navigate)
@@ -539,16 +537,17 @@ export default function TaskList(props) {
         </button>
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
-      <button 
-      style= {sideBarButtonStyle}
-        onClick={event => {
+      <button
+        style={sideBarButtonStyle}
+        onClick={(event) => {
           setSideBarStyle({
-            width: "25vw", 
-            "border-left": "5px solid rgb(67, 99, 98)"
+            width: "25vw",
+            "border-left": "5px solid rgb(67, 99, 98)",
           });
-          setSideBarButtonStyle({display: "hidden"})
-      }}>
-        <img src={iconFriend} height="50px" width="50px"/>
+          setSideBarButtonStyle({ display: "hidden" });
+        }}
+      >
+        <img src={iconFriend} height="50px" width="50px" />
       </button>
       <Friends
         sideBarStyle={sideBarStyle}
