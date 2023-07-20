@@ -64,7 +64,7 @@ router.get("/", async (req, res) => {
      deadline: 1
     }
    }]).toArray();}
-
+   console.log(results);
   res.status(200).send(results);
 });
 

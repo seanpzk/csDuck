@@ -67,7 +67,6 @@ async function setCurrent(task) {
   const currentUser = firebaseAuth.currentUser;
   if (currentUser) {
     const idToken = await currentUser?.getIdToken();
-    const uid = currentUser.uid;
     const response = await fetch(`${backendURL}/setCurrentTask`, {
       method: "PATCH",
       headers: {
@@ -79,16 +78,12 @@ async function setCurrent(task) {
       window.alert(error);
       return;
     });
-    console.log(await response.json());
     if (response.ok) {
       // We successfully set the current task in mongoDb
       // now set it in realtime dataabase firebase
       const user = firebaseAuth.currentUser;
-      if (user) {
-        const uid = user.uid;
-        const currentTaskRef = ref(realtimeDb, "users/" + uid + "/currentTask");
-        set(currentTaskRef, task.name);
-      }
+      const currentTaskRef = ref(realtimeDb, "users/" + task.firebaseUID + "/currentTask");
+      set(currentTaskRef, task.name);
     }
   }
 }
@@ -228,7 +223,10 @@ export default function TaskList(props) {
         return;
       }
 
-      const tasks = await response.json();
+      let tasks = await response.json();
+      if (!customPrio) {
+        tasks = await Toposort(tasks);
+      }
       setTasks(tasks);
     }
     getTasks();
@@ -438,10 +436,38 @@ export default function TaskList(props) {
     navigate("/mytasks");
   }
 
-  async function useToposort(e) {
-    let topoList = await Toposort(await extractExistingTasks());
-    setTasks(topoList);
+  // async function useToposort(e) {
+  //   let topoList = await Toposort(await extractExistingTasks());
+  //   setTasks(topoList);
+  // }
+
+  const friendsRef = useRef();
+  const friendButtonRef = useRef();
+  /**
+   * event handler for the closing of friendbar.
+   * Styling should be changed here and in Frineds.jsx.
+   * 
+   * @param {Event} event 
+   */
+  const handleClosingFriendBar = event => {
+    if (friendsRef.current 
+      && !friendsRef.current.contains(event.target)
+      && !friendButtonRef.current.contains(event.target)) {
+      setSideBarStyle({
+        width: "0px",
+        position:"fixed"});
+      setSideBarButtonStyle({
+        position: "fixed",
+        right: "0px",
+        bottom: "0px",
+        backgroundColor: "transparent"
+      })
+    }
   }
+  useEffect(() => {
+    document.addEventListener("click", handleClosingFriendBar);
+    return () => document.removeEventListener("click", handleClosingFriendBar);
+  }, []);
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -532,12 +558,13 @@ export default function TaskList(props) {
             Reset to default sort order
           </button>
         </div>
-        <button type="button" onClick={useToposort}>
+        {/* <button type="button" onClick={useToposort}>
           Auto sort
-        </button>
+        </button> */}
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
       <button
+      ref = {friendButtonRef}
         style={sideBarButtonStyle}
         onClick={(event) => {
           setSideBarStyle({
@@ -550,6 +577,7 @@ export default function TaskList(props) {
         <img src={iconFriend} height="50px" width="50px" />
       </button>
       <Friends
+      ref ={friendsRef}
         sideBarStyle={sideBarStyle}
         setSideBarStyle={setSideBarStyle}
         setSideBarButtonStyle={setSideBarButtonStyle}
