@@ -16,15 +16,24 @@ router.post("/", async(req, res) => {
         currentTask: ""
     }
 
-    const result = await db.collection("users")
-        .insertOne(newUser)
-        .then(doc => {
-            res.status(200).json(doc)
-        })
-        .catch(error => {
-            res.status(500).json(error);
-        })
-    console.log("CRETED NEW USER");
+    const userCollection = db.collection("users");
+    userCollection.findOne({
+        firebaseUID: req.body.firebaseUID
+    }).then(user => {
+        if (!user) {
+            userCollection
+            .insertOne(newUser)
+            .then(doc => {
+                res.status(200).json(doc)
+            })
+            .catch(error => {
+                res.status(500).json(error);
+            })
+            console.log("CRETED NEW USER");
+        } else {
+            console.log("User already present in database");
+        }
+    })
 });
 
 router.patch("/", async(req, res) => {
