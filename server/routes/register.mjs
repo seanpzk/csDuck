@@ -24,6 +24,7 @@ router.post("/", async(req, res) => {
         .catch(error => {
             res.status(500).json(error);
         })
+    console.log("CRETED NEW USER");
 });
 
 router.patch("/", async(req, res) => {

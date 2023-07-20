@@ -224,7 +224,7 @@ export default function TaskList(props) {
       }
 
       let tasks = await response.json();
-      if (!customPrio) {
+      if (customPrio == undefined || !customPrio) {
         tasks = await Toposort(tasks);
       }
       setTasks(tasks);
