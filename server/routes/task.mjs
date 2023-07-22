@@ -96,6 +96,7 @@ router.post("/", async (req, res) => {
 // This section will help you update a record by id.
 router.patch("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
+  console.log(query);
   const updates =  {
     $set: {
       name: req.body.name,
@@ -106,9 +107,25 @@ router.patch("/:id", async (req, res) => {
       customPriority: req.body.customPriority,
     }
   };
-
-  let collection = await db.collection("task");
-  let result = await collection.updateOne(query, updates);
+  let taskCollection = await db.collection("task");
+  const prevTask = await taskCollection.findOne(query);
+  console.log(prevTask);
+  let result = await taskCollection.updateOne(query, updates);
+  if (result.modifiedCount > 0) {
+    const usersCollection = db.collection("users");
+    const user = await usersCollection.findOne({firebaseUID: req.body.firebaseUID});
+    if (user && user.currentTask == prevTask.name) {
+      await usersCollection.updateOne({
+        firebaseUID: req.body.firebaseUID
+      }, {
+        $set : {
+          currentTask: req.body.name
+        }
+      })
+    }
+  } else {
+    res.status(500);
+  }
 
   res.status(200).send(result);
 });

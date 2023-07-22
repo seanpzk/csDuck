@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
 import { ref, set, remove } from "firebase/database";
 import { backendURL } from "./helperFunctions/serverUrl";
-import RedirectLogin from "./helperFunctions/RedirectLogin";
 import ShowTaskInfo from "./ShowTaskInfo";
 import "../stylesheets/styles.css";
 import { useNonInitialEffect } from "./useNonInitialEffect";
-import { Toposort, extractExistingTasks } from "./helperFunctions/Toposort.jsx";
+import { Toposort } from "./helperFunctions/Toposort.jsx";
 import ThemeSwitcher from "./ThemeSwitcher";
 import Friends from "./Friends.jsx";
 import iconFriend from "../assets/friends.png";
@@ -116,7 +115,7 @@ export default function TaskList(props) {
   const [sideBarStyle, setSideBarStyle] = useState({});
 
   const navigate = useNavigate();
-  const [topoTask, setTopo] = useState([]);
+  const [isBioOpen, setIsBioOpen] = useState(false);
 
   // This method will determine if Theme Switcher is visible or not.
   useEffect(() => {
@@ -225,7 +224,7 @@ export default function TaskList(props) {
       }
 
       let tasks = await response.json();
-      if (!customPrio) {
+      if (customPrio == undefined || !customPrio) {
         tasks = await Toposort(tasks);
       }
       setTasks(tasks);
@@ -437,11 +436,6 @@ export default function TaskList(props) {
     navigate("/mytasks");
   }
 
-  // async function useToposort(e) {
-  //   let topoList = await Toposort(await extractExistingTasks());
-  //   setTasks(topoList);
-  // }
-
   const friendsRef = useRef();
   const friendButtonRef = useRef();
   /**
@@ -450,7 +444,7 @@ export default function TaskList(props) {
    * 
    * @param {Event} event 
    */
-  const handleClosingFriendBar = event => {
+  const handleClosingFriendBar = useCallback(event => {
     if (friendsRef.current 
       && !friendsRef.current.contains(event.target)
       && !friendButtonRef.current.contains(event.target)) {
@@ -464,11 +458,24 @@ export default function TaskList(props) {
         backgroundColor: "transparent"
       })
     }
-  }
-  useEffect(() => {
-    document.addEventListener("click", handleClosingFriendBar);
-    return () => document.removeEventListener("click", handleClosingFriendBar);
   }, []);
+
+  useEffect(() => {
+    if (!isBioOpen) {
+      // Added delay to prevent it from automatically closing
+      const timer = setTimeout(
+        () => document.addEventListener("click", handleClosingFriendBar)
+        , 100);
+      return () => document.removeEventListener("click", handleClosingFriendBar);
+    }
+  }, [isBioOpen]);
+
+  useNonInitialEffect(() => {
+    if (isBioOpen) {
+      document.removeEventListener("click", handleClosingFriendBar);
+    }
+  }
+  , [isBioOpen])
 
   // This following section will display the table with the tasks of individuals.
   return (
@@ -559,9 +566,6 @@ export default function TaskList(props) {
             Reset to default sort order
           </button>
         </div>
-        {/* <button type="button" onClick={useToposort}>
-          Auto sort
-        </button> */}
         {allowCustomisation ? <ThemeSwitcher></ThemeSwitcher> : <></>}
       </div>
       <button
@@ -582,6 +586,7 @@ export default function TaskList(props) {
         sideBarStyle={sideBarStyle}
         setSideBarStyle={setSideBarStyle}
         setSideBarButtonStyle={setSideBarButtonStyle}
+        setIsBioOpen = {setIsBioOpen}
       />
     </>
   );

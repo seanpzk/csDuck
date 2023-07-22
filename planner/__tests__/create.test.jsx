@@ -72,10 +72,11 @@ describe("Test create task form", () => {
         });
         await waitFor(() => expect(global.fetch).toBeCalledTimes(0));
         fireEvent.click(submit_button);
-        await waitFor(() => expect(global.fetch).toBeCalledTimes(1));
+        // Calls fetch twice (ScheduleEvent and the post request)
+        await waitFor(() => expect(global.fetch).toBeCalledTimes(2));
         verifyDAG.mockReturnValue(false);
         fireEvent.click(submit_button);
         // counter shouldn't increase since it doesnt reset / run fetch
-        await waitFor(() => expect(global.fetch).toBeCalledTimes(1));
+        await waitFor(() => expect(global.fetch).toBeCalledTimes(2));
     })
 })

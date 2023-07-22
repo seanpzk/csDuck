@@ -45,6 +45,9 @@ testEnvironment: "jsdom"
 ```
 
 Test react:
+```
+npm i jest-environment-jsdom
+```
 Following code must be present
 ```
 testEnvironment: "jsdom"
