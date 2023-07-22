@@ -98,7 +98,8 @@ export default function Register(props) {
       updateUser(
         await handleEmailPwCreation(firebaseAuth, creationForm)
           .catch(error => {
-            setError(error.message);
+            const msg = error.message.replace('Firebase: ', "");
+            setError(msg);
             return;
           })
       );
