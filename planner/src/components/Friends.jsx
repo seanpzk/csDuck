@@ -209,6 +209,7 @@ const Friends = React.forwardRef((props, reactRef) => {
         friendForm["firebaseUID"] = firebaseAuth.currentUser?.uid;
         const currentUser = firebaseAuth.currentUser;
         const idToken = await firebaseAuth.currentUser?.getIdToken();
+        console.log(friendForm.friendId);
         if (friendForm.friendId == currentUser.uid || friendForm.friendId == "") {
             setErrorMessage("Enter your friend's User ID!");
             setTimeout(() => setErrorMessage(""), 5000);
@@ -376,7 +377,7 @@ const Friends = React.forwardRef((props, reactRef) => {
                         placeholder = {"User-id"} 
                         required
                         maxLength={"36"}
-                        onChange={(event) => updateForm({friendId: event.target.value})}
+                        onInput={(event) => updateForm({friendId: event.target.value})}
                         />
                         <div className={"error-message"}>{errorMessage}</div>
                         <button type = "submit" className={"button-submit"}>
