@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.patch("/", async(req, res) => {
     const uid = req.body.firebaseUID;
+    console.log(uid);
     const taskName = req.body.name;
+    console.log(taskName);
     const collection = await db.collection("users");
     collection.updateOne({firebaseUID: uid}, 
         {$set: {currentTask: taskName}})

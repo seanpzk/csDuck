@@ -12,10 +12,11 @@ const ThemeSwitcher = () => {
   const [usable, setUsable] = useLocalStorage("react-todo.usable", false);
   const [hue, setHue] = useLocalStorage("react-todo.color", "240");
   const defaultDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const [theme, setTheme] = useLocalStorage(
-    "react-todo.theme",
-    defaultDark ? "dark" : "light"
-  );
+  // const [theme, setTheme] = useLocalStorage(
+  //   "react-todo.theme",
+  //   defaultDark ? "dark" : "light"
+  // );
+  const [theme, setTheme] = useState("light");
   const [isColorPicking, setIsColorPicking] = useState(false);
 
   useEffect(() => {

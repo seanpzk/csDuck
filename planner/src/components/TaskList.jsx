@@ -169,6 +169,7 @@ export default function TaskList(props) {
         return;
       }
       const idToken = await firebaseAuth.currentUser?.getIdToken();
+      console.log(idToken);
       const UID = firebaseAuth.currentUser.uid;
       // creates a default GET request -> included UID
       const response = await fetch(`${backendURL}/tasklist?UID=${UID}`, {
