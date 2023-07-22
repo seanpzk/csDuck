@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import { ref, onValue, push, get, onChildAdded, onChildRemoved, set } from "firebase/database"
@@ -6,6 +6,7 @@ import "../stylesheets/Friend-sidebar-stylesheets/Friend-stylesheet.css";
 import addFriendIcon from "../assets/addFriend.png";
 import clipboardIcon from "../assets/clipboardIcon.png";
 import removeFriendIcon from "../assets/removeFriend.png";
+import ShowBio from "./ShowBio";
 
 const Friends = React.forwardRef((props, reactRef) => {
     // track current user's name
@@ -14,6 +15,8 @@ const Friends = React.forwardRef((props, reactRef) => {
     const [friendList, setFriendList] = useState([]);
     // Track list of friend names. Order should correspond to friendList.
     const [friendNames, setFriendNames] = useState([]);
+    // Track list of friend bio. ORder should correspond to friendList.
+    const [friendBio, setFriendBio] = useState([]);
     // Form for creating user
     const [friendForm, setFriendForm] = useState({
         friendId : ""
@@ -78,18 +81,18 @@ const Friends = React.forwardRef((props, reactRef) => {
         });
         // Retrieve currentUser name
         firebaseAuth.currentUser?.getIdToken()
-            .then(idToken => uidToName(currentUserUID, idToken))
-                .then(name => setCurrentUserName(name));
+            .then(idToken => uidToUser(currentUserUID, idToken))
+                .then(user => setCurrentUserName(user.username));
     }, []);
 
     /**
-     * Obtains the username of user from mongodb corresponding to uid.
+     * Obtains the respective user from mongodb corresponding to uid.
      * 
      * @param {String} uid 
      * @param {String} idToken Used for authentication to backend
-     * @return Promise(username) of uid
+     * @return Promise(user) of uid
      */
-    function uidToName(uid, idToken) {
+    function uidToUser(uid, idToken) {
         return new Promise((resolve) => {
             const response = fetch(`${backendURL}/setting?UID=${uid}`, {
                 method: "GET",
@@ -99,7 +102,8 @@ const Friends = React.forwardRef((props, reactRef) => {
                 }
             }).then(res => res.json()
                 .then(data => {
-                    resolve(data[0].username);
+                    console.log(data[0]);
+                    resolve(data[0]);
                     }
                 ));
         });
@@ -110,25 +114,26 @@ const Friends = React.forwardRef((props, reactRef) => {
      */
     useEffect(() => {
         obtainCurrentTask(friendList);
-        updateFriendNames(friendList);
+        updateFriendNamesBio(friendList);
     }, [friendList]);
 
     /**
-     * Updates the state of friendNames in react based on friendList.
+     * Updates the state of friendNames and friendBio in react based on friendList.
      * 
      * @param {Array} friendList array containing the uid of friends
      */
-    function updateFriendNames(friendList) {
+    function updateFriendNamesBio(friendList) {
         const currentUser = firebaseAuth.currentUser;
         currentUser.getIdToken()
             .then(idToken => {
                 // obtain the respective array of names
                 const promises = friendList.map(frienduid => {
-                    return uidToName(frienduid, idToken);
+                    return uidToUser(frienduid, idToken);
                 });
                 Promise.all(promises)
-                    .then(names => {
-                        setFriendNames(names)
+                    .then(users => {
+                        setFriendNames(users.map(user => user.username));
+                        setFriendBio(users.map(user => user.bio));
                     })
             });
     }
@@ -301,9 +306,16 @@ const Friends = React.forwardRef((props, reactRef) => {
         return Object.values(currentTaskList)
             .map((item, index) => {
                 const name = friendNames[index];
+                const bio = friendBio[index];
                 return (
+                    <>
                     <div key = {index} className = "userBox">
-                        <div className="username">{name}</div>
+                        {/* <div className="username">{name}</div> */}
+                        <ShowBio 
+                        bio = {bio} 
+                        username = {name}
+                        setIsBioOpen={props.setIsBioOpen}
+                        />
                         <div className="user-currentTask">{item || "Chilling at the moment"}</div>
                         <button
                             onClick={(event) => deleteFriend(friendList, index)}
@@ -311,6 +323,7 @@ const Friends = React.forwardRef((props, reactRef) => {
                             <img src ={removeFriendIcon} alt ="delete friend" height="100%" width="100%"/>
                         </button>
                     </div>
+                    </>
                 )
             });
     }

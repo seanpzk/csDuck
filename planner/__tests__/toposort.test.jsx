@@ -805,7 +805,7 @@ describe("Tests for Toposort Function", () => {
                 }],
                 fireabaseUID: "asdfasdf",
                 name: "task2",
-                priority: "Low"
+                priority: "High"
             }, {
                 _id: "3",
                 deadline: "2023-06-26",
@@ -825,7 +825,7 @@ describe("Tests for Toposort Function", () => {
                     doBefore: [],
                     fireabaseUID: "asdfasdf",
                     name: "task2",
-                    priority: "Low"
+                    priority: "High"
                 }],
                 fireabaseUID: "asdfasdf",
                 name: "task3",

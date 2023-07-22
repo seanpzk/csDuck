@@ -42,8 +42,6 @@ export default function Create() {
     var eventID = uuidv4().replace(/-/g, "");
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newTask = { ...task, eventID };
-    console.log(newTask);
-    console.log(newTask.eventID);
     ScheduleEvent(newTask);
     if (await verifyDAG(newTask, await extractExistingTasks())) {
       console.log("DAG Present");
