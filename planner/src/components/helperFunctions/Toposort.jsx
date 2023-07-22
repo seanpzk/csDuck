@@ -117,18 +117,33 @@ export async function extractExistingTasks() {
  * @param {Node} b 
  * @returns {int} - {-1 : top of Heap, 1 : bottom of Heap}
  */
+
+const prioToVal = new Map();
+prioToVal.set("High", 3);
+prioToVal.set("Medium", 2);
+prioToVal.set("Low", 1);
+
 function customInDegComparator(a, b) {
+    const aDate = new Date(a.task.deadline);
+    const bDate = new Date(b.task.deadline);
     if (a.in_deg < b.in_deg) {
         return -1;
     } else if (a.in_deg > b.in_deg) {
         return 1;
     } else {
-        if (a.task.deadline < b.task.deadline) {
+        if (prioToVal.get(a.task.priority) > prioToVal.get(b.task.priority)) {
             return -1;
-        } else if (a.task.deadline > b.task.deadline){
+        } else if (prioToVal.get(a.task.priority) < prioToVal.get(b.task.priority)) {
             return 1;
         } else {
-            return 0;
+            // priorities are the same, sort by deadline
+            if (aDate< bDate) {
+                return -1;
+            } else if (aDate > bDate) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 }

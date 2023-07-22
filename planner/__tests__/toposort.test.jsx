@@ -789,7 +789,7 @@ describe("Tests for Toposort Function", () => {
                 doBefore: [],
                 fireabaseUID: "asdfasdf",
                 name: "task1",
-                priority: ""
+                priority: "Low"
             }, {
                 _id: "2",
                 deadline: "2023-06-27",
@@ -801,11 +801,11 @@ describe("Tests for Toposort Function", () => {
                     doBefore: [],
                     fireabaseUID: "asdfasdf",
                     name: "task1",
-                    priority: ""
+                    priority: "Low"
                 }],
                 fireabaseUID: "asdfasdf",
                 name: "task2",
-                priority: ""
+                priority: "High"
             }, {
                 _id: "3",
                 deadline: "2023-06-26",
@@ -817,7 +817,7 @@ describe("Tests for Toposort Function", () => {
                     doBefore: [],
                     fireabaseUID: "asdfasdf",
                     name: "task1",
-                    priority: ""
+                    priority: "Low"
                 }, {
                     _id: "2",
                     deadline: "2023-06-27",
@@ -825,11 +825,11 @@ describe("Tests for Toposort Function", () => {
                     doBefore: [],
                     fireabaseUID: "asdfasdf",
                     name: "task2",
-                    priority: ""
+                    priority: "High"
                 }],
                 fireabaseUID: "asdfasdf",
                 name: "task3",
-                priority: ""
+                priority: "Low"
             }, {
                 _id: "4",
                 deadline: "2023-06-22",
@@ -837,7 +837,7 @@ describe("Tests for Toposort Function", () => {
                 doBefore: [],
                 fireabaseUID: "asdfasdf",
                 name: "task4",
-                priority: ""
+                priority: "Low"
             }])).map(task => task._id)).toEqual(["4", "1", "2", "3"]);
         });
     });

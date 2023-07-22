@@ -69,6 +69,7 @@ export default function Edit() {
       deadline: form.deadline,
       priority: form.priority,
       description: form.description,
+      firebaseUID: firebaseAuth.currentUser?.uid,
       doBefore: form.doBefore,
     };
     const idToken = await firebaseAuth.currentUser?.getIdToken();
@@ -84,7 +85,6 @@ export default function Edit() {
     PatchEvent({ ...editedTask, eventID });
     if (await verifyDAG(editedTask, await extractExistingTasks())) {
       console.log("DAG PRESENT");
-      console.log(idToken);
       // This will send a post request to update the data in the database.
       await fetch(`${backendURL}/task/${params.id}`, {
         method: "PATCH",

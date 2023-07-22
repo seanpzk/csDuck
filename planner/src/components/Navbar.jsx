@@ -25,7 +25,7 @@ export default function Navbar(props) {
     firebaseAuth.onAuthStateChanged(() =>
       props.setAuth(firebaseAuth.currentUser != null)
     )
-  );
+  , []);
 
   async function handleLogout() {
     UserPresenceLogout(firebaseAuth.currentUser);

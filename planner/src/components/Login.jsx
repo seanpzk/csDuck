@@ -73,8 +73,10 @@ export default function Login(props) {
    */
   async function loginWithGoogle() {
     const response = await signInWithPopup(firebaseAuth, googleProvider)
-      .then(async (result) => {
-        await CreateUserMongo();
+      .then(async (user) => {
+        if (user) {
+          await CreateUserMongo();
+        }
         // const token =
         //   GoogleAuthProvider.credentialFromResult(result).accessToken;
         // const user = result.user;
