@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import firebaseAuth, { realtimeDb } from "../firebase.config";
 import { backendURL } from "./helperFunctions/serverUrl";
 import { ref, onValue, push, get, onChildAdded, onChildRemoved, set } from "firebase/database"
@@ -7,7 +7,7 @@ import addFriendIcon from "../assets/addFriend.png";
 import clipboardIcon from "../assets/clipboardIcon.png";
 import removeFriendIcon from "../assets/removeFriend.png";
 
-export default function Friends(props) {
+const Friends = React.forwardRef((props, reactRef) => {
     // track current user's name
     const [currentUserName, setCurrentUserName] = useState("");
     // Tracks list of friend uids.
@@ -300,7 +300,6 @@ export default function Friends(props) {
     function displayUserItems(currentTaskList, friendNames) {
         return Object.values(currentTaskList)
             .map((item, index) => {
-                console.log(item);
                 const name = friendNames[index];
                 return (
                     <div key = {index} className = "userBox">
@@ -319,6 +318,7 @@ export default function Friends(props) {
     return (
         <>
             <div 
+            ref = {reactRef}
             className = "side-bar"
             style={props.sideBarStyle}
             >
@@ -378,4 +378,6 @@ export default function Friends(props) {
             </div>
         </>
     )
-}
+});
+
+export default Friends;
