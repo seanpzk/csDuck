@@ -1,5 +1,5 @@
 #base image
-FROM node:18.16.1-bullseye
+FROM node:18.16
 
 
 #run linux commands
@@ -11,7 +11,7 @@ COPY . /planner
 WORKDIR /planner 
 
 # install the necessary dependencies
-RUN npm install vite@4.3.9 react-bootstrap bootstrap@5.2.3 react-phone-input-2 jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer identity-obj-proxy @heroicons/react
+RUN npm install
 
 # start container with node and parameters: server.js
 EXPOSE 5173

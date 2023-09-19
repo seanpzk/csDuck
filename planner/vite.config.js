@@ -9,5 +9,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['@meforma/vue-toaster']
-  }
+  },
+  server: {
+    host: '0.0.0.0'
+  },
 })
