@@ -7,5 +7,10 @@ export default defineConfig({
   build: {
     outDir: './build'
   },
-  
+  optimizeDeps: {
+    exclude: ['@meforma/vue-toaster']
+  },
+  server: {
+    host: '0.0.0.0'
+  },
 })
