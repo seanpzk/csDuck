@@ -15,4 +15,3 @@ RUN npm install
 # start container with node and parameters: server.js
 EXPOSE 5173
 CMD [ "npm", "run", "dev"]
-
