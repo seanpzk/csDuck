@@ -4,29 +4,16 @@ Orbital project
 
 ## Before you run the programs, ensure you have nodejs and npm installed
 
-## To install in planner
+## Run following command in planner
 
 ```
-npm install vite@latest 
-react-bootstrap 
-bootstrap@5.2.3 
-react-phone-input-2 
-jest 
-babel-jest 
-@babel/preset-env 
-@babel/preset-react 
-react-test-renderer
-identity-obj-proxy
-@heroicons/react
-
+npm install
 ```
 
-## To install in server
+## Run following command in server
 
 ```
-npm install googleapis
-dayjs
-
+npm install 
 ```
 
 ## Run the application
@@ -52,3 +39,25 @@ Following code must be present
 ```
 testEnvironment: "jsdom"
 ```
+
+## Containerization
+
+Create Dockerfile to build docker image for containerization.
+
+### To deploy the **dev** server in container
+Access the directory _planner_ using terminal:
+1. `build` docker image:
+   `docker build -t csduckplanner:1.0 .`
+
+2. `run` docker container:
+  `docker run -d -p 5173:5173 csduckplanner:1.0`
+
+
+### To deploy the **static** server in container
+Access the directory _planner_ using terminal:
+1. `build` docker image:
+   `docker build --file Dockerfile-static -t csduckstatic:1.1 .`
+2. `run` docker container:
+   `docker run -d -p 4173:4173 csduckstatic:1.1`
+
+
