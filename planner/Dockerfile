@@ -1,16 +1,15 @@
-#base image
-FROM node:18.16
+# Base image
+FROM node:18.16.0-alpine3.16
 
+# Run linux commands 
 
-#run linux commands
+# Sets working directory
+WORKDIR /planner
 
-# copy from local file to container
-COPY . /planner
+# Copy from local file to container
+COPY . .
 
-# sets working directory
-WORKDIR /planner 
-
-# install the necessary dependencies
+# Install the necessary dependencies
 RUN npm install
 
 # start container with node and parameters: server.js

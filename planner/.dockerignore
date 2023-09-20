@@ -1,4 +1,4 @@
-.vercel
 Dockerfile
-fly.toml
-node_modules/
+__mocks__
+__tests__
+src/components/unused
