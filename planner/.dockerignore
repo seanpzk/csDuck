@@ -1,0 +1,4 @@
+Dockerfile
+__mocks__
+__tests__
+src/components/unused
